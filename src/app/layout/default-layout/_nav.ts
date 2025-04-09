@@ -40,6 +40,21 @@ export const navItems: INavData[] = [
     ],
   },
 
+  //Products
+  {
+    name: 'Product',
+    url: '/product',
+    iconComponent: { name: 'cil-puzzle' },
+    children: [
+      {
+        name: 'Manage Products',
+        url: '/product/manage',
+        icon: 'nav-icon-bullet',
+      },
+    ],
+  },
+  //End Products
+
   {
     name: 'Charts',
     iconComponent: { name: 'cil-chart-pie' },
