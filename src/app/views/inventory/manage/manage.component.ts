@@ -3,12 +3,13 @@ import { Inventory } from '../../../../models/inventory';
 import { InventoryService } from '../../../../services/inventory.service';  
 import { SpinnerComponent } from '@coreui/angular';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 declare var bootstrap: any;
 
 
 @Component({
   selector: 'app-manage',
-  imports: [SpinnerComponent,CommonModule],
+  imports: [SpinnerComponent,CommonModule, RouterLink],
   templateUrl: './manage.component.html',
   styleUrl: './manage.component.scss'
 })
