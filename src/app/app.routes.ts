@@ -29,6 +29,10 @@ export const routes: Routes = [
         loadChildren: () => import('./views/product/routes').then((m) => m.routes)
       },
       {
+        path: 'inventory',
+        loadChildren: () => import('./views/inventory/routes').then((m) => m.routes)
+      },
+      {
         path: 'widgets',
         loadChildren: () => import('./views/widgets/routes').then((m) => m.routes)
       },
@@ -36,10 +40,7 @@ export const routes: Routes = [
         path: 'charts',
         loadChildren: () => import('./views/charts/routes').then((m) => m.routes)
       },
-      {
-        path: 'products',
-        loadChildren: () => import('./views/prodcuts/routes').then((m) => m.routes)
-      },
+
       {
         path: 'pages',
         loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
