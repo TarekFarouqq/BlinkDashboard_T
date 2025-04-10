@@ -5,17 +5,20 @@ import { SpinnerComponent } from '@coreui/angular';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
+import { SearchPipe } from '../../shared/search.pipe';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-manage',
-  imports: [SpinnerComponent,CommonModule, RouterLink],
+  imports: [SpinnerComponent,CommonModule, RouterLink ,SearchPipe,FormsModule],
   templateUrl: './manage.component.html',
   styleUrl: './manage.component.scss'
 })
 export class ManageComponent implements OnInit {
 invetoryArr!: Inventory[];
   isLoading: boolean = true;
+  text:string="";
 
   constructor(private inventoryService: InventoryService, private router: Router) {}
   

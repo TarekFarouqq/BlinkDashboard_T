@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BrandService } from '../../../services/brand.service'; 
 import { Brand } from '../../../../models/brand';
+import { BrandService } from 'src/services/BranchServices/brand.service';
 
 @Component({
   selector: 'app-display',

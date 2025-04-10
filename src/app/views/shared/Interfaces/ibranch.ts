@@ -1,7 +1,7 @@
 import { Inventory } from "../../../../models/inventory";
 
 export interface Ibranch {
-    branchId:      number;
+    branchId:      string;
     branchName:    string;
     branchAddress: string;
     phone:         string;
