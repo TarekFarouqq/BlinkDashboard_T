@@ -1,0 +1,73 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10">
+        <form class="classic-form p-4" [formGroup]="addBranchForm" (ngSubmit)="addNewBranch()">
+          
+          <div class="row">
+            <!-- Column 1 -->
+            <div class="col-md-6">
+              <!-- Branch Name -->
+              <div class="form-group mb-3">
+                <label class="form-label">Branch Name</label>
+                <input type="text" class="form-control" formControlName="branchName">
+                <div
+                  class="text-danger"
+                  *ngIf="addBranchForm.get('branchName')?.errors && addBranchForm.get('branchName')?.touched"
+                >
+                  <p *ngIf="addBranchForm.get('branchName')?.getError('required')">
+                    Branch Name is required
+                  </p>
+                  <p *ngIf="addBranchForm.get('branchName')?.getError('minlength')">
+                    Branch Name must be at least 3 characters
+                  </p>
+                </div>
+              </div>
+  
+              <!-- Branch Address -->
+              <div class="form-group mb-3">
+                <label class="form-label">Branch Address</label>
+                <input type="text" class="form-control" formControlName="branchAddress">
+                <div
+                  class="text-danger"
+                  *ngIf="addBranchForm.get('branchAddress')?.errors && addBranchForm.get('branchAddress')?.touched"
+                >
+                  <p *ngIf="addBranchForm.get('branchAddress')?.getError('required')">
+                    Branch Address is required
+                  </p>
+                  <p *ngIf="addBranchForm.get('branchAddress')?.getError('minlength')">
+                    Branch Address must be at least 3 characters
+                  </p>
+                </div>
+              </div>
+  
+              <!-- Phone -->
+              <div class="form-group mb-3">
+                <label class="form-label">Phone</label>
+                <input type="text" class="form-control" formControlName="phone">
+                <div
+                  class="text-danger"
+                  *ngIf="addBranchForm.get('phone')?.errors && addBranchForm.get('phone')?.touched"
+                >
+                  <p *ngIf="addBranchForm.get('phone')?.getError('required')">
+                    Phone is required
+                  </p>
+                  <p *ngIf="addBranchForm.get('phone')?.getError('pattern')">
+                    Phone must be 11 digits
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="text-danger mt-1" *ngIf="msgerror">
+            {{ msgerror }}
+          </p>
+          <div class="form-footer mt-4">
+            <button type="submit" class="btn btn-danger text-light" style="width: 30%; border-radius: 2px !important;" [disabled]="addBranchForm.invalid">
+              Add
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
