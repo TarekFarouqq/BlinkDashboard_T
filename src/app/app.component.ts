@@ -10,7 +10,7 @@ import { iconSubset } from './icons/icon-subset';
 @Component({
     selector: 'app-root',
     template: '<router-outlet />',
-    imports: [RouterOutlet]
+    imports: [RouterOutlet],
 })
 export class AppComponent implements OnInit {
 

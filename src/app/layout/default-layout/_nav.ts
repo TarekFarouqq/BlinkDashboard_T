@@ -69,6 +69,20 @@ export const navItems: INavData[] = [
     ],
   },
   //End Products
+     //branchs
+     {
+      name: 'Branch',
+      url: '/branch',
+      iconComponent: { name: 'cilLayers' },
+      children: [
+        {
+          name: 'Manage Branches',
+          url: '/branch/manage',
+          icon: 'nav-icon-bullet',
+        },
+      ],
+    },
+    //End branchs
 
   {
     name: 'Charts',
