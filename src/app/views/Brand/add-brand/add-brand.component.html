@@ -1,0 +1,69 @@
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4">Add new brands</h2>
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10">
+        <form class="classic-form p-4" [formGroup]="addBrandForm" (ngSubmit)="onSubmit()">
+          
+          <div class="row">
+            
+            <div class="col-md-6">
+
+              <!-- Brand Name -->
+              <div class="form-group mb-3">
+                <label class="form-label">Brand Name</label>
+                <input type="text" class="form-control" formControlName="brandName">
+                <div *ngIf="brandName?.invalid && (brandName?.dirty || brandName?.touched)">
+                  <div class="invalid-feedback d-block">
+                    <span *ngIf="brandName?.errors?.['required']">Brand Name is required</span>
+                    <span *ngIf="brandName?.errors?.['minlength']">Must be at least 3 characters</span>
+                  </div>
+                </div>
+              </div>
+  
+              <!--   Description  of brandd-->
+              <div class="form-group mb-3">
+                <label class="form-label">Brand Description</label>
+                <textarea class="form-control" formControlName="brandDescription"></textarea>
+                <div *ngIf="brandDescription?.invalid && (brandDescription?.dirty || brandDescription?.touched)">
+                  <div class="invalid-feedback d-block">
+                    <span *ngIf="brandDescription?.errors?.['required']">Brand Description is required</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+           
+            <div class="col-md-6">
+              <!--   Website URL of brand  -->
+              <div class="form-group mb-3">
+                <label class="form-label">Brand Website URL</label>
+                <input type="url" class="form-control" formControlName="brandWebSiteURL">
+              </div>
+  
+              <!-- Brand Image -->
+              <div class="form-group mb-3">
+                <label class="form-label">Brand Image</label>
+                <input type="file" class="form-control" formControlName="brandImage" (change)="onFileChange($event)">
+              </div>
+            </div>
+          </div>
+  
+          <div class="form-footer mt-4">
+            <button type="submit" class="btn btn-danger text-light" style="width: 30%; border-radius: 2px !important;" [disabled]="addBrandForm.invalid">
+              Add Brand
+            </button>
+          </div>
+
+          <div class="form-footer mt-4">
+            <!-- Back to List Button -->
+            <button type="button" class="btn btn-secondary text-light" style="width: 30%; border-radius: 2px !important;"  [routerLink]="['/Brand/manage']">
+              Back to List
+            </button>
+          </div>
+          
+        </form>
+      </div>
+    </div>
+  </div>
+  

@@ -1,9 +1,12 @@
 //add route here
-
+ 
 import { Routes } from '@angular/router';
 import { DefaultLayoutComponent } from './layout';
+ 
 
 export const routes: Routes = [
+
+  
   {
     path: '',
     redirectTo: 'dashboard',
@@ -25,6 +28,7 @@ export const routes: Routes = [
         loadChildren: () => import('./views/base/routes').then((m) => m.routes)
       },
 
+     
   
       {
         path: 'widgets',
@@ -37,6 +41,10 @@ export const routes: Routes = [
       {
         path: 'products',
         loadChildren: () => import('./views/prodcuts/routes').then((m) => m.routes)
+      },
+      {
+        path: 'Brand',
+        loadChildren: () => import('./views/Brand/routes').then((m) => m.routes)
       },
       {
         path: 'pages',

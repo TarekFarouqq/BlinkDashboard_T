@@ -1,0 +1,20 @@
+<div *ngIf="brand" class="container mt-5">
+    <h2 class="text-center mb-4">Brand Details</h2>
+  
+    <div class="row">
+      <div class="col-md-6">
+        <h4>Name: {{ brand?.BrandName }}</h4>
+        <p><strong>Description:</strong> {{ brand?.Description }}</p>
+        <p><strong>Website URL:</strong> <a [href]="brand?.WebsiteUrl" target="_blank">{{ brand?.WebsiteUrl }}</a></p>
+      </div>
+  
+      <div class="col-md-6">
+        <img *ngIf="brand?.ImageUrl" [src]="brand?.ImageUrl" alt="Brand Image" width="200" height="200" class="rounded-circle">
+      </div>
+    </div>
+  
+    <div class="mt-4">
+      <button class="btn btn-secondary" (click)="goBackToList()">Back to List</button>
+    </div>
+  </div>
+  
