@@ -9,7 +9,6 @@ import {
   FormControlDirective,
   FormDirective,
   FormLabelDirective,
-  FormTextDirective
 } from '@coreui/angular';
 @Component({
   selector: 'app-product-details',
@@ -38,5 +37,14 @@ export class ProductDetailsComponent implements OnInit {
     }else{
       this.isLoading=false;
     }
+  }
+  addImage() {
+    const imgContainer = document.getElementById('image-container') as HTMLDivElement;
+    const imgDiv = document.createElement('div');
+    imgDiv.classList.add('flex-column', 'col-md-6', 'mb-3');
+    imgDiv.innerHTML = `
+      <input cFormControl id="inp-ProductImage" type="file" accept="image/*">
+    `;
+    imgContainer.appendChild(imgDiv);
   }
 }
