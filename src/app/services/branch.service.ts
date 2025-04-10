@@ -27,4 +27,8 @@ export class BranchService {
   deleteBranch(id:string):Observable<any> {
     return this._HttpClient.delete(`${environment.apiUrl}/Branch/delete/${id}`);
   }
+
+  
+
+
 }
