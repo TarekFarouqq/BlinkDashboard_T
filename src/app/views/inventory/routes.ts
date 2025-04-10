@@ -20,6 +20,13 @@ export const routes: Routes = [
           title: 'Manage Inventories'
         }
       },
+      {
+        path: 'add',
+        loadComponent: () => import('./add-inventory/add-inventory.component').then(m => m.AddInventoryComponent),
+        data: {
+          title: 'Add Inventory'
+        }
+      }
       
     ]
   }
