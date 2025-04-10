@@ -19,8 +19,14 @@ export const routes: Routes = [
         data: {
           title: 'Manage Products'
         }
+      },
+      {
+        path: 'product-details/:id',
+        loadComponent: () => import('./product-details/product-details.component').then(m => m.ProductDetailsComponent),
+        data: {
+          title: 'Product Details'
+        }
       }
-
     ]
   }
 ];

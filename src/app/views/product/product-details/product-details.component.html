@@ -1,0 +1,23 @@
+@if(!isLoading){
+  <form cForm>
+    <div class="row w-100">
+      <div class="flex-column col-md-6">
+        <div class="mb-3 col-md-9">
+          <label cLabel for="inp-ProductName">Product Name</label>
+          <input cFormControl id="inp-ProductName" type="text">
+        </div>
+        <div class="mb-3 col-md-9">
+          <label cLabel for="inp-ProductDescription">Product Description</label>
+          <input cFormControl id="inp-ProductDescription" type="text">
+        </div>
+      </div>
+      <div class="flex-column col-md-6"></div>
+    </div>
+    <input cButton color="primary" type="submit">
+  </form>
+}@else{
+<div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="height: 79vh !important;">
+  <c-spinner variant="grow" color="danger" />
+  <p>Loading</p>
+</div>
+}
