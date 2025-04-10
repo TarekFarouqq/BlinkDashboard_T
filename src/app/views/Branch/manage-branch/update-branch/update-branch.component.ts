@@ -11,13 +11,15 @@ import { CommonModule } from '@angular/common';
   styleUrl: './update-branch.component.scss'
 })
 export class UpdateBranchComponent {
+  msgerror: string = '';
+
   constructor(
     private _BranchService: BranchService,
     private _Router: Router,
     private _ActivatedRoute: ActivatedRoute
   ) {}
 
-  addBranchForm = new FormGroup({
+  updateBranchForm = new FormGroup({
     branchName: new FormControl('', [Validators.required, Validators.minLength(3)]),
     branchAddress: new FormControl('', [Validators.required, Validators.minLength(3)]),
     phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{11}$')]),
@@ -28,13 +30,15 @@ export class UpdateBranchComponent {
       next: (params) => {
         const id = params.get('id');
         if (id) {
-          this._BranchService.updateBranch(id, this.addBranchForm.value).subscribe({
+          this._BranchService.updateBranch(id, this.updateBranchForm.value).subscribe({
             next: (response) => {
               console.log(response);
+              this.msgerror = response.message;
               this._Router.navigate(['/branch/manage']);
             },
             error: (err) => {
               console.log(err);
+              this.msgerror = err.error.message;
             }
           });
         }
