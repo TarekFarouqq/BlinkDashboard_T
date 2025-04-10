@@ -1,23 +1,61 @@
 @if(!isLoading){
-  <form cForm>
-    <div class="row w-100">
-      <div class="flex-column col-md-6">
-        <div class="mb-3 col-md-9">
-          <label cLabel for="inp-ProductName">Product Name</label>
-          <input cFormControl id="inp-ProductName" type="text">
-        </div>
-        <div class="mb-3 col-md-9">
-          <label cLabel for="inp-ProductDescription">Product Description</label>
-          <input cFormControl id="inp-ProductDescription" type="text">
-        </div>
+<form cForm>
+  <!-- ProductDetails -->
+  <div class="row w-100 m-auto border-bottom mb-3">
+    <div class="flex-column col-md-6">
+      <div class="mb-3 col-md-9">
+        <label cLabel for="inp-ProductName">Product Name</label>
+        <input cFormControl id="inp-ProductName" type="text">
       </div>
-      <div class="flex-column col-md-6"></div>
+      <div class="mb-3 col-md-9">
+        <label cLabel for="inp-ProductDescription">Product Description</label>
+        <input cFormControl id="inp-ProductDescription" type="text">
+      </div>
     </div>
-    <input cButton color="primary" type="submit">
-  </form>
+    <div class="flex-column col-md-6 d-flex align-items-end justify-content-center">
+      <div class="mb-3 col-md-9">
+        <label cLabel for="inp-BrandName">Brand Name</label>
+        <select class="form-select" id="inp-BrandName" aria-label="Default select example">
+          <option selected value="0">Select Brand</option>
+          <option value="1">Hp</option>
+          <option value="2">Dell</option>
+          <option value="3">Lenovo</option>
+        </select>
+      </div>
+      <div class="mb-3 col-md-9">
+        <label cLabel for="inp-CategoryName">Category Name</label>
+        <select class="form-select" id="inp-CategoryName" aria-label="Default select example">
+          <option selected value="0">Select Category</option>
+          <option value="1">Laptop</option>
+          <option value="2">Screen</option>
+          <option value="3">Desktop</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <!-- Product Images -->
+  <div class="row w-100 m-auto border-bottom mb-3">
+    <div class="col-12 mb-3">
+      <button type="button" class="btn btn-primary" id="add-image-btn" (click)="addImage()">Add Another Image</button>
+    </div>
+    <div class="flex-column" id="image-container">
+      <div class="flex-column col-md-6 mb-3" id="image-1">
+        <input cFormControl id="inp-ProductImage-1" type="file" accept="image/*">
+      </div>
+    </div>
+  </div>
+  <input cButton color="danger" class="text-white rounded-2 col-md-1 m-auto" type="submit">
+</form>
 }@else{
 <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="height: 79vh !important;">
   <c-spinner variant="grow" color="danger" />
   <p>Loading</p>
 </div>
 }
+
+<style>
+  #image-container{
+    height: 46vh;
+    overflow-y: auto ;
+  }
+</style>
