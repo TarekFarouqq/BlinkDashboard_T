@@ -8,7 +8,7 @@
         <button type="button" class="btn btn-outline-danger" data-mdb-ripple-init>search</button>
       </div>
       <div class="d-flex align-items-center justify-content-end mb-2">
-        <button type="button" class="btn btn-danger text-white border2r" (click)="navigateToProductDetails(0)">
+        <button type="button" class="btn btn-danger text-white" (click)="navigateToProductDetails(0)">
           <i class="fa-solid fa-plus"></i>
           Add Product
         </button>
@@ -44,7 +44,7 @@
                     <td class="text-center align-middle text-secondary" style="height: 70px !important;">{{Product.categoryName}}</td>
                     <td class="text-center align-middle text-secondary" style="height: 70px !important;">
                      <div class="row gap-2 d-flex align-items-center justify-content-center">
-                      <button type="button" class="col-md-3 btn btn-warning border2r" data-mdb-ripple-init>
+                      <button type="button" class="col-md-3 btn btn-warning border2r" data-mdb-ripple-init (click)="navigateToProductDetails(Product.productId)">
                         <i class="fa-solid fa-pen-to-square text-white"></i>
                       </button>
                       <button type="button" class="col-md-3 btn btn-dark border2r" data-mdb-ripple-init (click)="openDeleteModal(Product.productId)">
