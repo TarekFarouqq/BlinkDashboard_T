@@ -25,8 +25,11 @@ export class ProductService {
   GetFilteredProducts(filter:string,pgNumber:number,pgSize:number):Observable<Product[]>{
     return this.httpClient.get<Product[]>(this.apiUrl + '/product/GetFilteredProducts/' + filter + '/' + pgNumber + '/' + pgSize);
   }
-  InsertProduct(product:InsertProductDTO):Observable<any>{
+  InsertProduct(product:FormData):Observable<any>{
     return this.httpClient.post(this.apiUrl + '/product',product);
+  }
+  UpdateProduct(id:number, product:FormData):Observable<any>{
+    return this.httpClient.put(this.apiUrl + `/product/${id}`,product);
   }
   DeleteProduct(id:number):Observable<any>{
     return this.httpClient.delete(this.apiUrl + '/product/' + id);

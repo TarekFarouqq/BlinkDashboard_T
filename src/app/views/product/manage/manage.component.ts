@@ -23,6 +23,7 @@ export class ManageComponent implements OnInit {
   ngOnInit() {
     this.productServ.GetTotalPages(8).subscribe((res) => {
       this.TotalPages = res;
+      this.CurrentPage=this.TotalPages;
       this.productServ.GetPagginatedProducts(this.CurrentPage, 8).subscribe(
         (res) => {
           this.ProductArr = res;

@@ -7,7 +7,9 @@ export interface Product {
     productSupplyDate: string;
     productImages: string[];
     supplierName: string;
+    brandId:number;
     brandName: string;
+    categoryId:number;
     categoryName: string;
     averageRate: number;
     countOfRates: number;
