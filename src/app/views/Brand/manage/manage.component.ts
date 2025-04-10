@@ -1,6 +1,6 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import { Brand } from '../../../../models/brand';  
-import { BrandService } from 'src/app/services/brand.service';
+import { BrandService } from '../../../services/brand.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 //import { FormModule } from '@coreui/angular';
