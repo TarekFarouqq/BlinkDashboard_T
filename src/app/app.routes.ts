@@ -27,9 +27,24 @@ export const routes: Routes = [
         path: 'base',
         loadChildren: () => import('./views/base/routes').then((m) => m.routes)
       },
+ 
 
      
   
+ 
+      {
+        path: 'product',
+        loadChildren: () => import('./views/product/routes').then((m) => m.routes)
+      },
+      {
+        path: 'inventory',
+        loadChildren: () => import('./views/inventory/routes').then((m) => m.routes)
+      },
+      {
+        path: 'branch',
+        loadChildren: () => import('./views/Branch/routes').then((m) => m.routes) 
+      },
+ 
       {
         path: 'widgets',
         loadChildren: () => import('./views/widgets/routes').then((m) => m.routes)
@@ -38,10 +53,7 @@ export const routes: Routes = [
         path: 'charts',
         loadChildren: () => import('./views/charts/routes').then((m) => m.routes)
       },
-      {
-        path: 'products',
-        loadChildren: () => import('./views/prodcuts/routes').then((m) => m.routes)
-      },
+
       {
         path: 'Brand',
         loadChildren: () => import('./views/Brand/routes').then((m) => m.routes)

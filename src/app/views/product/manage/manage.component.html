@@ -1,0 +1,108 @@
+@if(!isLoading){
+  <div class="pg-content w-100 d-flex flex-column align-items-center justify-content-start">
+    <!-- Search Panel -->
+    <div class="pg-search d-flex align-items-center justify-content-between ms-2 mt-2 w-100 border-bottom">
+      <div class="input-group w-50 gap-2 mb-2">
+        <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+          aria-describedby="search-addon"  [(ngModel)]="FilterProduct" (input)="filterProductArr()" />
+        <button type="button" class="btn btn-outline-danger" data-mdb-ripple-init>search</button>
+      </div>
+      <div class="d-flex align-items-center justify-content-end mb-2">
+        <button type="button" class="btn btn-danger text-white" (click)="navigateToProductDetails(0)">
+          <i class="fa-solid fa-plus"></i>
+          Add Product
+        </button>
+      </div>
+    </div>
+    <!-- Table Panel -->
+    <div class="p-1" style="max-height: 68vh; overflow-y: auto;">
+      <table class="table table-hover table-rounded w-100 ">
+        <thead>
+          <tr>
+            <th class="text-secondary text-center align-middle" style="width: 10%;">Product Id</th>
+            <th class="text-secondary text-center align-middle" style="width: 45%;">Product Name</th>
+            <th class="text-secondary text-center align-middle" style="width: 15%;">Brand Name</th>
+            <th class="text-secondary text-center align-middle" style="width: 15%;">Category Name</th>
+            <th class="text-secondary text-center align-middle" style="width: 15%;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+            @for (Product of ProductArr; track Product.productId){
+                <tr>
+                    <td class="align-middle text-center" style="height: 70px !important;">{{Product.productId}}</td>
+                    <td class="align-middle" style="height: 70px !important;">
+                      <div class="row">
+                        <div class="col-md-2">
+                          <img [src]="Product.productImages[0]" [alt]="Product.productName" style="width: 70%;" class="text-center"/>
+                        </div>
+                        <div class="col-md-8 text-secondary text-start">
+                          {{Product.productName}}
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-center align-middle text-secondary" style="height: 70px !important;">{{Product.brandName}}</td>
+                    <td class="text-center align-middle text-secondary" style="height: 70px !important;">{{Product.categoryName}}</td>
+                    <td class="text-center align-middle text-secondary" style="height: 70px !important;">
+                     <div class="row gap-2 d-flex align-items-center justify-content-center">
+                      <button type="button" class="col-md-3 btn btn-warning border2r" data-mdb-ripple-init (click)="navigateToProductDetails(Product.productId)">
+                        <i class="fa-solid fa-pen-to-square text-white"></i>
+                      </button>
+                      <button type="button" class="col-md-3 btn btn-dark border2r" data-mdb-ripple-init (click)="openDeleteModal(Product.productId)">
+                        <i class="fa-solid fa-trash-can text-white"></i>
+                      </button>
+                     </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+      </table>
+    </div>
+  </div>
+   <!-- Paggination -->
+   <div class="pg-footer mt-2 w-100 d-flex align-items-center justify-content-end">
+    <div class="tbl-nav d-flex align-items-center gap-3">
+      <button class="btn btn-outline-danger rounded-circle shadow-sm" title="Previous" (click)="prevPage()" [disabled]="CurrentPage == 1">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      
+      <input type="text" class="form-control text-center border border-danger rounded-pill shadow-sm"
+             style="width: 60px;" placeholder="1" disabled [value]="CurrentPage" />
+  
+      <button class="btn btn-outline-danger rounded-circle shadow-sm" title="Next" (click)="nextPage()" [disabled]="CurrentPage == TotalPages">
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+}@else {
+  <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="height: 79vh !important;">
+    <c-spinner variant="grow" color="danger" />
+    <p>Loading</p>
+  </div>
+}
+
+<!-- Confirm Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" >
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-danger">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this product?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary border2r" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger border2r text-white" (click)="confirmDelete()">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<style>
+  .pg-content {
+    height: 74vh !important;
+  }
+</style>

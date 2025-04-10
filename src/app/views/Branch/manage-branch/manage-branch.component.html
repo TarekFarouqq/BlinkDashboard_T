@@ -1,0 +1,64 @@
+<!-- @if (!isLoading) { -->
+    <div class="pg-content w-100 d-flex flex-column align-items-center justify-content-start">
+      <div class="row w-100 my-2">
+        <div class="col-12 d-flex justify-content-end">
+         <button class="btn btn-danger text-light" routerLink="/branch/add" style="border-radius: 2px !important;" > + Add Branch</button>
+            </div>
+      </div>
+      <!-- Table Panel -->
+      <div class="table-responsive w-100 p-1" style="max-height: 68vh; overflow-y: auto;">
+        <table class="table table-hover  text-center align-middle ">
+          <thead class=" sticky-top">
+            <tr style="height: 60px !important; ">
+              <th >Branch Id</th>
+              <th >Branch Name</th>
+              <th >Inventory</th>
+              <th >Branch Address</th>
+              <th >Phone</th>
+              <th >Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (branch of branchList; track branch.branchId) {
+                <tr>
+                    <td >{{ branch.branchId }}</td>
+                    <td >{{ branch.branchName }}</td>
+                  
+                    <td>
+                        @if (branch.inventories.length > 0) {
+                          <div class="d-flex flex-wrap gap-1 justify-content-center">
+                            @for (inventory of branch.inventories; track inventory.inventoryId) {
+                              <span class="badge bg-primary">{{ inventory.inventoryName }}</span>
+                            }
+                          </div>
+                        } @else {
+                          <span class="text-muted">No Inventory</span>
+                        }
+                      </td>
+                  
+                    <td>{{ branch.branchAddress }}</td>
+                    <td>{{ branch.phone }}</td>
+                    <td>
+                      <div class="d-flex justify-content-center gap-2">
+                        <button routerLink="/branch/update" type="button" class="btn btn-warning btn-sm border2r">
+                          <i  class="fa-solid fa-pen-to-square text-white"></i>
+                        </button>
+                        <button type="button" class="btn btn-dark btn-sm border2r">
+                          <i class="fa-solid fa-trash-can text-white"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <!-- } @else {
+    <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="height: 79vh !important;">
+      <c-spinner variant="grow" color="danger" />
+      <p>Loading</p>
+    </div>
+  } -->
+  

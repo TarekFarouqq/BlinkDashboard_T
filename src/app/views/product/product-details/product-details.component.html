@@ -1,0 +1,79 @@
+@if(!isLoading){
+<form cForm [formGroup]="ProductForm" (ngSubmit)="submitForm()">
+  <!-- ProductDetails -->
+  <div class="row w-100 m-auto border-bottom mb-3">
+    <div class="flex-column col-md-6">
+      <div class="mb-3 col-md-9">
+        <label cLabel for="inp-ProductName">Product Name</label>
+        <input cFormControl id="inp-ProductName" type="text" formControlName="productName">
+      </div>
+      <div class="mb-3 col-md-9">
+        <label cLabel for="inp-ProductDescription">Product Description</label>
+        <input cFormControl id="inp-ProductDescription" type="text" formControlName="productDescription">
+      </div>
+    </div>
+    <div class="flex-column col-md-6 d-flex align-items-end justify-content-center">
+      <div class="mb-3 col-md-9">
+        <label cLabel for="inp-BrandName">Brand Name</label>
+        <select class="form-select" id="inp-BrandName" aria-label="Default select example" formControlName="brandId">
+          <option selected value="0">Select Brand</option>
+          <option value="1">Hp</option>
+          <option value="2">Dell</option>
+          <option value="3">Lenovo</option>
+        </select>
+      </div>
+      <div class="mb-3 col-md-9">
+        <label cLabel for="inp-CategoryName">Category Name</label>
+        <select class="form-select" id="inp-CategoryName" aria-label="Default select example"
+          formControlName="categoryId">
+          <option selected value="0">Select Category</option>
+          <option value="1">Laptop</option>
+          <option value="2">Screen</option>
+          <option value="3">Desktop</option>
+          <option value="4">Mobile</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <!-- Product Images -->
+  <div class="row w-100 m-auto border-bottom mb-3">
+    <div class="col-12 mb-3">
+      <button type="button" class="btn btn-primary" id="add-image-btn" (click)="addImage()">Add Another Image</button>
+    </div>
+    <div formArrayName="productImages" id="image-container">
+      <div class="col-md-6 mb-3 d-flex align-items-center gap-2"
+        *ngFor="let imageGroup of productImages.controls; let i = index" [formGroupName]="i">
+        <div class="d-flex align-items-center gap-2 w-100">
+          <input class="form-control col-md-6" type="file" (change)="onFileSelected($event, i)">
+          <div *ngIf="imageGroup.value.previewUrl" class="ms-5" style="max-width: 100px;">
+            <img [src]="imageGroup.value.previewUrl" alt="Selected Image" class="img-thumbnail" style="max-height: 100px; max-width: 100px;">
+          </div>
+        </div>
+
+        <!-- Delete button -->
+        <button class="btn btn-warning" type="button" (click)="removeImage(i)">
+          <i class="fas fa-trash-alt text-dark"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <!-- Form Submit -->
+  <div class="form-footer w-100 d-flex align-items-end justify-content-end">
+    <input cButton color="danger" class="text-white rounded-2 col-md-1 me-3" type="submit">
+  </div>
+</form>
+}@else{
+<div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="height: 79vh !important;">
+  <c-spinner variant="grow" color="danger" />
+  <p>Loading</p>
+</div>
+}
+
+<style>
+  #image-container {
+    height: 46vh;
+    overflow-y: auto;
+  }
+
+</style>

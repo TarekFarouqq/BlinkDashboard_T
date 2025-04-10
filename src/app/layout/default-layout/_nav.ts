@@ -40,11 +40,56 @@ export const navItems: INavData[] = [
     ],
   },
 
+  //Products
+  {
+    name: 'Product',
+    url: '/product',
+    iconComponent: { name: 'cilBasket' },
+    children: [
+      {
+        name: 'Manage Products',
+        url: '/product/manage',
+        icon: 'nav-icon-bullet',
+      },
+    ],
+  },
+  //End Products
+
+   //Products
+   {
+    name: 'Inventory',
+    url: '/inventory',
+    iconComponent: { name: 'cilLayers' },
+    children: [
+      {
+        name: 'Manage Inventories',
+        url: '/inventory/manage',
+        icon: 'nav-icon-bullet',
+      },
+    ],
+  },
+  //End Products
+     //branchs
+     {
+      name: 'Branch',
+      url: '/branch',
+      iconComponent: { name: 'cilLayers' },
+      children: [
+        {
+          name: 'Manage Branches',
+          url: '/branch/manage',
+          icon: 'nav-icon-bullet',
+        },
+      ],
+    },
+    //End branchs
+
   {
     name: 'Charts',
     iconComponent: { name: 'cil-chart-pie' },
     url: '/charts',
   },
+ 
   {
     name: 'Products',
     iconComponent: { name: 'cilBasket' },
@@ -66,6 +111,9 @@ export const navItems: INavData[] = [
 },
 
  /////////////////////////////////////////////
+ 
+ 
+
   {
     name: 'Widgets',
     url: '/widgets',
