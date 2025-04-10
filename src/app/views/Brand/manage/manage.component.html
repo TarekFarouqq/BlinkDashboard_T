@@ -10,9 +10,10 @@
         type="text" 
         placeholder="Search Brands" 
         [(ngModel)]="search" 
-        (input)="filterBrands()"
+        (input)="onSearchInputChange()" 
+     
       />
-      <button class="btn btn-outline-primary" (click)="filterBrands()">Search</button>
+      <button class="btn btn-outline-primary"     (click)="searchBrand()" >Search</button>
     </div>
       <div class="d-flex align-items-center justify-content-end mb-2" >
     <button type="button" class="btn btn-danger text-white" routerLink="/Brand/add" style="border-radius: 2px !important;"  >
@@ -38,19 +39,25 @@
     <tbody>
       <!-- Loop through the brands and display data -->
       <tr *ngFor="let brand of  brands">
-        <td>{{ brand.id }}</td>
-        <td>{{ brand.BrandName }}</td>
+        <td>{{ brand.brandId }}</td>
+        <td>{{ brand.brandName }}</td>
         <td>
-          <img [src]="brand.ImageUrl" alt="Brand Image" width="50" height="50" class="rounded-circle">
+          <img [src]="brand.brandImage" alt="Brand Image" width="50" height="50" class="rounded-circle">
         </td>
-        <td>{{ brand.Description }}</td>
+        <td>{{ brand.brandDescription }}</td>
         <td>
-          <a [href]="brand.WebsiteUrl" target="_blank">{{ brand.WebsiteUrl }}</a>
+          <a [href]="brand.brandWebSiteURL" target="_blank">{{ brand.brandWebSiteURL }}</a>
         </td>
         <td>
-          <button class="btn btn-sm btn-warning me-4">Edit</button>
-          <button class="btn btn-sm btn-danger me-4">Delete</button>
-          <button class="btn btn-sm btn-info" (click)="goToBrandDisplay(brand.id)">Display</button>
+           
+           
+            <button   type="button" class="btn btn-warning btn-sm border2r me-4" (click)="navigateToUpdate(brand.brandId)">
+              <i  class="fa-solid fa-pen-to-square text-white"></i>
+            </button>
+            <button type="button" class="btn btn-dark btn-sm border2r me-4" (click)="deleteBrand(brand.brandId)">
+              <i class="fa-solid fa-trash-can text-white"></i>
+            </button>
+          <button class="btn btn-sm btn-info me-4"   (click)="goToBrandDisplay(brand.brandId)">View</button>
         </td>
       </tr>
     </tbody>

@@ -23,6 +23,11 @@ export class BrandService {
 getBrandById(id: number) {
   return this.httpClient.get<Brand>(`${this.apiUrl}/Brand/${id}`);  
 }
+
+// get by name:
+getBrandByName(name: string): Observable<Brand[]> {
+  return this.httpClient.get<Brand[]>(`${this.apiUrl}/Brand/GetBrandByName/${name}`);
+}
   // add new brand :
   aaddBrand(brand: Brand): Observable<any> {
     return this.httpClient.post<Brand>(`${this.apiUrl}/Brand/InsertBrand`, brand);
@@ -30,7 +35,7 @@ getBrandById(id: number) {
 
   // update brand by id:
   updateBrand(id: number, brand: Brand): Observable<any> {
-    return this.httpClient.put<Brand>(`${this.apiUrl}/Brand/UpdateBrand/${brand.id}`, brand);
+    return this.httpClient.put<Brand>(`${this.apiUrl}/Brand/UpdateBrand/${brand.brandId}`, brand);
   }
   // delete brand by id:
   deleteBrand(id: number): Observable<any> {
