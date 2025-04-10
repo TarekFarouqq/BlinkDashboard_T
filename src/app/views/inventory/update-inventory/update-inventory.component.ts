@@ -30,6 +30,7 @@ export class UpdateInventoryComponent implements OnInit {
       long: new FormControl('', [Validators.required]),
     });
   }
+  
   ngOnInit() {
      this.inventoryId = Number(this.ActivatedRoute.snapshot.paramMap.get('id'));
      this.inventoryService.getById(this.inventoryId).subscribe({
