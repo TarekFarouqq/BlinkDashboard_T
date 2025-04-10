@@ -3,8 +3,8 @@ import { Inventory } from '../../../../models/inventory';
 import { InventoryService } from '../../../../services/inventory.service';  
 import { SpinnerComponent } from '@coreui/angular';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-declare var bootstrap: any;
+import { Router, RouterLink } from '@angular/router';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -17,7 +17,7 @@ export class ManageComponent implements OnInit {
 invetoryArr!: Inventory[];
   isLoading: boolean = true;
 
-  constructor(private inventoryService: InventoryService) {}
+  constructor(private inventoryService: InventoryService, private router: Router) {}
   
   ngOnInit(){
     this.getAllInventories();
@@ -28,7 +28,6 @@ invetoryArr!: Inventory[];
     this.inventoryService.getAll().subscribe({
       next: (res) => {
         this.invetoryArr = res;
-        console.log(this.invetoryArr);
         this.isLoading = false;
       },
       error: (err) => {
@@ -37,4 +36,36 @@ invetoryArr!: Inventory[];
       }
     });
   }
+
+  navigateToUpdate(inventoryId: number) {
+    this.router.navigate(['/inventory/update', inventoryId]);
+  }
+
+  deleteInventory(inventoryId: number) {
+
+    Swal.fire({
+      title: 'Are you sure?',
+      icon: 'warning',
+      width: 400,
+      showCancelButton: true,
+      confirmButtonText: 'Delete',
+      confirmButtonColor: '#d33',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        
+    this.inventoryService.delete(inventoryId).subscribe({
+      next: (res) => {
+        this.getAllInventories();
+        console.log('Inventory deleted successfully');
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+      }
+    });
+
+  }
+
 }

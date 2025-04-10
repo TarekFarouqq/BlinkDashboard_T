@@ -26,6 +26,13 @@ export const routes: Routes = [
         data: {
           title: 'Add Inventory'
         }
+      },
+      {
+        path: 'update/:id',
+        loadComponent: () => import('./update-inventory/update-inventory.component').then(m => m.UpdateInventoryComponent), 
+        data: {
+          title: 'Update Inventory'
+        }
       }
       
     ]

@@ -22,8 +22,11 @@ export class InventoryService {
   add(inventory: Inventory):Observable<Inventory>{
     return this.httpClient.post<Inventory>(this.apiUrl + '/Inventory/add', inventory);
   }
-  update(inventory: Inventory):Observable<Inventory>{
-    return this.httpClient.put<Inventory>(this.apiUrl + '/Inventory/update/' + inventory.inventoryId, inventory);
+  update(inventory: Inventory, id: number):Observable<Inventory>{
+    return this.httpClient.put<Inventory>(this.apiUrl + '/Inventory/update/' +id, inventory);
   }
   
+  delete(id: number):Observable<Inventory>{
+    return this.httpClient.delete<Inventory>(this.apiUrl + '/Inventory/delete/' + id);
+  }
 }
