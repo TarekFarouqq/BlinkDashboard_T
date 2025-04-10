@@ -91,6 +91,30 @@ export const navItems: INavData[] = [
   },
  
   {
+    name: 'Products',
+    iconComponent: { name: 'cilBasket' },
+    url: '/products',
+  },
+ // add brand :
+
+ {
+  name: 'Brands',
+  url: '/brands',
+  iconComponent: { name: 'cil-tags' },
+  children: [
+    {
+      name: 'Manage Brands',
+      url: '/Brand/manage',
+      icon: 'nav-icon-bullet',
+    }
+  ],
+},
+
+ /////////////////////////////////////////////
+ 
+ 
+
+  {
     name: 'Widgets',
     url: '/widgets',
     iconComponent: { name: 'cil-calculator' },

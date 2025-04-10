@@ -1,0 +1,58 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Manage Brands</h2>
+
+  <!-- Add w Search Section -->
+  <div class="d-flex justify-content-between mb-4 w-100">
+     
+    <div class="d-flex align-items-center mb-4 w-50">
+      <input 
+        class="form-control me-2 w-100" 
+        type="text" 
+        placeholder="Search Brands" 
+        [(ngModel)]="search" 
+        (input)="filterBrands()"
+      />
+      <button class="btn btn-outline-primary" (click)="filterBrands()">Search</button>
+    </div>
+      <div class="d-flex align-items-center justify-content-end mb-2" >
+    <button type="button" class="btn btn-danger text-white" routerLink="/Brand/add" style="border-radius: 2px !important;"  >
+      <i class="fa-solid fa-plus"></i>
+      Add Brand
+    </button>
+  </div>
+  </div>
+ 
+
+  <!-- Brands Table -->
+  <table class="table table-hover table-striped">
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Image</th>
+        <th>Description</th>
+        <th>Website URL</th>
+        <th >Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Loop through the brands and display data -->
+      <tr *ngFor="let brand of  brands">
+        <td>{{ brand.id }}</td>
+        <td>{{ brand.BrandName }}</td>
+        <td>
+          <img [src]="brand.ImageUrl" alt="Brand Image" width="50" height="50" class="rounded-circle">
+        </td>
+        <td>{{ brand.Description }}</td>
+        <td>
+          <a [href]="brand.WebsiteUrl" target="_blank">{{ brand.WebsiteUrl }}</a>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-warning me-4">Edit</button>
+          <button class="btn btn-sm btn-danger me-4">Delete</button>
+          <button class="btn btn-sm btn-info" (click)="goToBrandDisplay(brand.id)">Display</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
