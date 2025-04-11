@@ -5,20 +5,20 @@
     <tbody>
       <tr>
         <th>Name</th>
-        <td>{{ brand?.brandName }}</td>
+        <td>{{ brand.brandName }}</td>
       </tr>
       <tr>
         <th>Description</th>
-        <td>{{ brand?.brandDescription }}</td>
+        <td>{{ brand.brandDescription }}</td>
       </tr>
       <tr>
         <th>Website URL</th>
-        <td><a [href]="brand?.brandWebSiteURL" target="_blank">{{ brand?.brandWebSiteURL }}</a></td>
+        <td><a [href]="brand.brandWebSiteURL" target="_blank">{{ brand.brandWebSiteURL }}</a></td>
       </tr>
       <tr *ngIf="brand?.brandImage">
         <th>Image</th>
         <td>
-          <img [src]="brand?.brandImage" alt="Brand Image" width="200" height="200" class="rounded-circle">
+          <img [src]="brand.brandImage" alt="Brand Image" width="200" height="200" class="rounded-circle">
         </td>
       </tr>
     </tbody>

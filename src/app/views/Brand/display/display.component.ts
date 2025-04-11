@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Brand } from '../../../../models/brand';
-import { BrandService } from 'src/services/BranchServices/brand.service';
 import { CommonModule } from '@angular/common';
+import { BrandService } from 'src/services/brand.service';
 
 
 
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-display',
   templateUrl: './display.component.html',
   styleUrls: ['./display.component.scss'],
-  imports: [RouterLink,CommonModule],
+  imports: [CommonModule],
 })
 export class DisplayComponent implements OnInit {
   brandId: number = 0;

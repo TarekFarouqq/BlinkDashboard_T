@@ -3,13 +3,13 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractContro
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Brand } from 'src/models/brand';
-import { BrandService } from 'src/app/services/brand.service';
 import { CommonModule } from '@angular/common';
+import { BrandService } from 'src/services/brand.service';
 
 @Component({
   selector: 'app-update',
   standalone: true,
-  imports: [ ReactiveFormsModule],
+  imports: [ ReactiveFormsModule,CommonModule],
 
   templateUrl: './update.component.html',
   styleUrl: './update.component.scss',
