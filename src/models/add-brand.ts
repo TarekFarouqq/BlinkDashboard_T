@@ -1,6 +1,6 @@
 export interface AddBrand {
   BrandName: string;
-    Description: string;
-    WebsiteUrl: string;
-    ImageUrl: string;
+  BrandImageFile: File;
+  BrandDescription: string;
+  BrandWebSiteURL: string;
 }

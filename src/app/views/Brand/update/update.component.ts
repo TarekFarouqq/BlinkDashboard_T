@@ -1,55 +1,82 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, FormBuilder } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl,
+  ValidationErrors,
+  FormBuilder,
+} from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Brand } from 'src/models/brand';
 import { CommonModule } from '@angular/common';
-import { BrandService } from 'src/services/brand.service';
+import { Brand } from '../../../../models/brand';
+import { BrandService } from '../../../../services/brand.service';
 
 @Component({
   selector: 'app-update',
   standalone: true,
-  imports: [ ReactiveFormsModule,CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
 
   templateUrl: './update.component.html',
   styleUrl: './update.component.scss',
- 
-  
 })
 export class UpdateComponent implements OnInit {
   updateBrandForm!: FormGroup;
   brand!: Brand;
   brandId!: number;
-   
-  constructor(private brandService: BrandService, private activatedRoute: ActivatedRoute, private router: Router) {
+  selectedFile: File | null = null;
+  imagePreview: string | ArrayBuffer | null = null;
+  constructor(
+    private brandService: BrandService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {
     this.updateBrandForm = new FormGroup({
-      brandName: new FormControl('', [Validators.required, Validators.minLength(3)]),
-      description: new FormControl('', [Validators.required, Validators.minLength(10)]),
-      websiteUrl: new FormControl('', [Validators.required, Validators.pattern('https?://.+')]),
-      imageUrl: new FormControl('', [Validators.required])
+      brandName: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+      ]),
+      description: new FormControl('', [
+        Validators.required,
+        Validators.minLength(10),
+      ]),
+      websiteUrl: new FormControl('', [
+        Validators.required,
+        Validators.pattern('https?://.+'),
+      ]),
+      brandImageFile: new FormControl('', [Validators.required]),
     });
   }
-
   ngOnInit(): void {
     this.brandId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
     this.brandService.getBrandById(this.brandId).subscribe({
       next: (response) => {
         this.brand = response;
-        this.updateBrandForm.patchValue(this.brand);
+        this.updateBrandForm.patchValue({
+          brandName: this.brand.brandName,
+          description: this.brand.brandDescription,
+          websiteUrl: this.brand.brandWebSiteURL,
+        });
+        this.imagePreview = this.brand.brandImage;
       },
       error: (error) => {
         console.error('Error fetching brand:', error);
-      }
+      },
     });
   }
-
   onSubmit(): void {
     this.updateBrand();
   }
-
   updateBrand(): void {
     if (this.updateBrandForm.valid) {
-      this.brandService.updateBrand(this.brandId, this.updateBrandForm.value).subscribe({
+      const formData = new FormData();
+      formData.append('BrandName',this.updateBrandForm.get('brandName')?.value);
+      formData.append('BrandDescription',this.updateBrandForm.get('description')?.value);
+      formData.append('BrandWebSiteURL',this.updateBrandForm.get('websiteUrl')?.value);
+      formData.append('BrandImageFile', this.selectedFile!);
+      this.brandService.updateBrand(this.brandId, formData).subscribe({
         next: (response) => {
           Swal.fire({
             toast: true,
@@ -63,15 +90,62 @@ export class UpdateComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error updating brand:', error);
+        },
+      });
+    }
+  }
+  // onFileChange(event: any): void {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     this.selectedFile = file;
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       this.imagePreview = reader.result;
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // }
+  onFileChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+        this.updateBrandForm.get('brandImageFile')?.setValue(file);
+        this.updateButtonState();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  updateButtonState(): void {
+    // تأكد من أن جميع الحقول في النموذج صالحة
+    if (this.updateBrandForm.valid) {
+      console.log("Form is valid. Button is enabled.");
+    } else {
+      console.log("Form is invalid. Button is disabled.");
+      // اطبع الحقول التي تحتوي على أخطاء
+      Object.keys(this.updateBrandForm.controls).forEach((controlName) => {
+        const control = this.updateBrandForm.get(controlName);
+        if (control?.invalid) {
+          console.log(`${controlName} is invalid. Errors: `, control.errors);
         }
       });
-    }}
-    goToManage() {
-      this.router.navigate(['/Brand/manage']);
     }
-    get brandName() { return this.updateBrandForm.get('brandName'); }
-    get description() { return this.updateBrandForm.get('description'); }
-    get websiteUrl() { return this.updateBrandForm.get('websiteUrl'); }
-    get imageUrl() { return this.updateBrandForm.get('imageUrl'); }
-  
+  }
+  goToManage() {
+    this.router.navigate(['/Brand/manage']);
+  }
+  get brandName() {
+    return this.updateBrandForm.get('brandName');
+  }
+  get description() {
+    return this.updateBrandForm.get('description');
+  }
+  get websiteUrl() {
+    return this.updateBrandForm.get('websiteUrl');
+  }
+  get imageUrl() {
+    return this.updateBrandForm.get('imageUrl');
+  }
 }
