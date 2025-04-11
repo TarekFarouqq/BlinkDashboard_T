@@ -1,0 +1,72 @@
+<section class="login-section d-flex align-items-center">
+    <div class="container">
+        <!-- Header Section -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-12 text-center">
+                <div class="d-inline-block position-relative">
+                    <span class="brand-header fw-bold fst-italic text-danger display-4">Blink</span>
+                    <h3 class="dashboard-text fw-bold position-absolute start-100 bottom-0 mb-0 ms-3 fs-4">
+                        Dashboard
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-4">
+                <div class="form-container p-4 p-md-5 " style="border-radius: 3px;">
+                    <form [formGroup]="loginForm" (ngSubmit)="login()">
+                        <!-- Email/Username Input -->
+                        <div class="mb-4">
+                            <input
+                                id="identifier"
+                                type="text"
+                                formControlName="identifier"
+                                class="custom-input form-control"
+                                placeholder="Enter your email or username"
+                                autocomplete="username"
+                            />
+                            <div class="text-danger small mt-2">
+                                <!-- Validation messages -->
+                            </div>
+                        </div>
+
+                        <!-- Password Input -->
+                        <div class="mb-4">
+                            <input
+                                id="password"
+                                type="password"
+                                formControlName="password"
+                                class="custom-input form-control"
+                                placeholder="Enter your password"
+                                autocomplete="new-password"
+                            />
+                            <div class="text-danger small mt-2">
+                                <!-- Validation messages -->
+                            </div>
+                        </div>
+
+                        <!-- Login Button -->
+                        <button
+                            type="submit"
+                            [disabled]="isLoading"
+                            class="btn btn-danger btn-login w-100 py-2 mt-4 text-light"
+                            style="border-radius: 2px;"
+                        >
+                            <span *ngIf="!isLoading">Login</span>
+                            <span *ngIf="isLoading">
+                                <span class="spinner-border spinner-border-sm" role="status"></span>
+                                Loading...
+                            </span>
+                        </button>
+
+                        <!-- Error Message -->
+                        <p class="text-danger text-center mt-3 mb-0" *ngIf="msgerror">{{ msgerror }}</p>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
