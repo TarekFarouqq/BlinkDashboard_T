@@ -3,7 +3,7 @@ import { ReactiveFormsModule,FormGroup, FormControl, Validators, } from '@angula
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { BrandService } from 'src/services/BranchServices/brand.service';
+import { BrandService } from 'src/services/brand.service';
 
 
 @Component({
