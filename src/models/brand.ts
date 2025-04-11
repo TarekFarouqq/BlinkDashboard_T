@@ -1,9 +1,9 @@
  
 export interface Brand {
-  id: number;
-  BrandName: string;
-  Description: string;
-  WebsiteUrl: string;
-  ImageUrl: string;
-  IsDeleted: boolean;
+  brandId: number;
+  brandName: string;
+  brandDescription: string;
+  brandWebSiteURL: string;
+  brandImage: string;
+ // IsDeleted: boolean;
 }

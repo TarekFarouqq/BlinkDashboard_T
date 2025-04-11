@@ -1,22 +1,23 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import { Brand } from '../../../../models/brand';  
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 //import { FormModule } from '@coreui/angular';
 import { FormsModule } from '@angular/forms';
 import { BrandService } from 'src/services/BranchServices/brand.service';
+import Swal from 'sweetalert2';
 
  
 
 @Component({
   selector: 'app-manage',
-  imports: [CommonModule,FormsModule,CommonModule],
+  imports: [FormsModule,CommonModule,RouterLink],
   templateUrl: './manage.component.html',
   styleUrl: './manage.component.scss'
 })
  
 export class ManageComponent implements OnInit {
-
+brand:any
   brands: Brand[] = [];  
   search: string = '';
   isLoading: boolean = true;
@@ -37,18 +38,82 @@ export class ManageComponent implements OnInit {
     });
 }
 
-// filter brand:
-filterBrands(): Brand[] {
-  return this.brands.filter(brand => 
-    brand.BrandName.toLowerCase().includes(this.search.toLowerCase())
-  );
-
-
+// search brand :
+ 
+searchBrand() {
+  if (this.search.trim()) {
+    
+    this.brandService.getBrandByName(this.search).subscribe({
+      next: (res) => {
+        this.brands = res;
+        if (this.brands.length > 0) {
+          
+         
+        } else  {
+        
+            this.loadBrands();
+          
+        }
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'No brand found!',
+          width: 400,
+          confirmButtonText: 'OK',
+        }) ;
+      }
+    });
+  } else {
+  // empty search input : 
+    this.loadBrands();
+  }
 }
+onSearchInputChange() {
+  if (!this.search.trim()) {
+    
+    this.loadBrands();
+  }
+}
+
+
 goToBrandDisplay(brandId: number): void {
   this.router.navigate(['/Brand/display', brandId]);
 }
 
+// update :
+navigateToUpdate(brandid: number) {
+ this.router.navigate(['/Brand/update/', brandid]);
+ console.log(brandid);
+}
+
+// delete:
+deleteBrand(brandId: number): void {
+
+  Swal.fire({
+    title: 'Are you sure?',
+    icon: 'warning',
+    width: 400,
+    showCancelButton: true,
+    confirmButtonText: 'Delete',
+    confirmButtonColor: '#d33',
+    cancelButtonText: 'Cancel',
+  }).then((result) => {
+    if (result.isConfirmed) {
+    this.brandService.deleteBrand(brandId).subscribe({
+      next: (res) => {
+        this.loadBrands();
+        console.log('Brand deleted successfully!');
+      },
+      error: (err) => {
+        console.error('Error deleting brand:', err);
+      }
+    });
+  }
+}
+);
+}
 }
    
 

@@ -106,7 +106,8 @@ export const navItems: INavData[] = [
       name: 'Manage Brands',
       url: '/Brand/manage',
       icon: 'nav-icon-bullet',
-    }
+    },
+    
   ],
 },
 

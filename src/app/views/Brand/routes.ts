@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+
  
  export const routes: Routes = [
     {
@@ -31,6 +32,10 @@ import { Routes } from '@angular/router';
 {
     path: 'display/:id',
     loadComponent: () => import('./display/display.component').then(m => m.DisplayComponent),
+},
+{
+    path: 'update/:id',
+    loadComponent: () => import('./update/update.component').then(m => m.UpdateComponent),
 }
     ]
 }
