@@ -8,7 +8,7 @@ import {
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { BrandService } from 'src/services/brand.service';
+import { BrandService } from '../../../../services/brand.service';
 
 @Component({
   selector: 'app-add-brand',
@@ -19,7 +19,7 @@ import { BrandService } from 'src/services/brand.service';
 export class AddBrandComponent implements OnInit {
   addBrandForm: FormGroup;
   imagePreview: string | ArrayBuffer | null = null;
-selectedFile: File | null = null;
+  selectedFile: File | null = null;
   constructor(private brandService: BrandService) {
     this.addBrandForm = new FormGroup({
       brandName: new FormControl('', [
@@ -28,41 +28,26 @@ selectedFile: File | null = null;
       ]),
       brandDescription: new FormControl('', [Validators.required]),
       brandWebSiteURL: new FormControl('', [Validators.required]),
-      // brandImage: new FormControl('', [Validators.required]),
     });
   }
   ngOnInit(): void {}
   onSubmit(): void {
     this.addBrand();
   }
-  // addBrand(): void {
-  //   if (this.addBrandForm.valid) {
-  //     this.brandService.aaddBrand(this.addBrandForm.value).subscribe({
-  //       next: (response) => {
-  //         Swal.fire({
-  //           toast: true,
-  //           position: 'top',
-  //           icon: 'success',
-  //           title: 'Brand added successfully',
-  //           showConfirmButton: false,
-  //           timer: 2500,
-  //         });
-  //         this.addBrandForm.reset();
-  //       },
-  //       error: (error) => {
-  //         console.error('Error adding brand:', error);
-  //       },
-  //     });
-  //   }
-  // }
   addBrand(): void {
     if (this.addBrandForm.valid && this.selectedFile) {
       const formData = new FormData();
       formData.append('BrandName', this.addBrandForm.get('brandName')?.value);
-      formData.append('BrandDescription', this.addBrandForm.get('brandDescription')?.value);
-      formData.append('BrandWebSiteURL', this.addBrandForm.get('brandWebSiteURL')?.value);
+      formData.append(
+        'BrandDescription',
+        this.addBrandForm.get('brandDescription')?.value
+      );
+      formData.append(
+        'BrandWebSiteURL',
+        this.addBrandForm.get('brandWebSiteURL')?.value
+      );
       formData.append('BrandImageFile', this.selectedFile); // 👈 هنا الصورة
-  
+
       this.brandService.aaddBrand(formData).subscribe({
         next: (response) => {
           Swal.fire({
@@ -87,7 +72,7 @@ selectedFile: File | null = null;
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
-  
+
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result;

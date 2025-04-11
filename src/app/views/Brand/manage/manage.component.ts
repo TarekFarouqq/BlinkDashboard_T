@@ -3,8 +3,8 @@ import { Brand } from '../../../../models/brand';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BrandService } from 'src/services/brand.service';
 import Swal from 'sweetalert2';
+import { BrandService } from '../../../../services/brand.service';
 @Component({
   selector: 'app-manage',
   imports: [FormsModule, CommonModule, RouterLink],
