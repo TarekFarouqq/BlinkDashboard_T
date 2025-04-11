@@ -1,5 +1,7 @@
 @if (!isLoading) {
   <div class="pg-content w-100 d-flex flex-column align-items-center justify-content-start">
+    <input [(ngModel)]="text" type="search" class="form-control w-50 mx-auto " placeholder="Search Branch"  />
+
     <div class="row w-100 my-2">
       <div class="col-12 d-flex justify-content-end">
        <button class="btn btn-danger text-light" routerLink="/inventory/add" style="border-radius: 2px !important;" > + Add Inventory</button>
@@ -19,7 +21,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (inventory of invetoryArr; track inventory.inventoryId) {
+          @for (inventory of invetoryArr | search :text :'inventoryName'; track inventory.inventoryId) {
             <tr>
               <td>{{inventory.inventoryId}}</td>
               <td>{{inventory.inventoryName}}</td>

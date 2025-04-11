@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule,FormGroup, FormControl, Validators, } from '@angular/forms';
-import { BrandService } from '../../../services/brand.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { BrandService } from 'src/services/BranchServices/brand.service';
 
 
 @Component({

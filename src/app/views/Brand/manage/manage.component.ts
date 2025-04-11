@@ -1,10 +1,10 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import { Brand } from '../../../../models/brand';  
-import { BrandService } from '../../../services/brand.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 //import { FormModule } from '@coreui/angular';
 import { FormsModule } from '@angular/forms';
+import { BrandService } from 'src/services/BranchServices/brand.service';
 import Swal from 'sweetalert2';
 
  

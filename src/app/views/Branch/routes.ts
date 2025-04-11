@@ -34,13 +34,6 @@ export const routes: Routes = [
         data: {
           title: 'Update Branch'
         }
-      },
-      {
-        path: 'delete/:id',
-        loadComponent: () => import('./manage-branch/delete-branch/delete-branch.component').then(m => m.DeleteBranchComponent),
-        data: {
-          title: 'Delete Branch'
-        }
       }
       
     ]

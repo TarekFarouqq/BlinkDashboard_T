@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BranchService } from '../../../../services/branch.service';
+import { BranchService } from '../../../../../services/BranchServices/branch.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
