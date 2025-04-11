@@ -3,10 +3,7 @@ import {
   FormGroup,
   FormControl,
   Validators,
-  ReactiveFormsModule,
-  AbstractControl,
-  ValidationErrors,
-  FormBuilder,
+  ReactiveFormsModule
 } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -94,17 +91,6 @@ export class UpdateComponent implements OnInit {
       });
     }
   }
-  // onFileChange(event: any): void {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     this.selectedFile = file;
-  //     const reader = new FileReader();
-  //     reader.onload = () => {
-  //       this.imagePreview = reader.result;
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // }
   onFileChange(event: any): void {
     const file = event.target.files[0];
     if (file) {
@@ -113,24 +99,8 @@ export class UpdateComponent implements OnInit {
       reader.onload = () => {
         this.imagePreview = reader.result;
         this.updateBrandForm.get('brandImageFile')?.setValue(file);
-        this.updateButtonState();
       };
       reader.readAsDataURL(file);
-    }
-  }
-  updateButtonState(): void {
-    // تأكد من أن جميع الحقول في النموذج صالحة
-    if (this.updateBrandForm.valid) {
-      console.log("Form is valid. Button is enabled.");
-    } else {
-      console.log("Form is invalid. Button is disabled.");
-      // اطبع الحقول التي تحتوي على أخطاء
-      Object.keys(this.updateBrandForm.controls).forEach((controlName) => {
-        const control = this.updateBrandForm.get(controlName);
-        if (control?.invalid) {
-          console.log(`${controlName} is invalid. Errors: `, control.errors);
-        }
-      });
     }
   }
   goToManage() {
