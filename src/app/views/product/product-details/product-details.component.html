@@ -6,10 +6,16 @@
       <div class="mb-3 col-md-9">
         <label cLabel for="inp-ProductName">Product Name</label>
         <input cFormControl id="inp-ProductName" type="text" formControlName="productName">
+        <div class="text-danger" *ngIf="ProductForm.get('productName')?.errors?.['required'] && ProductForm.get('productName')?.touched">
+          Product Name is required
+        </div>
       </div>
       <div class="mb-3 col-md-9">
         <label cLabel for="inp-ProductDescription">Product Description</label>
         <input cFormControl id="inp-ProductDescription" type="text" formControlName="productDescription">
+        <div class="text-danger" *ngIf="ProductForm.get('productDescription')?.errors?.['required'] && ProductForm.get('productDescription')?.touched">
+          Product Description is required
+        </div>
       </div>
     </div>
     <div class="flex-column col-md-6 d-flex align-items-end justify-content-center">
