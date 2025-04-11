@@ -1,0 +1,22 @@
+@if(ProductEntity){
+    <div class="pg-content w-100 d-flex align-items-center justify-content-center flex-column" style="height: 79.5vh;">
+        <!-- Product Details -->
+         <div class="row border w-100 rounded-2 mb-3" style="height: 18.8vh;">
+            <div class="flex-column col-md-6 mt-3" >
+                <div class="product-details w-100 mb-2 d-flex align-items-start justify-content-center flex-column" >
+                    <div class="form-group col-md-9 ms-3 ">
+                        <input type="text" class="form-control" placeholder="Product Name" [value]="ProductEntity.productName">
+                    </div>
+                    <div class="form-group col-md-9 ms-3 mt-3">
+                        <textarea class="form-control" rows="3" placeholder="Product Description" [value]="ProductEntity.productDescription"></textarea>
+                    </div>
+                 </div>
+            </div>
+            <div class="flex-column col-md-6 d-flex align-items-center justify-content-center">
+                <img [src]="ProductEntity.productImages[0]" style="width: 40%;">
+            </div>
+         </div>
+         <!-- Product Attributes -->
+         <div class="product-details w-100 border mb-2 rounded-2" style="height: calc(79.5vh - 18.8vh - 20px);overflow-y: auto;"></div>
+    </div>
+}

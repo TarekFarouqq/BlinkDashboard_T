@@ -51,6 +51,11 @@ export const navItems: INavData[] = [
         url: '/product/manage',
         icon: 'nav-icon-bullet',
       },
+      {
+        name: 'Product Attributes',
+        url: '/product/product-attributes',
+        icon: 'nav-icon-bullet',
+      },
     ],
   },
   //End Products
