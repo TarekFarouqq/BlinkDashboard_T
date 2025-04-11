@@ -4,6 +4,7 @@ import { environment } from '../environments/environment';
 import { Observable } from 'rxjs';
 import { InsertProductDTO } from '../models/insert-product-dto';
 import { Product } from '../models/product';
+import { ReadFilterAttributes } from '../models/read-filter-attributes';
 @Injectable({
   providedIn: 'root'
 })
@@ -34,4 +35,9 @@ export class ProductService {
   DeleteProduct(id:number):Observable<any>{
     return this.httpClient.delete(this.apiUrl + '/product/' + id);
   }
+
+  GetFilterAttributes():Observable<ReadFilterAttributes[]>{
+    return this.httpClient.get<ReadFilterAttributes[]>(`${this.apiUrl}/product/GetFilterAttributes`);
+  }
+
 }
