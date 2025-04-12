@@ -29,6 +29,7 @@
     "@angular/platform-browser": "^19.2.2",
     "@angular/platform-browser-dynamic": "^19.2.2",
     "@angular/router": "^19.2.2",
+    "@auth0/angular-jwt": "^5.2.0",
     "@coreui/angular": "~5.4.5",
     "@coreui/angular-chartjs": "^5.4.5",
     "@coreui/chartjs": "~4.1.0",
