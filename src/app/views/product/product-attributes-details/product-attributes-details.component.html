@@ -1,22 +1,68 @@
 @if(ProductEntity){
-    <div class="pg-content w-100 d-flex align-items-center justify-content-center flex-column" style="height: 79.5vh;">
-        <!-- Product Details -->
-         <div class="row border w-100 rounded-2 mb-3" style="height: 18.8vh;">
-            <div class="flex-column col-md-6 mt-3" >
-                <div class="product-details w-100 mb-2 d-flex align-items-start justify-content-center flex-column" >
-                    <div class="form-group col-md-9 ms-3 ">
-                        <input type="text" class="form-control" placeholder="Product Name" [value]="ProductEntity.productName">
-                    </div>
-                    <div class="form-group col-md-9 ms-3 mt-3">
-                        <textarea class="form-control" rows="3" placeholder="Product Description" [value]="ProductEntity.productDescription"></textarea>
-                    </div>
-                 </div>
-            </div>
-            <div class="flex-column col-md-6 d-flex align-items-center justify-content-center">
-                <img [src]="ProductEntity.productImages[0]" style="width: 40%;">
-            </div>
-         </div>
-         <!-- Product Attributes -->
-         <div class="product-details w-100 border mb-2 rounded-2" style="height: calc(79.5vh - 18.8vh - 20px);overflow-y: auto;"></div>
+<div class="pg-content w-100 d-flex align-items-center justify-content-center flex-column" style="height: 79.5vh;">
+  <div class="row border w-100 rounded-2 mb-3" style="height: 18.8vh;">
+    <div class="flex-column col-md-6 mt-3">
+      <div class="product-details w-100 mb-2 d-flex align-items-start justify-content-center flex-column">
+        <div class="form-group col-md-9 ms-3 ">
+          <input type="text" class="form-control" placeholder="Product Name" [value]="ProductEntity.productName" disabled>
+        </div>
+        <div class="form-group col-md-9 ms-3 mt-3">
+          <textarea class="form-control" rows="3" placeholder="Product Description"
+            [value]="ProductEntity.productDescription" disabled></textarea>
+        </div>
+      </div>
     </div>
+    <div class="flex-column col-md-6 d-flex align-items-center justify-content-center">
+      <img [src]="ProductEntity.productImages[0]" style="width: 28%;">
+    </div>
+  </div>
+  <div class="product-details w-100 border mb-2 rounded-2" style="height: calc(79.5vh - 18.8vh - 20px);overflow-y: auto;">
+    <div class="add-attribute-pnl w-100 border-bottom d-flex align-items-center justify-content-between "
+      style="height: 7vh;">
+      <button class="btn btn-primary col-md-2 ms-3" (click)="addAttribute()">
+        <i class="fa-solid fa-plus fa-xl"></i>
+        Add Attribute
+      </button>
+      <button class="btn btn-success col-md-2 ms-3 text-white me-3" (click)="onSubmit()">
+        <i class="fa-solid fa-floppy-disk fa-xl"></i>
+        Save Attributes
+      </button>
+    </div>
+    <div id="attributes-pnl" style="height: calc(79.5vh - 18.8vh - 20px - 11vh);">
+      <form [formGroup]="ProductAttributesGroup" (ngSubmit)="onSubmit()" class="ms-3 mt-3">
+        <div formArrayName="productAttributes" class="w-100">
+          <div *ngFor="let attr of ProductAttributes.controls; let i = index"
+               [formGroupName]="i"
+               class="d-flex gap-2 align-items-center mb-3">
+            <select formControlName="attributeId"
+                    class="form-select w-25"
+                    (change)="changeAttribute(attr)">
+              <option *ngFor="let att of FilterAttributesArr" [value]="att.attributeId">
+                {{ att.attributeName }}
+              </option>
+            </select>  
+            <ng-container *ngIf="attr.get('hasDefaultAttributes')?.value; else manualInput">
+              <select formControlName="attributeValue" class="form-select w-25">
+                <option *ngFor="let defaultValue of attr.get('defaultValues')?.value" [value]="defaultValue.attributeValue">
+                  {{ defaultValue.attributeValue }}
+                </option>
+              </select>
+            </ng-container>
+            <ng-template #manualInput>
+              <input [attr.type]="getInputType(attr)"
+                     formControlName="attributeValue"
+                     placeholder="Enter Attribute Value"
+                     class="form-control w-25" />
+            </ng-template>
+            <button type="button"
+                    class="btn btn-danger text-white"
+                    (click)="removeAttribute(i)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 }
