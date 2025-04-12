@@ -157,6 +157,8 @@ export class ProductDetailsComponent implements OnInit {
       }
     }
     if (!this.ProductEntity) {
+      // admin => insert product
+      // supplier => 
       this.productServ.InsertProduct(formData).subscribe(
         (res) => {
           Swal.fire({
