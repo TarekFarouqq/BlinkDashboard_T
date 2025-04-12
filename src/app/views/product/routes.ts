@@ -41,6 +41,13 @@ export const routes: Routes = [
           title: 'Product-Attributes-Details'
         }
       },
+      {
+        path: 'review-products',
+        loadComponent: () => import('./review-products/review-products.component').then(m => m.ReviewProductsComponent),
+        data: {
+          title: 'review-products'
+        }
+      },
     ]
   }
 ];
