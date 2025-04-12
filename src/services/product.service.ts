@@ -35,9 +35,13 @@ export class ProductService {
   DeleteProduct(id:number):Observable<any>{
     return this.httpClient.delete(this.apiUrl + '/product/' + id);
   }
-
   GetFilterAttributes():Observable<ReadFilterAttributes[]>{
     return this.httpClient.get<ReadFilterAttributes[]>(`${this.apiUrl}/product/GetFilterAttributes`);
   }
-
+  AddProductAttribute(productId:number, productAttribute:FormData):Observable<any>{
+    return this.httpClient.post(`${this.apiUrl}/product/AddProductAttribute/${productId}`,productAttribute);
+  }
+  GetProductAttributes(id:number):Observable<any>{
+    return this.httpClient.get<any>(`${this.apiUrl}/product/GetProductAttributes/${id}`);
+  }
 }
