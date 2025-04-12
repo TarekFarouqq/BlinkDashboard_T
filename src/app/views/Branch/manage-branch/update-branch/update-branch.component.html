@@ -6,7 +6,7 @@
         [formGroup]="updateBranchForm"
         (ngSubmit)="updateBranch()"
       >
-        <div class="row">
+        <div class="row d-flex justify-content-center ">
           <!-- Column 1 -->
          
           <div class="col-md-6">
@@ -94,23 +94,24 @@
               </div>
             </div>
           </div>
+          <p class="text-danger mt-1" *ngIf="msgerror">
+            {{ msgerror }}
+          </p>
+          <div class="form-footer mt-4 d-flex justify-content-center">
+            <button
+              type="submit"
+              class="btn btn-danger text-light"
+              style="width: 20%; border-radius: 2px !important"
+              [disabled]="updateBranchForm.invalid || !updateBranchForm.dirty"
+            >
+              Update
+            </button>
+            <!-- <button type="button" class="btn btn-secondary mx-2" style="width: 20%; border-radius: 2px !important;" (click)="cancel()">
+              Cancel
+            </button> -->
+          </div>
         </div>
-        <p class="text-danger mt-1" *ngIf="msgerror">
-          {{ msgerror }}
-        </p>
-        <div class="form-footer mt-4">
-          <button
-            type="submit"
-            class="btn btn-danger text-light"
-            style="width: 20%; border-radius: 2px !important"
-            [disabled]="updateBranchForm.invalid || !updateBranchForm.dirty"
-          >
-            Update
-          </button>
-          <!-- <button type="button" class="btn btn-secondary mx-2" style="width: 20%; border-radius: 2px !important;" (click)="cancel()">
-            Cancel
-          </button> -->
-        </div>
+      
       </form>
     </div>
   </div>
