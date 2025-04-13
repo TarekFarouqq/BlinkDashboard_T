@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { InventoryService } from '../../../../services/inventory.service';  
 import Swal from 'sweetalert2';
-import { BranchService } from 'src/services/BranchServices/branch.service';
+import { BranchService } from '../../../../services/BranchServices/branch.service';
 import { Ibranch } from '../../shared/Interfaces/ibranch';
 @Component({
   selector: 'app-add-inventory',
