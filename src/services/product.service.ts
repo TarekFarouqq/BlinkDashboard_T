@@ -44,4 +44,10 @@ export class ProductService {
   GetProductAttributes(id:number):Observable<any>{
     return this.httpClient.get<any>(`${this.apiUrl}/product/GetProductAttributes/${id}`);
   }
+  GetChildCategory():Observable<any>{
+    return this.httpClient.get<any>(`${this.apiUrl}/Category/GetChildCategories`);
+  }
+  GetProductStock(id:number):Observable<any>{
+    return this.httpClient.get<any>(`${this.apiUrl}/product/GetProductStock/${id}`);
+  }
 }
