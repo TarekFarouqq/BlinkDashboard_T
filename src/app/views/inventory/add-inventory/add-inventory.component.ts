@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { InventoryService } from '../../../../services/inventory.service';  
 import Swal from 'sweetalert2';
+import { BranchService } from 'src/services/BranchServices/branch.service';
+import { Ibranch } from '../../shared/Interfaces/ibranch';
 @Component({
   selector: 'app-add-inventory',
   imports: [ReactiveFormsModule],
@@ -12,8 +14,9 @@ export class AddInventoryComponent implements OnInit {
   addInventoryForm: FormGroup;
   //modify 
   branches: { id: number, name: string }[] = []; 
+  BranchArr!:Ibranch[];
 
-  constructor(private inventoryService: InventoryService) {
+  constructor(private inventoryService: InventoryService,private branchServ:BranchService) {
 
     this.addInventoryForm = new FormGroup({
       inventoryName: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -26,6 +29,9 @@ export class AddInventoryComponent implements OnInit {
   }
   ngOnInit() {
     // modify
+    this.branchServ.getAllBranches().subscribe((res)=>{
+      this.BranchArr=res;
+    })
     this.branches = [
       { id: 1, name: 'Cairo' },
       { id: 2, name: 'Mansoura' },

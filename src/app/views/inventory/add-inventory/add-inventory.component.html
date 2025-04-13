@@ -62,8 +62,8 @@
               <label class="form-label">Branch</label>
               <select class="form-control" formControlName="branchId">
                 <option value="">Select a branch</option>
-                @for (branch of branches; track branch.id) {
-                  <option [value]="branch.id">{{ branch.name }}</option>
+                @for (branch of BranchArr; track branch.branchId) {
+                  <option [value]="branch.branchId">{{ branch.branchName }}</option>
                 }
               </select>
               @if(branchId?.invalid && (branchId?.dirty || branchId?.touched)) {
