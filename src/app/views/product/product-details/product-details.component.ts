@@ -50,6 +50,7 @@ export class ProductDetailsComponent implements OnInit {
   CurrentUserLongitude!: number;
   closestInventoryId!: number;
   SupplierId!: string | '';
+  UserRole!: string | '';
   constructor(
     private brandServ: BrandService,
     private inventoryServ: InventoryService,
@@ -60,6 +61,7 @@ export class ProductDetailsComponent implements OnInit {
     private router: Router
   ) {
     this.SupplierId = this.authServ?.getUserId() ?? '';
+    this.UserRole = this.authServ.getUserRoleFromToken() ?? '';
     this.ProductForm = this.fb.group({
       productName: ['', Validators.required],
       productDescription: ['', Validators.required],
@@ -156,14 +158,19 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
   AddProductStock() {
-    this.ProductStocks.push(
-      this.fb.group({
-        inventoryId: [this.closestInventoryId, Validators.required],
-        productId: [this.ProductId, Validators.required],
-        stockUnitPrice: [null, Validators.required],
-        stockQuantity: [null, Validators.required],
-      })
-    );
+    const stockGroup = this.fb.group({
+      inventoryId: [
+        {
+          value: this.closestInventoryId,
+          disabled: this.UserRole === 'Supplier',
+        },
+        Validators.required,
+      ],
+      productId: [this.ProductId, Validators.required],
+      stockUnitPrice: [null, Validators.required],
+      stockQuantity: [null, Validators.required],
+    });
+    this.ProductStocks.push(stockGroup);
   }
   AddExistingProductStock(invId: number, qnt: number, pri: number) {
     this.ProductStocks.push(
@@ -240,9 +247,35 @@ export class ProductDetailsComponent implements OnInit {
         stock.value.stockQuantity
       );
     });
+
+    const formSupplierData = new FormData();
+    formSupplierData.append('productName', this.ProductForm.value.productName);
+    formSupplierData.append(
+      'productDescription',
+      this.ProductForm.value.productDescription
+    );
+    formSupplierData.append('brandId', this.ProductForm.value.brandId);
+    formSupplierData.append('categoryId', this.ProductForm.value.categoryId);
+    formSupplierData.append('supplierId', this.ProductForm.value.supplierId);
+    formSupplierData.append('inventoryId', this.closestInventoryId.toString());
+    formSupplierData.append(
+      'productPrice',
+      this.ProductStocks.at(0).get('stockUnitPrice')?.value
+    );
+    formSupplierData.append(
+      'productQuantity',
+      this.ProductStocks.at(0).get('stockQuantity')?.value
+    );
+    this.ProductImages.controls.forEach((img: any) => {
+      const file = img.get('productImage').value;
+      if (file instanceof File) {
+        formSupplierData.append('productImages', file);
+      }
+    });
+
     if (this.ProductId <= 0) {
-      this.productServ.InsertProduct(formData).subscribe(
-        (res) => {
+      if (this.UserRole === 'Supplier') {
+        this.productServ.AddReviewSuppliedProduct(formSupplierData).subscribe((res)=>{
           this.isLoading = false;
           this.ProductForm.reset();
           Swal.fire({
@@ -255,7 +288,7 @@ export class ProductDetailsComponent implements OnInit {
           });
           this.router.navigate(['/product/manage']);
         },
-        (err) => {
+      (error)=>{
           this.isLoading = false;
           Swal.fire({
             toast: true,
@@ -265,8 +298,35 @@ export class ProductDetailsComponent implements OnInit {
             showConfirmButton: false,
             timer: 2500,
           });
-        }
-      );
+      })
+      } else {
+        this.productServ.InsertProduct(formData).subscribe(
+          (res) => {
+            this.isLoading = false;
+            this.ProductForm.reset();
+            Swal.fire({
+              toast: true,
+              position: 'top',
+              icon: 'success',
+              title: 'Product added successfully',
+              showConfirmButton: false,
+              timer: 2500,
+            });
+            this.router.navigate(['/product/manage']);
+          },
+          (err) => {
+            this.isLoading = false;
+            Swal.fire({
+              toast: true,
+              position: 'top',
+              icon: 'error',
+              title: 'Error while adding product',
+              showConfirmButton: false,
+              timer: 2500,
+            });
+          }
+        );
+      }
     } else {
       this.productServ.UpdateProduct(this.ProductId, formData).subscribe(
         (res) => {

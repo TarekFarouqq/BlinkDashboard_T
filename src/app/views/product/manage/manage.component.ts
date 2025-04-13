@@ -5,6 +5,7 @@
   import { SpinnerComponent } from '@coreui/angular';
   import { FormsModule } from '@angular/forms';
   import { Router } from '@angular/router';
+import { AuthService } from '../../../../services/auth.service';
   declare var bootstrap: any;
   @Component({
     selector: 'app-manage',
@@ -19,7 +20,12 @@
     TotalPages!: number;
     selectedProductId!: number;
     FilterProduct:string='';
-    constructor(private productServ: ProductService, private router: Router) {}
+    UserRole!:string | '';
+    CurrentUserId!:string | '';
+    constructor(private productServ: ProductService, private router: Router,private authServ:AuthService) {
+      this.UserRole=this.authServ.getUserRoleFromToken() ?? '';
+      this.CurrentUserId=this.authServ.getUserId() ?? '';
+    }
     ngOnInit() {
       this.productServ.GetTotalPages(8).subscribe((res) => {
         this.TotalPages = res;
@@ -27,6 +33,11 @@
         this.productServ.GetPagginatedProducts(this.CurrentPage, 8).subscribe(
           (res) => {
             this.ProductArr = res;
+            if(this.UserRole=='Supplier'){
+              this.ProductArr=this.ProductArr.filter((prd)=>{
+                return prd.supplierId==this.CurrentUserId;
+              })
+            }
             this.isLoading = false;
           },
           (err) => {
