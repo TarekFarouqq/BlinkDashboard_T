@@ -98,7 +98,7 @@
             </div>
             <div class="col-10 col-lg-5 col-md-5 col-sm-10 mb-3">
               <label for="inp-StockInventory">Stock Inventory</label>
-              <select class="form-select" id="inp-StockInventory" aria-label="Select Category" formControlName="inventoryId">
+              <select class="form-select" id="inp-StockInventory" aria-label="Select Category" formControlName="inventoryId">>
                 <option *ngFor="let inventory of InventoryArr;let i = index" [value]="inventory.inventoryId">
                   {{inventory.inventoryName}}</option>
               </select>

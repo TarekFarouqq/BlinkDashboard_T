@@ -6,6 +6,7 @@ export interface Product {
     productModificationDate: string;
     productSupplyDate: string;
     productImages: string[];
+    supplierId:string;
     supplierName: string;
     brandId:number;
     brandName: string;

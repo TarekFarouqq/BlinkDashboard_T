@@ -50,4 +50,7 @@ export class ProductService {
   GetProductStock(id:number):Observable<any>{
     return this.httpClient.get<any>(`${this.apiUrl}/product/GetProductStock/${id}`);
   }
+  AddReviewSuppliedProduct(formGroup:FormData):Observable<any>{
+    return this.httpClient.post(`${this.apiUrl}/product/AddRequestSuppliedProduct`,formGroup);
+  }
 }
