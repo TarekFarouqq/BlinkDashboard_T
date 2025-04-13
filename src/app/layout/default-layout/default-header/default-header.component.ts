@@ -1,15 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, inject, input } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 import {
-  AvatarComponent,
-  BadgeComponent,
   BreadcrumbRouterComponent,
   ColorModeService,
   ContainerComponent,
   DropdownComponent,
-  DropdownDividerDirective,
   DropdownHeaderDirective,
   DropdownItemDirective,
   DropdownMenuDirective,
@@ -17,8 +14,6 @@ import {
   HeaderComponent,
   HeaderNavComponent,
   HeaderTogglerDirective,
-  NavItemComponent,
-  NavLinkDirective,
   SidebarToggleDirective
 } from '@coreui/angular';
 
@@ -27,7 +22,7 @@ import { IconDirective } from '@coreui/icons-angular';
 @Component({
     selector: 'app-default-header',
     templateUrl: './default-header.component.html',
-  imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, NavItemComponent, NavLinkDirective, RouterLink, RouterLinkActive, NgTemplateOutlet, BreadcrumbRouterComponent, DropdownComponent, DropdownToggleDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective]
+  imports: [ RouterLink,ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, NgTemplateOutlet, BreadcrumbRouterComponent, DropdownComponent, DropdownToggleDirective, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective]
 })
 export class DefaultHeaderComponent extends HeaderComponent {
 

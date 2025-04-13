@@ -1,0 +1,52 @@
+@if (!isLoading) {
+  <div class="pg-content w-100 d-flex flex-column align-items-center justify-content-start">
+    <input [(ngModel)]="text" type="search" class="form-control w-50 mx-auto " placeholder="Search Branch"  />
+
+    <div class="row w-100 my-2">
+      <div class="col-12 d-flex justify-content-end">
+       <button class="btn btn-danger text-light" routerLink="/inventory/add" style="border-radius: 2px !important;" > + Add Inventory</button>
+          </div>
+    </div>
+    <!-- Table Panel -->
+    <div class="table-responsive w-100 p-1" style="max-height: 68vh; overflow-y: auto;">
+      <table class="table table-hover  text-center align-middle ">
+        <thead class=" ">
+          <tr style="height: 60px !important; ">
+            <th>Inventory Id</th>
+            <th>Inventory Name</th>
+            <th>Branch</th>
+            <th>Inventory Address</th>
+            <th>Phone</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (inventory of invetoryArr | search :text :'inventoryName'; track inventory.inventoryId) {
+            <tr>
+              <td>{{inventory.inventoryId}}</td>
+              <td>{{inventory.inventoryName}}</td>
+              <td>{{inventory.branchName}}</td>
+              <td>{{inventory.inventoryAddress}}</td>
+              <td>{{inventory.phone}}</td>
+              <td>
+                <div class="d-flex justify-content-center gap-2">
+                  <button type="button" class="btn btn-warning btn-sm border2r" (click)="navigateToUpdate(inventory.inventoryId)">
+                    <i class="fa-solid fa-pen-to-square text-white"></i>
+                  </button>
+                  <button type="button" class="btn btn-dark btn-sm border2r" (click)="deleteInventory(inventory.inventoryId)" >
+                    <i class="fa-solid fa-trash-can text-white"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+} @else {
+  <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="height: 79vh !important;">
+    <c-spinner variant="grow" color="danger" />
+    <p>Loading</p>
+  </div>
+}

@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
-
-import { IconDirective } from '@coreui/icons-angular';
 import {
   ContainerComponent,
+  INavData,
   ShadowOnScrollDirective,
   SidebarBrandComponent,
   SidebarComponent,
@@ -16,7 +15,8 @@ import {
 } from '@coreui/angular';
 
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
-import { navItems } from './_nav';
+import { AuthService } from '../../../services/auth.service';
+
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -40,13 +40,158 @@ function isOverflown(element: HTMLElement) {
     ContainerComponent,
     DefaultFooterComponent,
     DefaultHeaderComponent,
-    IconDirective,
     NgScrollbar,
     RouterOutlet,
     RouterLink,
     ShadowOnScrollDirective
   ]
 })
-export class DefaultLayoutComponent {
-  public navItems = [...navItems];
+export class DefaultLayoutComponent implements OnInit {
+
+  isLogged = false;
+  userRole : string | null = '';
+  public navItems : INavData[] = [];
+
+  constructor(private authServ:AuthService, private router: Router) {
+    this.authServ.isLoggedIn$.subscribe((res) => {
+      this.isLogged = res
+    })
+  }
+  ngOnInit() {
+  this.authServ.userRole$.subscribe((res) => {
+    this.userRole = res
+  })
+
+  if (this.userRole == 'Supplier') {
+    this.navItems.push({
+      name: 'Dashboard',
+      url: '/dashboard',
+      iconComponent: { name: 'cil-speedometer' },
+    },
+  
+    {
+      name: 'Product',
+      url: '/product',
+      iconComponent: { name: 'cilBasket' },
+      children: [
+        {
+          name: 'Manage Products',
+          url: '/product/manage',
+          icon: 'nav-icon-bullet',
+        },
+        {
+          name: 'Product Attributes',
+          url: '/product/product-attributes',
+          icon: 'nav-icon-bullet',
+        },
+      ],
+    },
+    {
+      title: true,
+      name: 'Account',
+    },
+    {
+      name: 'Logout',
+      iconComponent: { name: 'cilAccountLogout' },
+      url: '/logout',
+    },
+    
+  )
+  }
+  else if (this.userRole == 'Admin') {
+    this.navItems.push(
+      {
+        name: 'Dashboard',
+        url: '/dashboard',
+        iconComponent: { name: 'cil-speedometer' },
+      },
+    
+      //Products
+      {
+        name: 'Product',
+        url: '/product',
+        iconComponent: { name: 'cilBasket' },
+        children: [
+          {
+            name: 'Manage Products',
+            url: '/product/manage',
+            icon: 'nav-icon-bullet',
+          },
+          {
+            name: 'Product Attributes',
+            url: '/product/product-attributes',
+            icon: 'nav-icon-bullet',
+          },
+          {
+            name: 'Review Products',
+            url: '/product/review-products',
+            icon: 'nav-icon-bullet',
+          },
+        ],
+      },
+      //End Products
+    
+       //Inventory
+       {
+        name: 'Inventory',
+        url: '/inventory',
+        iconComponent: { name: 'cilLayers' },
+        children: [
+          {
+            name: 'Manage Inventories',
+            url: '/inventory/manage',
+            icon: 'nav-icon-bullet',
+          },
+        ],
+      },
+      //End end
+  
+         //branchs
+         {
+          name: 'Branch',
+          url: '/branch',
+          iconComponent: { name: 'cilMap' },
+          children: [
+            {
+              name: 'Manage Branches',
+              url: '/branch/manage',
+              icon: 'nav-icon-bullet',
+            },
+          ],
+        },
+        //End branchs
+    
+    
+    
+     //  brands :
+    
+     {
+      name: 'Brands',
+      url: '/brands',
+      iconComponent: { name: 'cil-tags' },
+      children: [
+        {
+          name: 'Manage Brands',
+          url: '/Brand/manage',
+          icon: 'nav-icon-bullet',
+        },
+        
+      ],
+    },
+    // end brands 
+      {
+        title: true,
+        name: 'Account',
+      },
+    
+      {
+        name: 'Logout',
+        iconComponent: { name: 'cilAccountLogout' },
+        url: '/logout',
+      },
+    
+    );
+  }
+  }
+  
 }

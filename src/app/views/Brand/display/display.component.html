@@ -1,0 +1,30 @@
+<div *ngIf="brand" class="container mt-5">
+
+
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <th>Name</th>
+        <td>{{ brand.brandName }}</td>
+      </tr>
+      <tr>
+        <th>Description</th>
+        <td>{{ brand.brandDescription }}</td>
+      </tr>
+      <tr>
+        <th>Website URL</th>
+        <td><a [href]="brand.brandWebSiteURL" target="_blank">{{ brand.brandWebSiteURL }}</a></td>
+      </tr>
+      <tr *ngIf="brand?.brandImage">
+        <th>Image</th>
+        <td>
+          <img [src]="brand.brandImage" alt="Brand Image" width="200" height="200" class="rounded-circle">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="mt-4">
+    <button class="btn btn-secondary" (click)="goBackToList()">Back to List</button>
+  </div>
+</div>

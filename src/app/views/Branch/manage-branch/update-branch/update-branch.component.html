@@ -1,0 +1,118 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      <form
+        class="classic-form p-4"
+        [formGroup]="updateBranchForm"
+        (ngSubmit)="updateBranch()"
+      >
+        <div class="row d-flex justify-content-center ">
+          <!-- Column 1 -->
+         
+          <div class="col-md-6">
+            <!-- Branch Name -->
+            <div class="form-group mb-3">
+              <label class="form-label">Branch Name</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="branchName"
+              />
+              <div
+                class="text-danger"
+                *ngIf="
+                  updateBranchForm.get('branchName')?.errors &&
+                  updateBranchForm.get('branchName')?.touched
+                "
+              >
+                <p
+                  *ngIf="
+                    updateBranchForm.get('branchName')?.getError('required')
+                  "
+                >
+                  Branch Name is required
+                </p>
+                <p
+                  *ngIf="
+                    updateBranchForm.get('branchName')?.getError('minlength')
+                  "
+                >
+                  Branch Name must be at least 3 characters
+                </p>
+              </div>
+            </div>
+
+            <!-- Branch Address -->
+            <div class="form-group mb-3">
+              <label class="form-label">Branch Address</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="branchAddress"
+              />
+              <div
+                class="text-danger"
+                *ngIf="
+                  updateBranchForm.get('branchAddress')?.errors &&
+                  updateBranchForm.get('branchAddress')?.touched
+                "
+              >
+                <p
+                  *ngIf="
+                    updateBranchForm.get('branchAddress')?.getError('required')
+                  "
+                >
+                  Branch Address is required
+                </p>
+                <p
+                  *ngIf="
+                    updateBranchForm.get('branchAddress')?.getError('minlength')
+                  "
+                >
+                  Branch Address must be at least 3 characters
+                </p>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="form-group mb-3">
+              <label class="form-label">Phone</label>
+              <input type="text" class="form-control" formControlName="phone" />
+              <div
+                class="text-danger"
+                *ngIf="
+                  updateBranchForm.get('phone')?.errors &&
+                  updateBranchForm.get('phone')?.touched
+                "
+              >
+                <p *ngIf="updateBranchForm.get('phone')?.getError('required')">
+                  Phone is required
+                </p>
+                <p *ngIf="updateBranchForm.get('phone')?.getError('pattern')">
+                  Phone must be 11 digits
+                </p>
+              </div>
+            </div>
+          </div>
+          <p class="text-danger mt-1" *ngIf="msgerror">
+            {{ msgerror }}
+          </p>
+          <div class="form-footer mt-4 d-flex justify-content-center">
+            <button
+              type="submit"
+              class="btn btn-danger text-light"
+              style="width: 20%; border-radius: 2px !important"
+              [disabled]="updateBranchForm.invalid || !updateBranchForm.dirty"
+            >
+              Update
+            </button>
+            <!-- <button type="button" class="btn btn-secondary mx-2" style="width: 20%; border-radius: 2px !important;" (click)="cancel()">
+              Cancel
+            </button> -->
+          </div>
+        </div>
+      
+      </form>
+    </div>
+  </div>
+</div>

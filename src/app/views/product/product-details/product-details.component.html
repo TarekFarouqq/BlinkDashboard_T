@@ -1,0 +1,165 @@
+@if(!isLoading){
+<form cForm [formGroup]="ProductForm" (ngSubmit)="OnSubmit()">
+  <!-- Product Details -->
+  <div class="row w-100 border-bottom mb-1" style="height: 30vh; overflow-y: auto;">
+    <!-- Product Name & Product Description -->
+    <div class="col-12 col-md-6">
+      <!-- Product Name -->
+      <div class="mb-3">
+        <label for="inp-ProductName">Product Name</label>
+        <input cFormControl id="inp-ProductName" type="text" class="form-control" formControlName="productName"
+          placeholder="Please write product name here ...">
+          @if (ProductForm.get('productName')?.touched && ProductForm.get('productName')?.invalid) {
+            <small class="text-danger" *ngIf="ProductForm.get('productName')?.errors?.['required']">
+              Product Name is required
+            </small>
+          }
+      </div>
+      <!-- Product Description -->
+      <div class="mb-3">
+        <label for="inp-ProductDescription">Product Description</label>
+        <textarea id="inp-ProductDescription" class="form-control" rows="3"
+          placeholder="Please write product description here ..." style="resize: none;"
+          formControlName="productDescription"></textarea>
+          @if (ProductForm.get('productDescription')?.touched && ProductForm.get('productDescription')?.invalid) {
+            <small class="text-danger" *ngIf="ProductForm.get('productDescription')?.errors?.['required']">
+              Product Description is required
+            </small>
+          }
+      </div>
+    </div>
+    <!-- Product Brand & Product Category -->
+    <div class="col-12 col-md-6">
+      <div class="mb-3">
+        <label for="inp-ProductBrand">Product Brand</label>
+        <select class="form-select" id="inp-ProductBrand" aria-label="Select Brand" formControlName="brandId">
+          <option *ngFor="let brand of BrandArr" [value]="brand.brandId">{{brand.brandName}}</option>
+        </select>
+        @if (ProductForm.get('brandId')?.touched && ProductForm.get('brandId')?.invalid) {
+          <small class="text-danger" *ngIf="ProductForm.get('brandId')?.errors?.['required']">
+            Brand is required
+          </small>
+        }
+      </div>
+      <div class="mb-3">
+        <label for="inp-ProductCategory">Product Category</label>
+        <select class="form-select" id="inp-ProductCategory" aria-label="Select Category" formControlName="categoryId">
+          <option disabled>Select Category</option>
+          @for(category of CategoryArr;track category.categoryId){
+          <option [value]="category.categoryId">{{category.categoryName}}</option>
+          }
+        </select>
+        @if (ProductForm.get('categoryId')?.touched && ProductForm.get('categoryId')?.invalid) {
+          <small class="text-danger" *ngIf="ProductForm.get('categoryId')?.errors?.['required']">
+            Category is required
+          </small>
+        }
+      </div>
+    </div>
+  </div>
+  <!-- Stock Inventory -->
+  <div class="row w-100 border-bottom mb-1">
+    <div class="border-bottom mt-1 mb-1">
+      <button type="button" class="btn btn-primary mb-2 me-4" (click)="AddProductStock()">
+        <i class="fa-solid fa-plus"></i>
+        Add Inventory
+      </button>
+      @if (ProductStocks.controls.length === 0) {
+        <small class="text-danger">
+          Please add at least one inventory before submitting.
+        </small>
+      }
+    </div>
+    <!-- Stock List -->
+    <div [formArrayName]="'ProductStocks'" class="col-12 col-md-12 col-lg-12 col-sm-12">
+      <div style="height: 35vh; overflow-y: auto;">
+        <div class="row bg-light text-secondary mt-2 mb-2 rounded-1 p-2 ms-1 align-items-center" style="width: 99%;"
+          *ngFor="let productStock of ProductStocks.controls;let i = index">
+          <div class="row" [formGroupName]="i">
+            <div class="col-6 col-lg-3 col-md-3 col-sm-6 mb-3">
+              <label for="inp-ProductStock">Product Stock</label>
+              <input cFormControl id="inp-ProductStock" type="text" class="form-control"
+                placeholder="Please write product stock here ..." formControlName="stockQuantity">
+                @if (productStock.get('stockQuantity')?.touched && productStock.get('stockQuantity')?.invalid) {
+                  <small class="text-white bg-danger p-1 rounded-1" *ngIf="productStock.get('stockQuantity')?.errors?.['required']">
+                    Stock Quantity is required
+                  </small>
+                }
+            </div>
+            <div class="col-6 col-lg-3 col-md-3 col-sm-6 mb-3">
+              <label for="inp-ProductPrice">Product Price</label>
+              <input cFormControl id="inp-ProductPrice" type="text" class="form-control"
+                placeholder="Please write product price here ..." formControlName="stockUnitPrice">
+                @if (productStock.get('stockUnitPrice')?.touched && productStock.get('stockUnitPrice')?.invalid) {
+                  <small class="text-white bg-danger p-1 rounded-1" *ngIf="productStock.get('stockUnitPrice')?.errors?.['required']">
+                    Product Price is required
+                  </small>
+                }
+            </div>
+            <div class="col-10 col-lg-5 col-md-5 col-sm-10 mb-3">
+              <label for="inp-StockInventory">Stock Inventory</label>
+              <select class="form-select" id="inp-StockInventory" aria-label="Select Category" formControlName="inventoryId">>
+                <option *ngFor="let inventory of InventoryArr;let i = index" [value]="inventory.inventoryId">
+                  {{inventory.inventoryName}}</option>
+              </select>
+              @if (productStock.get('inventoryId')?.touched && productStock.get('inventoryId')?.invalid) {
+                <small class="text-white bg-danger p-1 rounded-1" *ngIf="productStock.get('inventoryId')?.errors?.['required']">
+                  Inventory is required
+                </small>
+              }
+            </div>
+            <div class="col-1 col-lg-1 col-md-1 col-sm-1 mb-3">
+              <button class="btn btn-danger text-white mt-4" (click)="DeleteProductStock(i)">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Product Images -->
+  <div class="row w-100 border-bottom mb-1">
+    <div class="col-12 mb-3 mt-2 border-bottom">
+      <button type="button" class="btn btn-primary mb-2" id="add-image-btn" (click)="AddProductImage()">
+        <i class="fa-solid fa-plus"></i>
+        Add Image
+      </button>
+    </div>
+    <div style="height: 35vh; overflow-y: auto;">
+      <div class="row bg-secondary text-white mt-2 mb-2 rounded-1 p-2 ms-1 align-items-center" style="width: 99%;"
+        *ngFor="let productImage of ProductImages.controls;let i = index">
+        <div class="row w-100 mt-2 mb-2 d-flex align-items-center justify-content-start">
+          <div class="col-8 col-lg-9 col-md-9 col-sm-9">
+            <input type="file" class="form-control" (change)="OnImageSelected($event, i)">
+          </div>
+          <div class="col-3 col-lg-2 col-md-2 col-sm-2">
+            <img *ngIf="productImage.get('previewUrl')?.value" [src]="productImage.get('previewUrl')?.value"
+              style="width: 70px; height: 60px;" class="rounded-1">
+          </div>
+          <div class="col-1 col-lg-1 col-md-1 col-sm-1">
+            <button class="btn btn-danger text-white" (click)="DeleteProductImage(i)">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Submit Form -->
+  <div class="row w-100 d-flex align-items-center justify-content-end">
+    <button
+      class="btn btn-primary col-lg-3 col-md-3 col-sm-4 col-12"
+      [disabled]="ProductForm.invalid">
+      <i class="fa-solid fa-floppy-disk"></i>
+      Save Changes
+    </button>
+  </div>
+</form>
+}@else{
+<div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="height: 79vh !important;">
+  <c-spinner variant="grow" color="danger" />
+  <p>Loading</p>
+</div>
+}

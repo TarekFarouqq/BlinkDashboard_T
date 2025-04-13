@@ -1,17 +1,24 @@
 //add route here
-
+ 
 import { Routes } from '@angular/router';
 import { DefaultLayoutComponent } from './layout';
+import { authGuard } from '../guards/auth.guard';
+import { adminGuard } from '../guards/admin.guard';
+ 
 
 export const routes: Routes = [
+
+  
   {
     path: '',
     redirectTo: 'dashboard',
+    
     pathMatch: 'full'
   },
   {
     path: '',
     component: DefaultLayoutComponent,
+    canActivate: [authGuard],
     data: {
       title: 'Home'
     },
@@ -20,57 +27,53 @@ export const routes: Routes = [
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
       },
-      {
-        path: 'base',
-        loadChildren: () => import('./views/base/routes').then((m) => m.routes)
-      },
 
-  
+      {
+        path: 'product',
+        
+        loadChildren: () => import('./views/product/routes').then((m) => m.routes)
+      },
+      {
+        path: 'inventory',
+        canActivate: [adminGuard],
+        loadChildren: () => import('./views/inventory/routes').then((m) => m.routes)
+      },
+      {
+        path: 'branch',
+        canActivate: [adminGuard],
+        loadChildren: () => import('./views/Branch/routes').then((m) => m.routes) 
+      },
+ 
       {
         path: 'widgets',
         loadChildren: () => import('./views/widgets/routes').then((m) => m.routes)
       },
       {
-        path: 'charts',
-        loadChildren: () => import('./views/charts/routes').then((m) => m.routes)
+        path: 'Brand',
+        canActivate: [adminGuard],
+        loadChildren: () => import('./views/Brand/routes').then((m) => m.routes)
       },
-      {
-        path: 'products',
-        loadChildren: () => import('./views/prodcuts/routes').then((m) => m.routes)
-      },
-      {
-        path: 'pages',
-        loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
-      }
+
+    
     ]
   },
-  {
-    path: '404',
-    loadComponent: () => import('./views/pages/page404/page404.component').then(m => m.Page404Component),
-    data: {
-      title: 'Page 404'
-    }
-  },
-  {
-    path: '500',
-    loadComponent: () => import('./views/pages/page500/page500.component').then(m => m.Page500Component),
-    data: {
-      title: 'Page 500'
-    }
-  },
+
+
   {
     path: 'login',
-    loadComponent: () => import('./views/pages/login/login.component').then(m => m.LoginComponent),
+    loadComponent: () => import('./views/login/login/login.component').then(m => m.LoginComponent),
     data: {
       title: 'Login Page'
     }
   },
+
   {
-    path: 'register',
-    loadComponent: () => import('./views/pages/register/register.component').then(m => m.RegisterComponent),
+    path: 'logout',
+    loadComponent: () => import('./views/Logout/logout/logout.component').then(m => m.LogoutComponent),
     data: {
-      title: 'Register Page'
+      title: 'logout Page'
     }
   },
+
   { path: '**', redirectTo: 'dashboard' }
 ];
