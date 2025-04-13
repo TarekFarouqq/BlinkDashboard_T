@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from '../../../guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -43,6 +44,7 @@ export const routes: Routes = [
       },
       {
         path: 'review-products',
+         canActivate: [adminGuard],
         loadComponent: () => import('./review-products/review-products.component').then(m => m.ReviewProductsComponent),
         data: {
           title: 'review-products'

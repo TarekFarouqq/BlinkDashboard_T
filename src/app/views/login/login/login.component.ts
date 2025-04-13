@@ -37,7 +37,6 @@ export class LoginComponent {
   
       this._AuthService.login(loginData).subscribe({
         next: (response) => {
-          console.log("Login Response:", response);
           if (response.token) {
             localStorage.setItem('token', response.token);
             this._AuthService.userLogin();
@@ -49,7 +48,7 @@ export class LoginComponent {
         error: (err: HttpErrorResponse) => {
           this.isLoading = false;
           console.log(err);
-          this.msgerror = err.error.message;
+          this.msgerror = err.error;
         }
       });
     } else {
