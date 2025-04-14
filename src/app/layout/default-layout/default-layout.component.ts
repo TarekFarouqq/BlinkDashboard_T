@@ -105,6 +105,23 @@ export class DefaultLayoutComponent implements OnInit {
         url: '/dashboard',
         iconComponent: { name: 'cil-speedometer' },
       },
+ 
+    // users :
+    {
+      name: 'Users',
+      url: '/users',
+      iconComponent: { name: 'cil-people' },
+      children: [
+        {
+          name: 'Manage Users',
+          url: '/Users/manage',
+          icon: 'nav-icon-bullet',
+        },
+      ],
+    },
+    /// end users
+
+ 
       
        //BI-Dashboard
        {
@@ -125,7 +142,7 @@ export class DefaultLayoutComponent implements OnInit {
         ],
       },
       //End BI-Dashboard
-      
+ 
       //Products
       {
         name: 'Product',

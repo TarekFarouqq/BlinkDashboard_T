@@ -1,0 +1,73 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      <form class="classic-form p-4" [formGroup]="updateUserForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <label class="form-label">Username</label>
+              <input type="text" class="form-control" formControlName="userName">
+              <div *ngIf="userName?.invalid && (userName?.dirty || userName?.touched)" class="invalid-feedback d-block">
+                <span *ngIf="userName?.errors?.['required']">Username is required</span>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">First Name</label>
+              <input type="text" class="form-control" formControlName="userFirstName">
+              <div *ngIf="userFirstName?.invalid && (userFirstName?.dirty || userFirstName?.touched)" class="invalid-feedback d-block">
+                <span *ngIf="userFirstName?.errors?.['required']">First Name is required</span>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Last Name</label>
+              <input type="text" class="form-control" formControlName="userLastName">
+              <div *ngIf="userLastName?.invalid && (userLastName?.dirty || userLastName?.touched)" class="invalid-feedback d-block">
+                <span *ngIf="userLastName?.errors?.['required']">Last Name is required</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" formControlName="userEmail">
+              <div *ngIf="userEmail?.invalid && (userEmail?.dirty || userEmail?.touched)" class="invalid-feedback d-block">
+                <span *ngIf="userEmail?.errors?.['required']">Email is required</span>
+                <span *ngIf="userEmail?.errors?.['email']">Invalid email</span>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Phone</label>
+              <input type="text" class="form-control" formControlName="userPhone">
+              <div *ngIf="userPhone?.invalid && (userPhone?.dirty || userPhone?.touched)" class="invalid-feedback d-block">
+                <span *ngIf="userPhone?.errors?.['required']">Phone is required</span>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Role</label>
+              <input type="text" class="form-control" formControlName="userRole">
+              <div *ngIf="userRole?.invalid && (userRole?.dirty || userRole?.touched)" class="invalid-feedback d-block">
+                <span *ngIf="userRole?.errors?.['required']">Role is required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-footer mt-4 text-center">
+          <button type="submit" class="btn btn-danger text-light" style="width: 30%; border-radius: 2px !important;">
+            Update User
+          </button>
+          <div class="form-footer mt-4">
+            <button type="button" class="btn btn-secondary text-light" style="width: 30%; border-radius: 2px !important;" (click)="goToManage()">
+              Back to List
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

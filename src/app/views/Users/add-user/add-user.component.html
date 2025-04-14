@@ -1,0 +1,80 @@
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Add new user</h2>
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10">
+        <form class="classic-form p-4" [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label class="form-label">User Name</label>
+                <input type="text" class="form-control" formControlName="userName">
+                <div *ngIf="userName?.invalid && (userName?.dirty || userName?.touched)">
+                  <div class="invalid-feedback d-block">
+                    <span *ngIf="userName?.errors?.['required']">User Name is required</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-control" formControlName="userFirstName">
+                <div *ngIf="userFirstName?.invalid && (userFirstName?.dirty || userFirstName?.touched)">
+                  <div class="invalid-feedback d-block">
+                    <span *ngIf="userFirstName?.errors?.['required']">First Name is required</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-control" formControlName="userLastName">
+                <div *ngIf="userLastName?.invalid && (userLastName?.dirty || userLastName?.touched)">
+                  <div class="invalid-feedback d-block">
+                    <span *ngIf="userLastName?.errors?.['required']">Last Name is required</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" formControlName="userEmail">
+                <div *ngIf="userEmail?.invalid && (userEmail?.dirty || userEmail?.touched)">
+                  <div class="invalid-feedback d-block">
+                    <span *ngIf="userEmail?.errors?.['required']">Email is required</span>
+                    <span *ngIf="userEmail?.errors?.['email']">Enter a valid email address</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" formControlName="userPassword">
+                <div *ngIf="userPassword?.invalid && (userPassword?.dirty || userPassword?.touched)">
+                  <div class="invalid-feedback d-block">
+                    <span *ngIf="userPassword?.errors?.['required']">Password is required</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label">Phone</label>
+                <input type="tel" class="form-control" formControlName="userPhone">
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label">Role</label>
+                <input type="text" class="form-control" formControlName="userRole">
+              </div>
+            </div>
+          </div>
+          <div class="form-footer mt-4">
+            <button type="submit" class="btn btn-danger text-light" style="width: 30%; border-radius: 2px !important;" [disabled]="addUserForm.invalid">
+              Add User
+            </button>
+          </div>
+          <div class="form-footer mt-4">
+            <button type="button" class="btn btn-secondary text-light" style="width: 30%; border-radius: 2px !important;" [routerLink]="['/Users/manage']">
+              Back to List
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
