@@ -34,7 +34,7 @@ export const routes: Routes = [
         path:'Users',
        // canActivate: [adminGuard],
         loadChildren: () => import('./views/Users/routes').then((m) => m.routes)
- 
+      },
       {
         path: 'bidashboard',
         
