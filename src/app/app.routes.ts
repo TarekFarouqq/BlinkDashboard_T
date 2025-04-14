@@ -28,6 +28,12 @@ export const routes: Routes = [
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
       },
 
+      // add users :
+      {
+        path:'Users',
+       // canActivate: [adminGuard],
+        loadChildren: () => import('./views/Users/routes').then((m) => m.routes)
+      },
       {
         path: 'product',
         
