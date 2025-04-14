@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { InsertProductDTO } from '../models/insert-product-dto';
 import { Product } from '../models/product';
 import { ReadFilterAttributes } from '../models/read-filter-attributes';
+import { ReviewSuppliedProducts } from '../models/review-supplied-products';
 @Injectable({
   providedIn: 'root'
 })
@@ -18,7 +19,7 @@ export class ProductService {
     return this.httpClient.get<Product>(this.apiUrl + '/product/' + id);
   }
   GetTotalPages(pgSize:number):Observable<number>{
-    return this.httpClient.get<number>(this.apiUrl + '/product/GetPagesCount/' + pgSize);
+    return this.httpClient.get<number>(`${this.apiUrl}/product/GetPagesCount/${pgSize}`);
   }
   GetPagginatedProducts(pgNumber:number,pgSize:number):Observable<Product[]>{
     return this.httpClient.get<Product[]>(this.apiUrl + '/product/GetAllWithPaging/' + pgNumber + '/' + pgSize);
@@ -53,4 +54,8 @@ export class ProductService {
   AddReviewSuppliedProduct(formGroup:FormData):Observable<any>{
     return this.httpClient.post(`${this.apiUrl}/product/AddRequestSuppliedProduct`,formGroup);
   }
+  GetReviewSuppliedProducts():Observable<ReviewSuppliedProducts[]>{
+    return this.httpClient.get<ReviewSuppliedProducts[]>(`${this.apiUrl}/product/GetSuppliedProducts`);
+  }
+
 }
