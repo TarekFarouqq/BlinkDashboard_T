@@ -27,7 +27,20 @@ export const routes: Routes = [
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
       },
+ 
 
+      // add users :
+      {
+        path:'Users',
+       // canActivate: [adminGuard],
+        loadChildren: () => import('./views/Users/routes').then((m) => m.routes)
+      },
+      {
+        path: 'bidashboard',
+        
+        loadChildren: () => import('./views/BI-Dashboard/routes').then((m) => m.routes)
+ 
+      },
       {
         path: 'product',
         

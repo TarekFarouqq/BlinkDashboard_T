@@ -1,3 +1,3 @@
 export const environment = {
-    apiUrl: 'https://localhost:7027/api',  
+   apiUrl: 'http://blink-backendapi.runasp.net/api'
 };

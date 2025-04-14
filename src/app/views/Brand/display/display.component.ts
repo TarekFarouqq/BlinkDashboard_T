@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Brand } from '../../../../models/brand';
 import { CommonModule } from '@angular/common';
-import { BrandService } from 'src/services/brand.service';
+import { BrandService } from '../../../../services/brand.service';
 
 
 

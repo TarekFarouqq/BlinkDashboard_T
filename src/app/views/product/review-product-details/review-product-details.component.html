@@ -1,0 +1,113 @@
+@if(!isLoading){
+@if(ReviewProductEntity){
+  <div class="row col-12 col-lg-12 col-md-12 col-sm-12 d-flex align-items-start justify-content-center"
+  style="height: 79vh; overflow-y: auto;">
+  <div
+    class="row col-12 col-lg-12 col-md-12 col-sm-12 h-100 rounded-2 p-2 d-flex align-items-center justify-content-center">
+    <div class="flex-colum col-12 col-lg-7 col-md-6 col-sm-12 h-100 border-end">
+      <div class="row col-lg-12 col-md-12 col-sm-12 col-12 mt-2 flex-nowrap" style="height: 170px;overflow-y: auto;">
+        @for(prdImage of ReviewProductEntity.productImages;track $index){
+          <div class="col-lg-3 col-md-3 col-sm-3 col-3 d-flex align-items-center justify-content-center"
+            style="cursor: pointer;" (click)="onImageClick(prdImage.imageUrl)">
+            <img src="{{prdImage.imageUrl}}" alt="Product Image" class="img-fluid rounded-2 border shadow-sm p-2 bg-white"
+              style="height: 150px; width: 150px;" />
+          </div>
+          }
+      </div>
+      <div class="row col-12 col-lg-12 col-md-12 col-sm-12 d-flex align-items-center justify-content-center">
+        <div class="col-lg-6 col-md-12 col-sm-12 col-12 mt-2">
+          <img [src]="CurrentPreviewImage" alt="Product Image" class="img-fluid rounded-2 border shadow-sm p-2 bg-white"
+            style="height: 50vh; width: 100em;" />
+        </div>
+      </div>
+    </div>
+    <div class="flex-colum col-12 col-lg-5 col-md-6 col-sm-12 h-100">
+      <div class="row col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+        <h4 class="text-start mt-2 fs-3 text-success">{{ReviewProductEntity.productName}}</h4>
+      </div>
+      <div class="row col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+        <h4 class="text-start mt-2 fs-5 ms-3">{{ReviewProductEntity.productDescription}}</h4>
+      </div>
+      <div class="row ms-2 col-12 col-lg-9 col-md-12 col-sm-12 mb-3">
+        <div class="col-12 col-lg-12 col-md-12 col-sm-12 text-dark fs-5">
+          Inventory
+        </div>
+        <div class="col-12 col-lg-12 col-md-12 col-sm-12 text-dark fs-5">
+          <select class="form-select" id="inp-ProductBrand" aria-label="Select Inventory"
+            [(ngModel)]="ReviewProductEntity.inventoryId">
+            <option *ngFor="let inventory of InventryArr"
+              [selected]="inventory.inventoryId == ReviewProductEntity.inventoryId" [value]="inventory.inventoryId">
+              {{inventory.inventoryName}}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="row ms-2 col-12 col-lg-9 col-md-12 col-sm-12 mb-3">
+        <div class="col-12 col-lg-12 col-md-12 col-sm-12 text-dark fs-5">
+          Brand
+        </div>
+        <div class="col-12 col-lg-12 col-md-12 col-sm-12 text-dark fs-5">
+          <select class="form-select" id="inp-ProductBrand" aria-label="Select Inventory"
+            [(ngModel)]="ReviewProductEntity.brandId">
+            <option *ngFor="let brand of BrandArr" [selected]="brand.brandId == ReviewProductEntity.brandId"
+              [value]="brand.brandId">
+              {{brand.brandName}}
+            </option>
+          </select>
+        </div>
+
+      </div>
+      <div class="row ms-2 col-12 col-lg-9 col-md-12 col-sm-12 mb-3">
+        <div class="col-12 col-lg-12 col-md-12 col-sm-12 text-dark fs-5">
+          Category
+        </div>
+        <div class="col-12 col-lg-12 col-md-12 col-sm-12 text-dark fs-5">
+          <select class="form-select" id="inp-ProductBrand" aria-label="Select Category"
+            [(ngModel)]="ReviewProductEntity.categoryId">
+            <option *ngFor="let category of CategoryArr"
+              [selected]="category.categoryId == ReviewProductEntity.categoryId" [value]="category.categoryId">
+              {{category.categoryName}}
+            </option>
+          </select>
+        </div>
+
+      </div>
+      <div class="row ms-2 col-12 col-lg-9 col-md-12 col-sm-12 mb-3 d-flex align-items-center">
+        <div class="col-12 col-lg-12 col-md-12 col-sm-12 text-dark fs-5">
+          Quantity
+        </div>
+        <div class="col-12 col-lg-12 col-md-12 col-sm-12">
+          <input type="number" class="form-control" [(ngModel)]="ReviewProductEntity.productQuantity">
+        </div>
+      </div>
+      <div class="row ms-2 col-12 col-lg-9 col-md-12 col-sm-12 mb-3 d-flex align-items-center">
+        <div class="col-12 col-lg-12 col-md-12 col-sm-12 text-dark fs-5">
+          Pricing
+        </div>
+        <div class="col-12 col-lg-9 col-md-12 col-sm-12">
+          <input type="number" class="form-control" [(ngModel)]="ReviewProductEntity.productPrice">
+        </div>
+      </div>
+      <div class="row ms-2 col-12 col-lg-9 col-md-12 col-sm-12 mb-3 d-flex align-items-center">
+        <div class="col-12 col-lg-12 col-md-12 col-sm-12 text-dark fs-5">
+          Review
+        </div>
+        <div class="col-9 col-lg-9 col-md-9 col-sm-9 row g-2 gap-3 ms-4">
+            <button class="btn btn-success col-12 col-lg-2 col-md-2 col-sm-12 text-white" (click)="acceptProduct()">
+                <i class="fa-solid fa-check fa-xl"></i>
+            </button>
+            <button class="btn btn-danger col-12 col-lg-2 col-md-2 col-sm-12 text-white">
+                <i class="fa-solid fa-xmark fa-xl"></i>
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}
+}@else{
+<div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="height: 79vh !important;">
+  <c-spinner variant="grow" color="danger" />
+  <p>Loading</p>
+</div>
+}

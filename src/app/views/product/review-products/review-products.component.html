@@ -1,1 +1,80 @@
-<p>review-products works!</p>
+@if(!isLoading){
+<div class="row col-12 col-lg-12 col-md-12 col-sm-12 d-flex align-items-center justify-content-end">
+  <div class="col-12 col-lg-4 col-md-5 col-sm-6">
+    <select class="form-select" [(ngModel)]="CurrentSelectedStatus">
+      <option [ngValue]="null">Pending</option>
+      <option [ngValue]="true">Accepted</option>
+      <option [ngValue]="false">Rejected</option>
+    </select>
+  </div>
+</div>
+<div class="row col-12 col-lg-12 col-md-12 col-sm-12 mt-2">
+  <table class="table table-bordered table-hover table-sm" style="table-layout: fixed; width: 100%;">
+    <thead class="table-light">
+      <tr>
+        <th style="width: 5%;" class="text-secondary align-middle text-center">Id</th>
+        <th style="width: 15%;" class="text-secondary align-middle text-center">Date</th>
+        <th style="width: 28%;" class="text-secondary align-middle text-center">Product Name</th>
+        <th style="width: 10%;" class="text-secondary align-middle text-center">Product Quantity</th>
+        <th style="width: 10%;" class="text-secondary align-middle text-center">Product Price</th>
+        <th style="width: 15%;" class="text-secondary align-middle text-center">Inventory Name</th>
+        <th style="width: 20%;" class="text-secondary align-middle text-center">Supplier Name</th>
+        <th style="width: 7%;" class="text-secondary align-middle text-center">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for(product of FilteredReviewSuppliedProducts; track product.requestId){
+      <tr (click)="selectPrd(product)" class="table-row">
+        <td class="align-middle text-center">{{product.requestId}}</td>
+        <td class="align-middle text-center">{{product.requestDate | date:'dd/MM/yyyy hh:mm a'}}</td>
+        <td class="align-middle text-start">{{product.productName}}</td>
+        <td class="align-middle text-center">{{product.productQuantity}}</td>
+        <td class="align-middle text-start">{{product.productPrice | currency:'$'}}</td>
+        <td class="align-middle text-start">{{product.inventoryName}}</td>
+        <td class="align-middle text-start">{{product.supplierName}}</td>
+        <td class="align-middle text-center">
+          @if(product.requestStatus == null){
+          <i class="fa-solid fa-circle text-danger"></i>
+          }@else if(product.requestStatus == true){
+          <i class="fa-solid fa-circle text-success"></i>
+          }@else if(product.requestStatus == false){
+          <i class="fa-solid fa-circle text-dark"></i>
+          }
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+}@else{
+<div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="height: 79vh !important;">
+  <c-spinner variant="grow" color="danger" />
+  <p>Loading</p>
+</div>
+}
+
+
+<style>
+  tbody {
+    font-size: 0.875rem;
+  }
+
+  tbody tr {
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  tbody tr:hover {
+    background-color: #f1f3f5;
+    cursor: pointer;
+  }
+
+  tbody tr td {
+    vertical-align: middle;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+</style>

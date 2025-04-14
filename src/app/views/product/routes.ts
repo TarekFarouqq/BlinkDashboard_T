@@ -50,6 +50,14 @@ export const routes: Routes = [
           title: 'review-products'
         }
       },
+      {
+        path: 'review-products-details/:id',
+         canActivate: [adminGuard],
+        loadComponent: () => import('./review-product-details/review-product-details.component').then(m => m.ReviewProductDetailsComponent),
+        data: {
+          title: 'review-products-details'
+        }
+      },
     ]
   }
 ];
