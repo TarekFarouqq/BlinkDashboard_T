@@ -105,6 +105,7 @@ export class DefaultLayoutComponent implements OnInit {
         url: '/dashboard',
         iconComponent: { name: 'cil-speedometer' },
       },
+ 
     // users :
     {
       name: 'Users',
@@ -120,6 +121,28 @@ export class DefaultLayoutComponent implements OnInit {
     },
     /// end users
 
+ 
+      
+       //BI-Dashboard
+       {
+        name: 'BI-Dashboard',
+        url: '/bidashboard',
+        iconComponent: { name: 'cilChart' },
+        children: [
+          {
+            name: 'Customers',
+            url: '/bidashboard/customers',
+            icon: 'nav-icon-bullet',
+          },
+          {
+            name: 'Products',
+            url: '/bidashboard/products',
+            icon: 'nav-icon-bullet',
+          },
+        ],
+      },
+      //End BI-Dashboard
+ 
       //Products
       {
         name: 'Product',
@@ -159,6 +182,7 @@ export class DefaultLayoutComponent implements OnInit {
         ],
       },
       //End end
+
   
          //branchs
          {
