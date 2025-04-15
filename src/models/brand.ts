@@ -1,3 +1,5 @@
+import { Product } from "./product";
+
  
 export interface Brand {
   brandId: number;
@@ -5,5 +7,7 @@ export interface Brand {
   brandDescription: string;
   brandWebSiteURL: string;
   brandImage: string;
+
+ // products:Product[];
  // IsDeleted: boolean;
 }
