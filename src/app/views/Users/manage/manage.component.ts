@@ -88,7 +88,7 @@ searchUser() {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.userService.deleteUser(Number(userId)).subscribe({
+        this.userService.deleteUser((userId)).subscribe({
           next: (res) => {
             this.loadUsers();
             console.log('User deleted successfully!');

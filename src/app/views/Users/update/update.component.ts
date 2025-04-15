@@ -15,7 +15,7 @@ import { User } from '../../../../models/User';
 })
 export class UpdateComponent implements OnInit {
   updateUserForm!: FormGroup;
-  userId!: number;
+  userId!: string;
   user!: AddUser;
   
   constructor(
@@ -29,13 +29,17 @@ export class UpdateComponent implements OnInit {
       userLastName: new FormControl('', [Validators.required]),
       userEmail: new FormControl('', [Validators.required, Validators.email]),
       userPhone: new FormControl('', [Validators.required]),
+      userPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),  
+      address: new FormControl('', [Validators.required]),                                
       userRole: new FormControl('', [Validators.required])
     });
   }
 
 
   ngOnInit(): void {
-    this.userId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+    this.userId = this.activatedRoute.snapshot.paramMap.get('id')!;
+
+   // this.userId = this.activatedRoute.snapshot.paramMap.get('id');
     this.userService.getUserById(this.userId).subscribe({
       next: (response) => {
         this.user = response;

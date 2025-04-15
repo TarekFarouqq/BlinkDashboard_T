@@ -20,7 +20,7 @@ export class UserService {
     return this.httpClient.get<User[]>(`${this.apiUrl}/Users/GetAll`);
   }
 
-  getUserById(id: number): Observable<User> {
+  getUserById(id: string): Observable<User> {
     return this.httpClient.get<User>(`${this.apiUrl}/Users/GetById/${id}`);     
 
     
@@ -34,11 +34,11 @@ export class UserService {
     return this.httpClient.post(`${this.apiUrl}/Users/Insert`, user);
   }
 
-  updateUser(id: number, user: User): Observable<any> {
+  updateUser(id: string, user: User): Observable<any> {
     return this.httpClient.put(`${this.apiUrl}/Users/Update/${id}`, user);
   }
 
-  deleteUser(id: number): Observable<any> {
+  deleteUser(id: string): Observable<any> {
     return this.httpClient.delete(`${this.apiUrl}/Users/Delete/${id}`);
   }
 }
