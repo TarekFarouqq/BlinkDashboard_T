@@ -1,52 +1,60 @@
 <div class="container mt-5">
 
-  <div class="d-flex justify-content-between mb-4 w-100">
+  <div class="d-flex flex-wrap justify-content-between mb-4 w-100">
 
-    <div class="d-flex align-items-center mb-4 w-50">
-      <input class="form-control me-2 w-100" type="text" placeholder="Search Brands" [(ngModel)]="search"
+    <div class="d-flex flex-wrap align-items-center mb-2 w-100 w-md-50">
+      <input class="form-control me-2 mb-2 flex-grow-1" type="text" placeholder="Search Brands" [(ngModel)]="search"
         (input)="onSearchInputChange()" />
-      <button class="btn btn-outline-primary" (click)="searchBrand()">Search</button>
+      <button class="btn btn-outline-primary mb-2 search-btn" (click)="searchBrand()">Search</button>
     </div>
-    <div class="d-flex align-items-center justify-content-end mb-2">
-      <button type="button" class="btn btn-danger text-white" routerLink="/Brand/add"
+
+    <div class="d-flex align-items-center justify-content-end mb-2 w-100 w-md-auto">
+      <button type="button" class="btn btn-danger text-white add-btn" routerLink="/Brand/add"
         style="border-radius: 2px !important;">
         <i class="fa-solid fa-plus"></i>
         Add Brand
       </button>
     </div>
+
   </div>
-  <table class="table table-hover table-striped">
-    <thead class="table-light">
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Image</th>
-        <th>Description</th>
-        <th>Website URL</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let brand of  brands">
-        <td>{{ brand.brandId }}</td>
-        <td>{{ brand.brandName }}</td>
-        <td>
-          <img [src]="brand.brandImage" alt="Brand Image" width="50" height="50" class="rounded-circle">
-        </td>
-        <td>{{ brand.brandDescription }}</td>
-        <td>
-          <a [href]="brand.brandWebSiteURL" target="_blank">{{ brand.brandWebSiteURL }}</a>
-        </td>
-        <td>
-          <button type="button" class="btn btn-warning btn-sm border2r me-4" (click)="navigateToUpdate(brand.brandId)">
-            <i class="fa-solid fa-pen-to-square text-white"></i>
-          </button>
-          <button type="button" class="btn btn-dark btn-sm border2r me-4" (click)="deleteBrand(brand.brandId)">
-            <i class="fa-solid fa-trash-can text-white"></i>
-          </button>
-          <button class="btn btn-sm btn-info me-4" (click)="goToBrandDisplay(brand.brandId)">View</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-striped">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Image</th>
+          <th>Description</th>
+          <th>Website URL</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let brand of brands">
+          <td>{{ brand.brandId }}</td>
+          <td>{{ brand.brandName }}</td>
+          <td>
+            <img [src]="brand.brandImage" alt="Brand Image" width="50" height="50" class="rounded-circle">
+          </td>
+          <td>{{ brand.brandDescription }}</td>
+          <td>
+            <a [href]="brand.brandWebSiteURL" target="_blank">{{ brand.brandWebSiteURL }}</a>
+          </td>
+          <td>
+            <button type="button" class="btn btn-warning btn-sm border2r me-2 mb-1"
+              (click)="navigateToUpdate(brand.brandId)">
+              <i class="fa-solid fa-pen-to-square text-white"></i>
+            </button>
+            <button type="button" class="btn btn-dark btn-sm border2r me-2 mb-1"
+              (click)="deleteBrand(brand.brandId)">
+              <i class="fa-solid fa-trash-can text-white"></i>
+            </button>
+            <button class="btn btn-sm btn-info mb-1" (click)="goToBrandDisplay(brand.brandId)">View</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
 </div>
