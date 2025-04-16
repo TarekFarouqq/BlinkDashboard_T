@@ -1,0 +1,93 @@
+@if(!isLoading){
+   <!-- Top Panel -->
+<div class="row col-12 col-lg-12 col-md-12 col-sm-12 align-items-center justify-content-between border-bottom p-2">
+   <!-- Search  -->
+    <div class="row col-12 col-lg-6 col-md-9 col-sm-12">
+       <input type="text" class="form-control" placeholder="Search Category">
+    </div>
+    <!-- Add Category -->
+    <div class="row col-12 col-lg-2 col-md-3 col-sm-12">
+     <button class="btn btn-primary rounded-2"  (click)="NavigateToDetails(0)">
+        <i class="fa-solid fa-plus"></i>
+        Add Category
+     </button>
+    </div>
+</div>
+<!-- Table -->
+<div class="row col-12 col-lg-12 col-md-12 col-sm-12 border-bottom" style="height: 66.1 vh;overflow-y: auto;">
+  <table class="table table-hover table-rounded">
+     <thead>
+        <tr>
+         @if(MobileWidth){
+            <th style="width: 15%;" class="text-center">ID</th>
+            <th style="width: 70%;" class="text-center">Category Name</th>
+            <th style="width: 15%;" class="text-center">Actions</th>
+         }@else{
+            <th style="width: 10%;" class="text-center">ID</th>
+            <th style="width: 75%;" class="text-center">Category Name</th>
+            <th style="width: 15%;" class="text-center">Actions</th>
+         }
+        </tr>
+     </thead>
+     <tbody>
+         @for(Category of CategoryArr; track Category.categoryId){
+            <tr>
+               <th class="align-middle text-center">{{Category.categoryId}}</th>
+               <td class="align-middle text-start">{{Category.categoryName}}</td>
+               <td >
+                  <div class="row col-12 gap-1 d-flex align-items-center justify-content-center">
+                     <button class="btn btn-warning col-lg-5 col-md-5 col-sm-12 text-white" (click)="NavigateToDetails(Category.categoryId)">
+                        <i class="fa-solid fa-pen"></i>
+                     </button>
+                     <button class="btn btn-danger col-lg-5 col-md-5 col-sm-12 text-white"  (click)="openDeleteModal(Category.categoryId)">
+                        <i class="fa-solid fa-trash"></i>
+                     </button>
+                  </div>
+               </td>
+            </tr>
+         }
+     </tbody>
+  </table>
+</div>
+<!-- Paggination -->
+<div class="row col-12 col-lg-12 col-md-12 col-sm-12 d-flex align-items-center justify-content-center">
+  <div class="mt-3 row col-12 col-lg-12 col-md-12 col-sm-12 d-flex align-items-end justify-content-end mb-2">
+     <div class="col-2 col-lg-1 col-md-3 col-sm-4 m-0 p-0 d-flex justify-content-end">
+        <button class="btn btn-primary col-12 col-lg-6 col-md-9 col-sm-12"  [disabled]="CurrentPage==1" (click)="PrevPage()">
+           <i class="fa-solid fa-arrow-left"></i>
+        </button>
+     </div>
+     <div class="col-3 col-lg-1 col-md-3 col-sm-4 m-0 p-0">
+        <input type="number" class="form-control text-center" [ngModel]="CurrentPage" disabled>
+     </div>
+     <div class="col-2 col-lg-1 col-md-3 col-sm-4 m-0 p-0">
+        <button class="btn btn-primary col-12 col-lg-6 col-md-9 col-sm-12" (click)="NextPage()" [disabled]="CurrentPage==MaxPages">
+           <i class="fa-solid fa-arrow-right"></i>
+        </button>
+     </div>
+  </div>
+</div>
+}@else{
+<div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="height: 79vh !important;">
+   <c-spinner variant="grow" color="danger" />
+   <p>Loading</p>
+</div>
+}
+<!-- Confirm Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+   <div class="modal-dialog modal-dialog-centered">
+     <div class="modal-content border-danger">
+       <div class="modal-header bg-danger text-white">
+         <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+         <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>
+       <div class="modal-body">
+         Are you sure you want to delete this product?
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-secondary border2r" data-bs-dismiss="modal">Cancel</button>
+         <button type="button" class="btn btn-danger border2r text-white" (click)="ConfirmDelete()">Yes, Delete</button>
+       </div>
+     </div>
+   </div>
+ </div>
