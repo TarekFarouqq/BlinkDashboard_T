@@ -56,5 +56,19 @@
         </tr>
       </tbody>
     </table>
+
+  <!-- Pagination user : -->
+ 
+<div class="d-flex justify-content-center align-items-center mt-3 pagination-container">
+  <button  [disabled]="currentPage === 1" (click)="previousPage()" class="btn btn-outline-primary">
+    <i class="fa-solid fa-chevron-left"></i> Previous
+  </button>
+
+  <span class="mx-2">Page {{ currentPage }} of {{ totalPages }}</span>
+
+  <button class="btn btn-outline-primary" [disabled]="currentPage === totalPages" (click)="nextPage()">  Next <i class="fa-solid fa-chevron-right"></i></button>
+</div>
+
+
   </div>
 </div>

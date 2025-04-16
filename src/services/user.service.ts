@@ -41,4 +41,14 @@ export class UserService {
   deleteUser(id: string): Observable<any> {
     return this.httpClient.delete(`${this.apiUrl}/Users/Delete/${id}`);
   }
+
+// user pagination : 
+getPaginatedUsers(pageNumber: number, pageSize: number): Observable<User[]> {
+  return this.httpClient.get<User[]>(`${this.apiUrl}/Users/GetAllPaginated?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+}
+
+getPagesCount(pageSize: number): Observable<number> {
+  return this.httpClient.get<number>(`${this.apiUrl}/Users/GetPagesCount?pageSize=${pageSize}`);
+}
+
 }

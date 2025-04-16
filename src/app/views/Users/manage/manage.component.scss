@@ -1,62 +1,81 @@
- // ** for responsive **
+ 
 .btn-primary {
-    background-color: #ff5242;
-    border-color: #ff5242;
+  background-color: #ff5242;
+  border-color: #ff5242;
+}
+
+.btn-primary:hover {
+  background-color: #f62d1e;
+  border-color: #f62d1e;
+}
+
+h2 {
+  font-size: 1.8rem;
+  color: #343a40;
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+}
+
+button {
+  margin-right: 5px;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+ 
+.page-info {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+}
+
+ // responsiivee
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: auto;
   }
-  
-  .btn-primary:hover {
-    background-color: #f62d1e;
-    border-color: #f62d1e;
+
+  .d-flex.flex-wrap .form-control {
+    width: 100% !important;
+    margin-bottom: 10px;
   }
-  
-  h2 {
-    font-size: 1.8rem;
-    color: #343a40;
-    font-weight: bold;
+
+  .d-flex.flex-wrap .search-btn {
+    width: 100% !important;
   }
-  
-  table {
-    width: 100%;
+
+  .add-btn {
+    width: 100% !important;
   }
-  
-  button {
-    margin-right: 5px;
+
+  .d-flex.justify-content-end {
+    justify-content: center !important;
   }
-  
-  button:hover {
-    opacity: 0.9;
+
+  .btn {
+    margin-right: 0 !important;
+    margin-bottom: 5px;
   }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .table-responsive {
-      overflow-x: auto;
-    }
-  
-    .d-flex.flex-wrap .form-control {
-      width: 100% !important;
-      margin-bottom: 10px;
-    }
-  
-    .d-flex.flex-wrap .search-btn {
-      width: 100% !important;
-    }
-  
-    .add-btn {
-      width: 100% !important;
-    }
-  
-    .d-flex.justify-content-end {
-      justify-content: center !important;
-    }
-  
-    .btn {
-      margin-right: 0 !important;
-      margin-bottom: 5px;
-    }
-  
-    td {
-      word-break: break-word;
-    }
+
+  td {
+    word-break: break-word;
   }
-  
+
+  /* pagination responsive :: */
+  .pagination-container {
+    flex-direction: column;
+  }
+
+  .pagination-container button {
+    width: 100% !important;
+  }
+
+  .page-info {
+    margin: 10px 0;
+  }
+}
