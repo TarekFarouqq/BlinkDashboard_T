@@ -1,0 +1,78 @@
+<form [formGroup]="DiscountForm">
+  <!-- Discount Details -->
+  <div class="row col-lg-12 col-md-12 col-sm-12 col-12 border-bottom">
+    <div class="flex-column col-lg-4 mb-3">
+      <label for="inp-StartDate">Start Date</label>
+      <input type="date" id="inp-StartDate" class="form-control" formControlName="discountFromDate">
+    </div>
+    <div class="flex-column col-lg-4 mb-3">
+      <label for="inp-EndDate">End Date</label>
+      <input type="date" id="inp-EndDate" class="form-control" formControlName="discountEndDate">
+    </div>
+    <div class="flex-column col-lg-4 mb-3">
+      <label for="inp-DiscountPercentage">Discount Percentage</label>
+      <input type="number" id="inp-DiscountPercentage" class="form-control" formControlName="discountPercentage">
+    </div>
+  </div>
+  <!-- Product Detail -->
+  <div class="row col-lg-12 col-md-12 col-sm-12 col-12 mt-3">
+    <!-- Inserting Tools -->
+    <div class="row col-lg-12 col-md-12 col-sm-12 col-12 d-flex align-items-center justify-content-center">
+      <div class="row col-lg-12 col-md-12 col-sm-12 col-12 gap-2 border-bottom mb-2">
+        <div class="row col-lg-4 col-md-5 col-sm-12 col-12 mb-2">
+          <select class="form-select" aria-label="Default select example" name="selectedFilter"
+            aria-placeholder="Group Select" [(ngModel)]="SelectedFilter" [ngModelOptions]="{standalone: true}"
+            (change)="CreateFilterSelect()">
+            <option value="0">All</option>
+            <option value="1">Category</option>
+            <option value="2">Brand</option>
+          </select>
+        </div>
+        <div class="row col-lg-4 col-md-5 col-sm-12 col-12 mb-2" id="input-method">
+
+        </div>
+        <div class="row col-lg-2 col-md-2 col-sm-6 col-6 mb-2">
+          <button class="btn btn-primary" (click)="AddGroup()">
+            <i class="fa-solid fa-check"></i>
+          </button>
+        </div>
+        <div class="row col-lg-2 col-md-2 col-sm-6 col-6 mb-2">
+          <button class="btn btn-dark text-white" (click)="AddNewProduct()">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="row col-lg-12 col-md-12 col-sm-12 col-12" style="height: 57vh; overflow-y: auto;">
+        <div formArrayName="insertProductDiscountDetails">
+          <div *ngFor="let product of DiscountProducts.controls;let i = index" [formGroupName]="i" class="">
+            <div class="row col-lg-12 col-md-12 col-sm-12 col-12 border-bottom d-flex align-items-center justify-content-center">
+              <div class="flex-column col-lg-4 col-md-4 col-sm-12 col-12 p-1">
+                Product Name
+                <ng-select [items]="ProductArr" formControlName="productId" bindValue="productId"
+                  bindLabel="productName" placeholder="Select Product" (change)="ChangeProductDiscountAmount(i)">
+                </ng-select>
+              </div>
+              <div class="flex-column col-lg-4 col-md-4 col-sm-8 col-8 p-1">
+                Discount Amount
+                <input type="number" class="form-control mt-2" formControlName="discountAmount"
+                  style="font-weight: bold; font-size: 16px; margin-top: 13px !important;">
+              </div>
+              <div class="flex-column col-lg-4 col-md-4 col-sm-2 col-2 p-1">
+                Delete
+                <button class="btn btn-danger text-white d-flex align-items-center justify-content-center" style="height: 40px;" (click)="deleteProduct(i)">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Form Submit -->
+  <div class="row col-lg-12 col-mg-12 col-sm-12 col-12 d-flex align-items-center justify-content-end mt-2">
+    <div class="row col-lg-2 col-md-4 col-sm-6 col-12">
+      <button class="btn btn-success text-white">Save Changes</button>
+    </div>
+  </div>
+</form>

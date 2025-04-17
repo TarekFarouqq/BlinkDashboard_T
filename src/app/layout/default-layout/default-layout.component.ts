@@ -176,6 +176,11 @@ export class DefaultLayoutComponent implements OnInit {
             url: '/product/review-products',
             icon: 'nav-icon-bullet',
           },
+          {
+            name: 'Manage Discounts',
+            url: '/product/manage-discounts',
+            icon: 'nav-icon-bullet',
+          },
         ],
       },
       //End Products
