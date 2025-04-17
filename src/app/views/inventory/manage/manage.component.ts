@@ -17,13 +17,15 @@ import { FormsModule } from '@angular/forms';
 })
 export class ManageComponent implements OnInit {
 invetoryArr!: Inventory[];
-  isLoading: boolean = true;
-  text:string="";
+isLoading: boolean = true;
+text:string="";
+isInventoryHasProducts! : boolean;
 
   constructor(private inventoryService: InventoryService, private router: Router) {}
   
   ngOnInit(){
     this.getAllInventories();
+    
   }
 
 
@@ -45,30 +47,63 @@ invetoryArr!: Inventory[];
   }
 
   deleteInventory(inventoryId: number) {
-
-    Swal.fire({
-      title: 'Are you sure?',
-      icon: 'warning',
-      width: 400,
-      showCancelButton: true,
-      confirmButtonText: 'Delete',
-      confirmButtonColor: '#d33',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        
-    this.inventoryService.delete(inventoryId).subscribe({
-      next: (res) => {
-        this.getAllInventories();
-        console.log('Inventory deleted successfully');
+    this.inventoryService.isInventoryHasProducts(inventoryId).subscribe({
+      next: (response) => {
+        if (response) {
+          Swal.fire({
+            title: 'This inventory has products.',
+            text: 'You cannot delete this inventory.',
+            icon: 'warning',
+            width: 400,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6',
+          });
+          return;
+        }
+  
+        Swal.fire({
+          title: 'Are you sure?',
+          icon: 'warning',
+          width: 400,
+          showCancelButton: true,
+          confirmButtonText: 'Delete',
+          confirmButtonColor: '#d33',
+          cancelButtonText: 'Cancel',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.inventoryService.delete(inventoryId).subscribe({
+              next: (res) => {
+                this.getAllInventories();
+                Swal.fire({
+                  title: 'Deleted!',
+                  text: 'Inventory has been deleted.',
+                  icon: 'success',
+                  width: 400
+                });
+              },
+              error: (err) => {
+                console.error(err);
+                Swal.fire({
+                  title: 'Error!',
+                  text: 'Failed to delete inventory',
+                  icon: 'error',
+                  width: 400
+                });
+              }
+            });
+          }
+        });
       },
-      error: (err) => {
-        console.error(err);
+      error: (error) => {
+        console.error("Error checking inventory:", error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to check inventory status',
+          icon: 'error',
+          width: 400
+        });
       }
     });
-      }
-    });
-
   }
 
 }
