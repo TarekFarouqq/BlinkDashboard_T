@@ -1,0 +1,64 @@
+<form [formGroup]="TransactionForm" (submit)="onSubmit()">
+  <div class="row col-lg-12 col-md-12 col-sm-12 col-12 border-bottom">
+    <div class="flex-column col-lg-3 col-md-3 col-sm-12 col-12 mb-3" [formGroup]="TransactionDetail">
+      Source Inventory
+      <select class="form-select" formControlName="srcInventoryId">
+        <option *ngFor="let inventory of InventoryArr" [ngValue]="inventory.inventoryId">
+          {{ inventory.inventoryName }}
+        </option>
+      </select>
+    </div>
+    <div class="flex-column col-lg-3 col-md-3 col-sm-12 col-12 mb-3" [formGroup]="TransactionDetail">
+      Destination Inventory
+      <select class="form-select" formControlName="distInventoryId">
+        <option *ngFor="let inventory of InventoryArr" [ngValue]="inventory.inventoryId">
+          {{ inventory.inventoryName }}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="row col-lg-12 col-md-12 col-sm-12 col-12 border-bottom">
+    <div
+      class="row col-12 col-md-12 col-sm-12 col-12 gap-2 border-bottom d-flex align-items-center justify-content-end">
+      <div class="row col-1 col-md-2 col-sm-12 col-12 mb-2 mt-2">
+        <button class="btn btn-dark" type="button" (click)="AddAllProducts()">
+          All Products
+        </button>
+      </div>
+      <div class="row col-1 col-md-2 col-sm-12 col-12 mb-2 mt-2">
+        <button class="btn btn-primary" type="button" (click)="AddTransactionProduct()">
+          Add Products
+        </button>
+      </div>
+    </div>
+    <div class="" style="height: 59vh; overflow-y: auto;" formArrayName="transactionProducts">
+      <div class="row col-lg-12 col-md-12 col-sm-12 col-12 mt-2"
+        *ngFor="let product of TransactionProducts.controls; let i = index" [formGroupName]="i">
+        <div class="flex-column col-lg-4 col-md-4 col-sm-12 col-12">
+          Product Name
+          <ng-select [items]="ProductArr" formControlName="productId" bindValue="productId" bindLabel="productName">
+          </ng-select>
+        </div>
+        <div class="flex-column col-lg-4 col-md-4 col-sm-12 col-12">
+          Stock Quantity
+          <input type="number" class="form-control mt-3" formControlName="transactionQuantity">
+        </div>
+        <div class="flex-column col-lg-1 col-md-4 col-sm-12 col-12 d-flex align-items-center justify-content-center">
+          <div class="row col-9" style="margin-top: 35px;">
+            <button class="btn btn-danger text-white" type="button" (click)="DeleteProduct(i)">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Form Submit -->
+  <div class="row col-lg-12 col-md-12 col-sm-12 col-12 d-flex align-items-center justify-content-end mt-2">
+    <div class="row col-lg-2 col-md-4 col-sm-12 col-12">
+      <button class="btn btn-success text-white" type="submit">
+        Save Changes
+      </button>
+    </div>
+  </div>
+</form>

@@ -181,6 +181,11 @@ export class DefaultLayoutComponent implements OnInit {
             url: '/product/manage-discounts',
             icon: 'nav-icon-bullet',
           },
+          {
+            name: 'Inventory Transaction',
+            url: '/product/manage-transaction',
+            icon: 'nav-icon-bullet',
+          },
         ],
       },
       //End Products
