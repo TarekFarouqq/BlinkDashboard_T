@@ -1,6 +1,6 @@
 
-export interface AddUser {
-
+export interface updateUser {
+id:string;
   userName: string;
   firstName: string;
   lastName: string;

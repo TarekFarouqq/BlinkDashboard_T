@@ -1,0 +1,127 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Add New Admin</h2>
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      <form class="classic-form p-4" [formGroup]="addAdminForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <label class="form-label">User Name</label>
+              <input type="text" class="form-control" formControlName="userName">
+              <div *ngIf="userName?.invalid && (userName?.dirty || userName?.touched)">
+                <div class="invalid-feedback d-block">
+                  <span *ngIf="userName?.errors?.['required']">User Name is required</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">First Name</label>
+              <input type="text" class="form-control" formControlName="fName">
+              <div *ngIf="fName?.invalid && (fName?.dirty || fName?.touched)">
+                <div class="invalid-feedback d-block">
+                  <span *ngIf="fName?.errors?.['required']">First Name is required</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Last Name</label>
+              <input type="text" class="form-control" formControlName="lName">
+              <div *ngIf="lName?.invalid && (lName?.dirty || lName?.touched)">
+                <div class="invalid-feedback d-block">
+                  <span *ngIf="lName?.errors?.['required']">Last Name is required</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Address</label>
+              <input type="text" class="form-control" formControlName="address">
+              <div *ngIf="address?.invalid && (address?.dirty || address?.touched)">
+                <div class="invalid-feedback d-block">
+                  <span *ngIf="address?.errors?.['required']">Address is required</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" formControlName="email">
+              <div *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+                <div class="invalid-feedback d-block">
+                  <span *ngIf="email?.errors?.['required']">Email is required</span>
+                  <span *ngIf="email?.errors?.['email']">Enter a valid email address</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control" formControlName="password">
+              <div *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+                <div class="invalid-feedback d-block">
+                  <span *ngIf="password?.errors?.['required']">Password is required</span>
+                  <span *ngIf="password?.errors?.['minlength']">Password must be at least 8 characters</span>
+                  <span *ngIf="password?.errors?.['pattern']">
+                    Password must contain:
+                    <ul>
+                      <li>At least one uppercase letter</li>
+                      <li>At least one number</li>
+                      <li>At least one special character</li>
+                    </ul>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Re-enter Password</label>
+              <input type="password" class="form-control" formControlName="rePassword">
+              <div *ngIf="rePassword?.invalid && (rePassword?.dirty || rePassword?.touched)">
+                <div class="invalid-feedback d-block">
+                  <span *ngIf="rePassword?.errors?.['required']">Re-entering password is required</span>
+                </div>
+              </div>
+              <div *ngIf="addAdminForm.errors?.['mismatch'] && (addAdminForm.dirty || addAdminForm.touched)">
+                <div class="invalid-feedback d-block">
+                  <span>Passwords do not match</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-control" formControlName="phoneNumber">
+            </div>
+
+             
+          </div>
+        </div>
+
+        <div class="form-footer mt-4">
+          <button type="submit" class="btn btn-danger text-light" 
+            style="width: 30%; border-radius: 2px !important;" 
+            [disabled]="addAdminForm.invalid">
+            Add Admin
+          </button>
+        </div>
+        
+        <div *ngIf="serverError" class="alert alert-danger mt-3">
+          {{ serverError }}
+        </div>
+        
+        <div class="form-footer mt-4">
+          <button type="button" class="btn btn-secondary text-light"
+            style="width: 30%; border-radius: 2px !important;" 
+            [routerLink]="['/Users/manage']">
+            Back to List
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

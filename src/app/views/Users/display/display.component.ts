@@ -40,24 +40,9 @@ export class DisplayComponent  implements OnInit{
       }
     });
   }
-  navigateToUpdate(id: string): void {
-    this.router.navigate(['/Users/update', id]);
-  }
+   
   goBackToList(): void {
     this.router.navigate(['/Users/manage']);
   }
-  deleteUser(id: string): void {
-    if (confirm('Are you sure you want to delete this user?')) {
-      this.userService.deleteUser(id).subscribe({
-        next: () => {
-          alert('User deleted successfully!');
-          this.goBackToList();
-        },
-        error: (err) => {
-          console.error('Error deleting user:', err);
-        }
-      });
-    }
-  
-}
+ 
 }

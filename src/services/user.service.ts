@@ -5,6 +5,9 @@ import { User } from '../models/User';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment.development';
 import { AddUser } from '../models/add-user';
+import { AddAdmin } from 'src/models/add-admin';
+ 
+ 
 
 @Injectable({
   providedIn: 'root'
@@ -50,5 +53,19 @@ getPaginatedUsers(pageNumber: number, pageSize: number): Observable<User[]> {
 getPagesCount(pageSize: number): Observable<number> {
   return this.httpClient.get<number>(`${this.apiUrl}/Users/GetPagesCount?pageSize=${pageSize}`);
 }
+
+// add admin :
+addAdmin(admin: AddAdmin): Observable<any> {
+  return this.httpClient.post(`${this.apiUrl}/Account/RegisterAdmin`, admin);
+}
+ // add client 
+// addClient(client: AddUser): Observable<any> {
+//   return this.httpClient.post(`${this.apiUrl}/Users/Insert`, client);
+// }
+// // add supplier :
+// addSupplier(supplier: AddUser): Observable<any> {
+//   return this.httpClient.post(`${this.apiUrl}/Users/Insert`, supplier);
+// }
+ 
 
 }
