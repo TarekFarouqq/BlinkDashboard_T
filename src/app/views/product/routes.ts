@@ -74,6 +74,22 @@ export const routes: Routes = [
           title: 'Discount-Details'
         }
       },
+      {
+        path: 'manage-transaction',
+         canActivate: [adminGuard],
+        loadComponent: () => import('./manage-inventory-transaction/manage-inventory-transaction.component').then(m => m.ManageInventoryTransactionComponent),
+        data: {
+          title: 'Manage-Transactions'
+        }
+      },
+      {
+        path: 'transaction-details/:id',
+         canActivate: [adminGuard],
+        loadComponent: () => import('./transaction-details/transaction-details.component').then(m => m.TransactionDetailsComponent),
+        data: {
+          title: 'Transaction-Details'
+        }
+      },
     ]
   }
 ];

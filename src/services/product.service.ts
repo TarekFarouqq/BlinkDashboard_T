@@ -57,5 +57,7 @@ export class ProductService {
   GetReviewSuppliedProducts():Observable<ReviewSuppliedProducts[]>{
     return this.httpClient.get<ReviewSuppliedProducts[]>(`${this.apiUrl}/product/GetSuppliedProducts`);
   }
-
+  GetProductStockInInventory(srcId:number,prdId:number):Observable<number>{
+    return this.httpClient.get<number>(`${this.apiUrl}/Product/GetProductStockInInventory/${srcId}/${prdId}`);
+  }
 }
