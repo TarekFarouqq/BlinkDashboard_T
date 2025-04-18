@@ -35,6 +35,8 @@ export class ManageComponent implements OnInit{
       next: (res) => {
         this.users = res;
         this.isLoading = false;
+        console.log(this.users);
+
       },
       error: (err) => {
         console.error('Error loading users:', err);
