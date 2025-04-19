@@ -29,53 +29,39 @@ export class ManageComponent implements OnInit {
   ) {
     this.UserRole = this.authServ.getUserRoleFromToken() ?? '';
     this.CurrentUserId = this.authServ.getUserId() ?? '';
-    this.productServ.GetTotalPages(8).subscribe((res) => {
-      this.TotalPages = res;
-      this.CurrentPage=this.TotalPages;
-    },(error)=>{
-      if(error.status==404){
-        this.TotalPages=1;
-      }
-    }
-  );
+    
+    // First get total pages
+    this.productServ.GetTotalPages(8).subscribe({
+      next: (res) => {
+        this.TotalPages = res;
+        this.CurrentPage = this.TotalPages;
+        
+        // Then get products for the last page
+        this.productServ.GetPagginatedProducts(this.TotalPages, 8).subscribe({
+          next: (products) => {
+            this.ProductArr = products;
+            this.isLoading = false;
+          },
+          error: (err) => console.error(err)
+        });
+      },
+      error: (err) => console.error(err)
+    });
   }
   ngOnInit() {
-    this.CurrentPage = this.TotalPages;
-    this.productServ
-      .GetPagginatedProducts(this.CurrentPage, 8)
-      .subscribe((res) => {
-        this.ProductArr = res;
-        if (this.UserRole == 'Supplier') {
-          this.ProductArr = this.ProductArr.filter((prd) => {
-            return prd.supplierId == this.CurrentUserId;
-          });
-        }
-      });
-    this.isLoading = false;
+
   }
   nextPage() {
     this.CurrentPage++;
     if (this.CurrentPage > this.TotalPages) {
       this.CurrentPage = this.TotalPages;
     }
-
-    this.productServ
-      .GetPagginatedProducts(this.CurrentPage, 8)
-      .subscribe((res) => {
-        this.ProductArr = res;
-      });
   }
   prevPage() {
     this.CurrentPage--;
     if (this.CurrentPage < 1) {
       this.CurrentPage = 1;
     }
-
-    this.productServ
-      .GetPagginatedProducts(this.CurrentPage, 8)
-      .subscribe((res) => {
-        this.ProductArr = res;
-      });
   }
   openDeleteModal(productId: number) {
     this.selectedProductId = productId;

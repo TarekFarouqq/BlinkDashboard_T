@@ -60,4 +60,17 @@ export class ProductService {
   GetProductStockInInventory(srcId:number,prdId:number):Observable<number>{
     return this.httpClient.get<number>(`${this.apiUrl}/Product/GetProductStockInInventory/${srcId}/${prdId}`);
   }
+  GetBrandData():Observable<any[]>{
+    return this.httpClient.get<any[]>(`${this.apiUrl}/Product/GetListOfBrands`);
+  }
+  GetSubCategories():Observable<any[]>{
+    return this.httpClient.get<any[]>(`${this.apiUrl}/Product/GetSubCategories`);
+  }
+  GetListOfInventory():Observable<any[]>{
+    return this.httpClient.get<any[]>(`${this.apiUrl}/Product/GetListOfInventory`);
+  }
+  DeleteProductImage(id: number, path: string): Observable<any> {
+    const encodedPath = encodeURIComponent(path);
+    return this.httpClient.delete(`${this.apiUrl}/product/${id}/${encodedPath}`);
+  }
 }
