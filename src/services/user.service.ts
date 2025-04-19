@@ -5,7 +5,7 @@ import { User } from '../models/User';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment.development';
 import { AddUser } from '../models/add-user';
-import { AddAdmin } from 'src/models/add-admin';
+import { AddAdmin } from '../models/add-admin';
  
  
 
