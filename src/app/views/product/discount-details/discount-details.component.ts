@@ -172,7 +172,7 @@ export class DiscountDetailsComponent implements OnInit {
     if (parentObj) {
       if (this.SelectedFilter == 1) {
         //Category
-        this.categoryServ.GetAll().subscribe((res) => {
+        this.categoryServ.GetAll(1,1000).subscribe((res) => {
           this.CategoryArr = res;
           const selectObj = document.createElement('select');
           selectObj.className = 'form-select';
