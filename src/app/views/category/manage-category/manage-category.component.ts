@@ -20,30 +20,44 @@ export class ManageCategoryComponent implements OnInit {
   CategoryArr!: Category[];
   isLoading: boolean = true;
   selectedProductId: number = 0;
+  pgSize: number = 10;
+  TotalPages!: number;
   @HostListener('window:resize', [])
   onWindowResize() {
     this.checkScreenSize();
   }
-  constructor(private categoryServ: CategoryService,private router:Router) {}
+  constructor(private categoryServ: CategoryService, private router: Router) {}
   ngOnInit() {
     this.isLoading = true;
+    this.categoryServ.GetTotalPages(this.pgSize).subscribe((res) => {
+      this.TotalPages = res;
+      this.CurrentPage = this.TotalPages;
+      this.isLoading = false;
+    });
     this.checkScreenSize();
     this.GetCategoryData();
-    this.isLoading = false;
   }
   private checkScreenSize() {
+    this.isLoading = true;
     this.MobileWidth = window.innerWidth <= 540;
+    this.isLoading = false;
   }
-  GetCategoryData(){
-    this.categoryServ.GetAll().subscribe((res)=>{
-      this.CategoryArr=res;
-    })
+  GetCategoryData() {
+    this.isLoading = true;
+    this.categoryServ.GetAll(this.CurrentPage, this.pgSize).subscribe((res) => {
+      this.CategoryArr = res;
+      this.isLoading = false;
+    });
   }
   NextPage() {
+    this.isLoading=true;
     this.CurrentPage += 1;
+    this.GetCategoryData();
   }
   PrevPage() {
+    this.isLoading=true;
     this.CurrentPage -= 1;
+    this.GetCategoryData();
   }
   openDeleteModal(id: number) {
     this.selectedProductId = id;
@@ -55,9 +69,8 @@ export class ManageCategoryComponent implements OnInit {
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     modalInstance.hide();
     this.isLoading = true;
-    this.categoryServ
-      .DeleteParentCategory(this.selectedProductId)
-      .subscribe((res) => {
+    this.categoryServ.DeleteParentCategory(this.selectedProductId).subscribe(
+      (res) => {
         Swal.fire({
           toast: true,
           position: 'top',
@@ -67,8 +80,9 @@ export class ManageCategoryComponent implements OnInit {
           timer: 2500,
         });
         this.GetCategoryData();
-        this.isLoading=false;
-      },(error)=>{
+        this.isLoading = false;
+      },
+      (error) => {
         Swal.fire({
           toast: true,
           position: 'top',
@@ -78,10 +92,11 @@ export class ManageCategoryComponent implements OnInit {
           timer: 2500,
         });
         this.GetCategoryData();
-        this.isLoading=false;
-      });
+        this.isLoading = false;
+      }
+    );
   }
-  NavigateToDetails(id:number){
-    this.router.navigate(['category/details',id])
+  NavigateToDetails(id: number) {
+    this.router.navigate(['category/details', id]);
   }
 }

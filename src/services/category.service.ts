@@ -10,8 +10,11 @@ import { Category } from '../models/category';
 export class CategoryService {
   constructor(private httpClient : HttpClient) { }
   private apiUrl=environment.apiUrl;
-  GetAll():Observable<Category[]>{
-    return this.httpClient.get<Category[]>(this.apiUrl + '/Category');
+  GetAll(pgNumber:number,pgSize:number):Observable<Category[]>{
+    return this.httpClient.get<Category[]>(this.apiUrl + '/Category/'+ pgNumber + '/' + pgSize);
+  }
+  GetTotalPages(pgSize:number):Observable<number>{
+    return this.httpClient.get<number>(this.apiUrl + '/Category/GetCategoryTotalPages/' + pgSize);
   }
   GetById(id:number):Observable<Category>{
     return this.httpClient.get<Category>(this.apiUrl + '/Category/'+id);
