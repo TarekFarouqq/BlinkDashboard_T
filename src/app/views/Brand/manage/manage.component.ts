@@ -18,21 +18,56 @@ export class ManageComponent implements OnInit {
   //productList: Product[]=[];
   search: string = '';
   isLoading: boolean = true;
+
+  currentPage: number = 1;
+pageSize: number = 5;
+totalPages: number = 0;
+
   constructor(private brandService: BrandService, private router: Router) {}
   ngOnInit(): void {
+    this.loadPagesCount();
     this.loadBrands();
+
   }
   loadBrands(): void {
-    this.brandService.getAllBrands().subscribe({
-      next: (res) => {
-        this.brands = res;
-        this.isLoading = false;
+    this.isLoading = true;
+  this.brandService.getPaginatedBrands(this.currentPage, this.pageSize).subscribe({
+    next: (res) => {
+      this.brands = res;
+      this.isLoading = false;
+    },
+    error: (err) => {
+      console.error('Error loading brands:', err);
+      this.isLoading = false;
+    },
+  });
+  }
+
+  loadPagesCount(): void {
+    this.brandService.getBrandsPagesCount(this.pageSize).subscribe({
+      next: (count) => {
+        this.totalPages = count;
       },
       error: (err) => {
-        console.error('Error loading brands:', err);
+        console.error('Error getting pages count:', err);
       },
     });
   }
+  
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadBrands();
+    }
+  }
+  
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadBrands();
+    }
+  }
+  
   searchBrand() {
     if (this.search.trim()) {
       this.brandService.getBrandByName(this.search).subscribe({
