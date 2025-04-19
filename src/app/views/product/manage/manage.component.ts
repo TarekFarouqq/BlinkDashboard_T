@@ -31,6 +31,7 @@ export class ManageComponent implements OnInit {
     this.CurrentUserId = this.authServ.getUserId() ?? '';
     this.productServ.GetTotalPages(8).subscribe((res) => {
       this.TotalPages = res;
+      this.CurrentPage=this.TotalPages;
     },(error)=>{
       if(error.status==404){
         this.TotalPages=1;
