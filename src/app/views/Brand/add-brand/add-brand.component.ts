@@ -46,7 +46,7 @@ export class AddBrandComponent implements OnInit {
         'BrandWebSiteURL',
         this.addBrandForm.get('brandWebSiteURL')?.value
       );
-      formData.append('BrandImageFile', this.selectedFile); // 👈 هنا الصورة
+      formData.append('BrandImageFile', this.selectedFile); 
 
       this.brandService.aaddBrand(formData).subscribe({
         next: (response) => {
