@@ -75,8 +75,11 @@
       <i class="fa-solid fa-arrow-left"></i>
     </button>
 
-    <input type="text" class="form-control text-center border border-danger rounded-pill shadow-sm" style="width: 60px;"
-      placeholder="1" disabled [value]="CurrentPage" />
+    <input type="text" class="form-control text-center border border-danger rounded-pill shadow-sm" style="width: 80px;"
+      placeholder="1" disabled [ngModel]="CurrentPage" />
+    Of
+    <input type="text" class="form-control text-center border border-danger rounded-pill shadow-sm" style="width: 80px;"
+      placeholder="1" disabled [ngModel]="TotalPages" />
 
     <button class="btn btn-outline-danger rounded-circle shadow-sm" title="Next" (click)="nextPage()"
       [disabled]="CurrentPage == TotalPages">
