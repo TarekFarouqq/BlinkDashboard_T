@@ -21,8 +21,14 @@ export class ProductService {
   GetTotalPages(pgSize:number):Observable<number>{
     return this.httpClient.get<number>(`${this.apiUrl}/product/GetPagesCount/${pgSize}`);
   }
+  GetTotalPagesWithUser(pgSize:number,UserId:string):Observable<number>{
+    return this.httpClient.get<number>(`${this.apiUrl}/product/GetPagesCountWithUser/${pgSize}/${UserId}`);
+  }
   GetPagginatedProducts(pgNumber:number,pgSize:number):Observable<Product[]>{
     return this.httpClient.get<Product[]>(this.apiUrl + '/product/GetAllWithPaging/' + pgNumber + '/' + pgSize);
+  }
+  GetPagginatedProductsWithUser(pgNumber:number,pgSize:number,UserId:string):Observable<Product[]>{
+    return this.httpClient.get<Product[]>(`${this.apiUrl}/product/GetAllWithPagingWithUser/${pgNumber}/${pgSize}/${UserId}`);
   }
   GetFilteredProducts(filter:string,pgNumber:number,pgSize:number):Observable<Product[]>{
     return this.httpClient.get<Product[]>(this.apiUrl + '/product/GetFilteredProducts/' + filter + '/' + pgNumber + '/' + pgSize);

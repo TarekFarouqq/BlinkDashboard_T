@@ -48,7 +48,7 @@ export class ReviewProductDetailsComponent implements OnInit{
     this.inventoryServ.getAll().subscribe((res)=>{
       this.InventryArr=res;
     })
-    this.brandServ.getAllBrands().subscribe((res)=>{
+    this.productServ.GetBrandData().subscribe((res)=>{
       this.BrandArr=res;
     })
     this.productServ.GetChildCategory().subscribe((res)=>{
