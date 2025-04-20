@@ -34,12 +34,22 @@ export class ManageDiscountsComponent implements OnInit {
     this.endDateSubject.next(parsedDate);
   }
   ngOnInit() {
-    this.discountServ.GetDiscounts().subscribe((res) => {
-      this.DiscountArr = res;
-    });
-    this.startDate$.subscribe((res) => {
-      this.filterByDate();
-    });
+    this.isLoading=true
+    combineLatest([this.startDate$,this.endDate$]).subscribe(([startDate,endDate])=>{
+      this.discountServ.GetDiscountsBetweenDates(startDate,endDate).subscribe({
+        next:(res)=>{
+          this.DiscountArr=res;
+          this.isLoading=false;
+        },
+        error:()=>{
+          console.log('Failed');
+          this.isLoading=false;
+        }
+      })
+    })
+    // this.discountServ.GetDiscountsBetweenDates(this.startDate$,this.endDate$).subscribe((res) => {
+    //   this.DiscountArr = res;
+    // });
   }
   NavigateToDetails(id: number) {
     this.router.navigate([`/product/discount-details/${id}`]);
@@ -62,17 +72,5 @@ export class ManageDiscountsComponent implements OnInit {
           this.isLoading = false;
         });
       });
-  }
-  filterByDate() {
-    combineLatest([this.startDate$, this.endDate$]).subscribe(([StartDate, EndDate]) => {
-      this.discountServ.GetDiscounts().subscribe((res) => {
-        this.DiscountArr = res.filter((discount) => {
-          return (
-            new Date(discount.discountFromDate) >= StartDate &&
-            new Date(discount.discountEndDate) <= EndDate
-          );
-        });
-      });
-    });
   }
 }
