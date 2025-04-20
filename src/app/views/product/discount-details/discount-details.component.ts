@@ -1,27 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { ReadDiscountDetailsDTO } from '../../../../models/read-discount-details-dto';
-import { DiscountService } from '../../../../services/discount.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BrandService } from '../../../../services/brand.service';
-import { CategoryService } from '../../../../services/category.service';
 import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from '@coreui/angular';
 import {
   FormArray,
   FormBuilder,
-  FormControl,
   FormGroup,
   FormsModule,
   Validators,
 } from '@angular/forms';
-import { Brand } from '../../../../models/brand';
-import { Category } from '../../../../models/category';
-import { ProductService } from '../../../../services/product.service';
-import { Product } from '../../../../models/product';
-import { BehaviorSubject } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import Swal from 'sweetalert2';
+import { ActivatedRoute } from '@angular/router';
+import { ProductService } from '../../../../services/product.service';
+import { catchError, debounceTime, distinctUntilChanged, find, of, Subject, switchMap, tap } from 'rxjs';
+import {DiscountService} from '../../../../services/discount.service';
+import {ReadDiscountDetailsDTO} from '../../../../models/read-discount-details-dto'
 @Component({
   selector: 'app-discount-details',
   imports: [
@@ -35,230 +29,207 @@ import Swal from 'sweetalert2';
   styleUrl: './discount-details.component.scss',
 })
 export class DiscountDetailsComponent implements OnInit {
-  DiscountEntity!: ReadDiscountDetailsDTO;
-  DiscountId!: number;
-  SelectedFilter: number = 0;
-  BrandArr!: Brand[];
-  CategoryArr!: Category[];
-  ProductArr!: Product[];
-  SelectedFilterId = new BehaviorSubject<number | null>(null);
-  DiscountForm!: FormGroup;
   isLoading: boolean = true;
+  DiscountForm!: FormGroup;
+  DiscountId!: number;
+  BrandArr!: any[];
+  CategoryArr!: any[];
+  InventoryArr!: any[];
+  ProductArr!:any[];
+  DiscountEntity!:ReadDiscountDetailsDTO;
+  productInput$ = new Subject<string>();
   constructor(
-    private discountServ: DiscountService,
-    private routes: ActivatedRoute,
-    private categoryServ: CategoryService,
-    private brandServ: BrandService,
-    private productServ: ProductService,
     private fb: FormBuilder,
-    private router:Router
+    private routes: ActivatedRoute,
+    private productServ: ProductService,
+    private discountServ:DiscountService
   ) {
     this.routes.paramMap.subscribe((value) => {
       this.DiscountId = Number(value.get('id'));
     });
+    const today = new Date();
+    const startDate = today.toISOString().split('T')[0];
+    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    const endDate = endOfMonth.toLocaleDateString('en-CA');
     this.DiscountForm = this.fb.group({
-      discountPercentage: [15, Validators.required],
-      discountFromDate: [null, Validators.required],
-      discountEndDate: [null, Validators.required],
-      insertProductDiscountDetails: this.fb.array([]),
+      DiscountPercentage: [1, Validators.required],
+      DiscountFromDate: [startDate,Validators.required,],
+      DiscountEndDate: [endDate, Validators.required],
+      Select1: [1],
+      Select2: [1],
+      InsertProductDiscountDetails: this.fb.array([],Validators.required),
     });
-  }
-  get DiscountProducts(): FormArray {
-    return this.DiscountForm.get('insertProductDiscountDetails') as FormArray;
   }
   ngOnInit() {
-    if (this.DiscountId > 0) {
-      // Update
-      this.discountServ.GetDiscountById(this.DiscountId).subscribe((res) => {
-        this.DiscountEntity = res;
-        console.log(this.DiscountEntity);
-        this.DiscountEntity.discountFromDate = new Date(
-          this.DiscountEntity.discountFromDate
-        );
-        this.DiscountEntity.discountEndDate = new Date(
-          this.DiscountEntity.discountEndDate
-        );
-        this.DiscountForm.patchValue({
-          discountPercentage: this.DiscountEntity.discountPercentage,
-          discountFromDate: this.DiscountEntity.discountFromDate
-            .toISOString()
-            .split('T')[0],
-          discountEndDate: this.DiscountEntity.discountEndDate
-            .toISOString()
-            .split('T')[0],
-        });
-        this.DiscountEntity.readProductsDiscountDTOs.forEach((product) => {
-          this.AddExistingProduct(product.productId, product.discountAmount);
-        });
-      });
-    }
-    this.productServ.GetAll().subscribe((res) => {
-      this.ProductArr = res;
+    this.setupProductSearch();
+    this.isLoading = true;
+    this.productServ.GetBrandData().subscribe({
+      next: (res) => {
+        this.BrandArr = res;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.ShowErrorPanel('Failed To Get Brand Data From Server');
+      },
     });
+    this.isLoading = true;
+    this.productServ.GetSubCategories().subscribe({
+      next: (res) => {
+        this.CategoryArr = res;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.ShowErrorPanel('Failed To Get Category Data from Server');
+      },
+    });
+    this.isLoading = true;
+    this.productServ.GetListOfInventory().subscribe({
+      next: (res) => {
+        this.InventoryArr = res;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.ShowErrorPanel('Failed To Get Inventory Data From Server');
+      },
+    });
+    this.isLoading=true;
+    this.productServ.GetPagginatedProducts(1,20).subscribe({
+      next:(res)=>{
+        this.ProductArr=res;
+        this.isLoading=true;
+    if(this.DiscountId > 0 ){
+      this.discountServ.GetDiscountById(this.DiscountId).subscribe({
+        next:(res)=>{
+          this.DiscountEntity=res;
+          this.DiscountForm.patchValue({
+            DiscountPercentage:[this.DiscountEntity.discountPercentage],
+            DiscountFromDate:[this.formatDateForInput(new Date(this.DiscountEntity.discountFromDate))],
+            DiscountEndDate:[this.formatDateForInput(new Date(this.DiscountEntity.discountEndDate))]
+          })
+          this.DiscountEntity.readProductsDiscountDTOs.forEach((product)=>{
+            this.CreateDiscountProduct(product.productId,product.discountAmount)
+          })
+          this.isLoading=false;
+        },
+        error:()=>{
+          this.ShowErrorPanel("Failed To Get Discount Details From Server");
+        }
+      })
+    }
+        this.isLoading=false;
+      },
+      error:()=>{
+        this.ShowErrorPanel("Failed To Get Product Data From Server");
+      }
+    })
     this.isLoading = false;
   }
-  AddExistingProduct(prdId: number, disAmount: number) {
-    this.DiscountProducts.push(
-      this.fb.group({
-        productId: [prdId, Validators.required],
-        // discountAmount: [disAmount, Validators.required],
-        discountAmount: new FormControl(
-          {
-            value: disAmount,
-            disabled: true,
-          },
-          [Validators.required]
-        ),
-      })
-    );
+  formatDateForInput(date: Date): string {
+    return date.toISOString().split('T')[0];
   }
-  AddNewProduct() {
-    this.DiscountProducts.push(
-      this.fb.group({
-        productId: [0, Validators.required],
-        discountAmount: new FormControl(
-          {
-            value: 0,
-            disabled: true,
-          },
-          [Validators.required]
-        ),
-      })
-    );
+  get DiscountProducts():FormArray{
+    return this.DiscountForm.get('InsertProductDiscountDetails') as FormArray
   }
-  AddFromGroupProduct(prdId: number) {
-    let ProductPrice = this.ProductArr.find(
-      (prd) => prd.productId == prdId
-    )?.productPrice;
-    let discountPercentage = this.DiscountForm.get('discountPercentage')?.value;
-    let discountAmount =
-      (ProductPrice ?? 0) * ((discountPercentage ?? 0) / 100);
-    this.DiscountProducts.push(
-      this.fb.group({
-        productId: [prdId, Validators.required],
-        discountAmount: new FormControl(
-          {
-            value: discountAmount,
-            disabled: true,
-          },
-          [Validators.required]
-        ),
-      })
-    );
-  }
-  ChangeProductDiscountAmount(index: number) {
-    let prdId = (this.DiscountProducts.at(index) as FormGroup).get(
-      'productId'
-    )?.value;
-    let productPrice = this.ProductArr.find(
-      (p) => p.productId == prdId
-    )?.productPrice;
-    if (productPrice !== undefined) {
-      const discountPercentage =
-        this.DiscountForm.controls['discountPercentage']?.value;
-      const discountAmount = productPrice * (discountPercentage / 100);
-      (this.DiscountProducts.at(index) as FormGroup)
-        .get('discountAmount')
-        ?.setValue(discountAmount);
-    } else {
-      console.warn(`Product with ID ${prdId} not found in ProductArr`);
-    }
-  }
-  CreateFilterSelect() {
-    const parentObj = document.getElementById('input-method');
-    if (parentObj) {
-      parentObj.innerHTML = '';
-    }
-    if (parentObj) {
-      if (this.SelectedFilter == 1) {
-        //Category
-        this.categoryServ.GetAll(1,1000).subscribe((res) => {
-          this.CategoryArr = res;
-          const selectObj = document.createElement('select');
-          selectObj.className = 'form-select';
-          selectObj.addEventListener('change', (event) => {
-            const target = event.target as HTMLSelectElement;
-            this.SelectedFilterId.next(+target.value);
-          });
-          this.CategoryArr.forEach((category) => {
-            category.subCategories.forEach((subCategory) => {
-              const optionObj = document.createElement('option');
-              optionObj.value = subCategory.categoryId.toString();
-              optionObj.text = subCategory.categoryName;
-              selectObj.appendChild(optionObj);
-            });
-          });
-          this.SelectedFilterId.next(
-            this.CategoryArr[0].subCategories[0].categoryId
-          );
-          parentObj.appendChild(selectObj);
-        });
-      } else if (this.SelectedFilter == 2) {
-        // Brand
-        this.brandServ.getAllBrands().subscribe((res) => {
-          this.BrandArr = res;
-          const selectObj = document.createElement('select');
-          selectObj.className = 'form-select';
-          selectObj.addEventListener('change', (event) => {
-            const target = event.target as HTMLSelectElement;
-            this.SelectedFilterId.next(+target.value);
-          });
-          this.BrandArr.forEach((brand) => {
-            const optionObj = document.createElement('option');
-            optionObj.value = brand.brandId.toString();
-            optionObj.text = brand.brandName;
-            selectObj.appendChild(optionObj);
-          });
-          this.SelectedFilterId.next(this.BrandArr[0].brandId);
-          parentObj.appendChild(selectObj);
-        });
-      }
-    }
-  }
-  deleteProduct(id: number) {
-    this.DiscountProducts.removeAt(id);
-  }
-  ClearProducts() {
+  DeleteAllDiscountProducts(){
     this.DiscountProducts.clear();
   }
-  AddGroup() {
-    let CurrentId = 0;
-    this.SelectedFilterId.subscribe((res) => {
-      CurrentId = Number(res);
-    });
-    switch (this.SelectedFilter) {
-      case 0:
-        this.ProductArr.forEach((product) => {
-          this.AddFromGroupProduct(product.productId);
-        });
-        return;
-      case 1:
-        let resultPWCArr = this.ProductArr.filter((product) => {
-          return product.categoryId == CurrentId;
-        });
-        if (resultPWCArr.length == 0) {
-          this.ShowErrorPanel('No Products Found In Selected Category');
-          return;
+  DeleteDiscountProduct(index:number){
+    this.DiscountProducts.removeAt(index);
+  }
+  CreateDiscountProduct(prdId:number=0,amount:number=0){
+    this.isLoading=true
+    if(prdId > 0 ){
+      this.productServ.GetById(prdId).subscribe({
+        next:(res)=>{
+          let tempProductEntity = res;
+          let disPercentage:number = this.DiscountForm.get('DiscountPercentage')?.value
+          amount=tempProductEntity.productPrice * (disPercentage / 100)
         }
-        resultPWCArr.forEach((product) => {
-          this.AddFromGroupProduct(product.productId);
-        });
-        return;
-      case 2:
-        let resultPWBArr = this.ProductArr.filter((product) => {
-          return product.brandId == CurrentId;
-        });
-        if (resultPWBArr.length == 0) {
-          this.ShowErrorPanel('No Products Found In Selected Category');
-          return;
-        }
-        resultPWBArr.forEach((product) => {
-          this.AddFromGroupProduct(product.productId);
-        });
-        return;
-      default:
-        return;
+      })
     }
+    let findedProduct = this.ProductArr.find(prd=>prd.productId==prdId)
+    if(prdId > 0 ){
+      if(!findedProduct){
+        this.productServ.GetById(prdId).subscribe({
+          next:(response)=>{
+            this.ProductArr.push(response);
+            this.DiscountProducts.push(this.fb.group({
+              productId:[prdId,Validators.required],
+              discountAmount:[amount,Validators.required]
+            }))
+          }
+        })
+      }else{
+        this.DiscountProducts.push(this.fb.group({
+          productId:[prdId,Validators.required],
+          discountAmount:[amount,Validators.required]
+        }))
+      }
+    }else{
+      this.DiscountProducts.push(this.fb.group({
+        productId:[prdId,Validators.required],
+        discountAmount:[amount,Validators.required]
+      }))
+    }
+    this.isLoading=false;
+  }
+  AddDiscountProduct(){
+    this.CreateDiscountProduct();
+  }
+  AddAllProducts(){
+    this.isLoading=true
+    let select1Value = this.DiscountForm.get('Select1')?.value;
+    let select2Value = this.DiscountForm.get('Select2')?.value;
+    let discount:number = this.DiscountForm.get('DiscountPercentage')?.value;
+    this.DiscountProducts.clear();
+    if(select1Value > 0 && select2Value > 0 && discount > 0){
+      switch(select1Value){
+        case '1':
+          //ByBrand
+          this.productServ.FilterByBrand(select2Value).subscribe({
+            next:(res)=>{
+             if(res.length > 0 ){
+              res.forEach((product)=>{
+                let discountPrice = product.productPrice * (discount / 100);
+                this.CreateDiscountProduct(product.productId,discountPrice);
+              })
+              this.isLoading=false;
+             }else{
+              this.ShowErrorPanel("No Products For Selected Brand");
+             }
+            }
+          })
+          return;
+        case '2':
+          //ByCategory
+          this.productServ.FilterByCategory(select2Value).subscribe({
+            next:(res)=>{
+              if(res.length> 0 ){
+                res.forEach((product)=>{
+                  let discountPrice = product.productPrice * (discount / 100);
+                  this.CreateDiscountProduct(product.productId,discountPrice);
+                })
+                this.isLoading=false;
+              }else{
+                this.ShowErrorPanel("No Products For Selected Brand");
+              }
+            }
+          })
+          return;
+        default:
+          return;
+      }
+    }else{
+      this.ShowErrorPanel("All Requirements to Filter Products are not set");
+    }
+  }
+  SearchProducts(index:number){
+    let searchText:string= this.DiscountProducts.at(index).get('searchText')?.value
+    this.productServ.SearchProducts(searchText).subscribe({
+      next:(res)=>{
+        this.ProductArr=res;
+      }
+    })
   }
   ShowErrorPanel(msg: string) {
     Swal.fire({
@@ -270,7 +241,7 @@ export class DiscountDetailsComponent implements OnInit {
       showConfirmButton: false,
       timer: 2500,
     });
-    this.isLoading=false
+    this.isLoading = false;
   }
   ShowSuccessPanel(msg: string) {
     Swal.fire({
@@ -282,38 +253,55 @@ export class DiscountDetailsComponent implements OnInit {
       showConfirmButton: false,
       timer: 2500,
     });
-    this.isLoading=false
+    this.isLoading = false;
   }
-  onSubmit() {
-    this.isLoading=true
-    if (this.DiscountEntity){
-      const payLoad={
-        discountId:this.DiscountId,
-        discountPercentage:this.DiscountForm.value.discountPercentage,
-        discountFromDate:this.DiscountForm.value.discountFromDate,
-        discountEndDate:this.DiscountForm.value.discountEndDate,
-        updateProductDiscountDetails: this.DiscountProducts.getRawValue()
-      }
-      this.discountServ.UpdateDiscount(payLoad).subscribe((res)=>{
-        this.ShowSuccessPanel('Discount Updated Successfull');
-        this.router.navigate(['/product/manage-discounts'])
-      },(err)=>{
-        this.ShowErrorPanel('Discount Failed To Update');
+  setupProductSearch() {
+    this.productInput$.pipe(
+      debounceTime(300), 
+      distinctUntilChanged(),
+      tap(),
+      switchMap(searchTerm => this.productServ.SearchProducts(searchTerm).pipe(
+        catchError(() => of([])),
+        tap()
+      ))
+    ).subscribe(results => {
+      this.ProductArr = results;
+    });
+  }
+  onSubmit(){
+    if(this.DiscountForm.valid){
+      const formData=new FormData();
+      formData.append('DiscountPercentage',this.DiscountForm.get('DiscountPercentage')?.value)
+      formData.append('DiscountFromDate',this.DiscountForm.get('DiscountFromDate')?.value)
+      formData.append('DiscountEndDate',this.DiscountForm.get('DiscountEndDate')?.value)
+      this.DiscountProducts.controls.forEach((product,index)=>{
+        formData.append(`InsertProductDiscountDetails[${index}].ProductId`,product.get('productId')?.value)
+        formData.append(`InsertProductDiscountDetails[${index}].DiscountAmount`,product.get('discountAmount')?.value)
       })
+      if(this.DiscountEntity){
+        //Update
+        formData.append('discountId',this.DiscountId.toString());
+        this.discountServ.UpdateDiscount(formData).subscribe({
+          next:()=>{
+            this.ShowSuccessPanel("Discount Updated Successfull");
+          },
+          error:()=>{
+            this.ShowErrorPanel("Discount Update Failed");
+          }
+        })
+      }else{
+        //Insert
+        this.discountServ.CreateDiscount(formData).subscribe({
+          next:()=>{
+            this.ShowSuccessPanel("Discount Created Successfull");
+          },
+          error:()=>{
+            this.ShowErrorPanel("Discount Failed To Create");
+          }
+        })
+      }
     }else{
-      const payLoad={
-        discountPercentage:this.DiscountForm.value.discountPercentage,
-        discountFromDate:this.DiscountForm.value.discountFromDate,
-        discountEndDate:this.DiscountForm.value.discountEndDate,
-        insertProductDiscountDetails: this.DiscountProducts.getRawValue()
-      }
-      this.discountServ.CreateDiscount(payLoad).subscribe((res)=>{
-        this.ShowSuccessPanel('Discount Created Successfull');
-        this.router.navigate(['/product/manage-discounts'])
-      },(err)=>{
-        this.ShowErrorPanel('Discount Failed To Create');
-      })
+      this.ShowErrorPanel("Form isn't Valid, All Inputs Are Required")
     }
   }
 }
-

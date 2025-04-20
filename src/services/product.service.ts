@@ -79,4 +79,13 @@ export class ProductService {
     const encodedPath = encodeURIComponent(path);
     return this.httpClient.delete(`${this.apiUrl}/product/${id}/${encodedPath}`);
   }
+  SearchProducts(searchText:string):Observable<any[]>{
+    return this.httpClient.get<any[]>(`${this.apiUrl}/Product/SearchProducts/${searchText}`);
+  }
+  FilterByBrand(id:number):Observable<Product[]>{
+    return this.httpClient.get<Product[]>(`${this.apiUrl}/Product/FilterByBrand/${id}`);
+  }
+  FilterByCategory(id:number):Observable<Product[]>{
+    return this.httpClient.get<Product[]>(`${this.apiUrl}/Product/FilterByCategory/${id}`);
+  }
 }

@@ -25,4 +25,9 @@ export class DiscountService {
   DeleteDiscount(id:number):Observable<any>{
     return this.httpClient.delete<any>(`${this.apiUrl}/Discount/${id}`); 
   }
+  GetDiscountsBetweenDates(startDate:any,endDate:any):Observable<ReadDiscountDetailsDTO[]>{
+    const formattedStart = startDate.toISOString().split('T')[0];
+    const formattedEnd = endDate.toISOString().split('T')[0];
+    return this.httpClient.get<ReadDiscountDetailsDTO[]>(`${this.apiUrl}/Discount/${formattedStart}/${formattedEnd}`); 
+  }
 }
