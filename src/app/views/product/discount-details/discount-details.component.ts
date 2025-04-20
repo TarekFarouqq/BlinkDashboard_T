@@ -11,7 +11,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import Swal from 'sweetalert2';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../../services/product.service';
 import { catchError, debounceTime, distinctUntilChanged, find, of, Subject, switchMap, tap } from 'rxjs';
 import {DiscountService} from '../../../../services/discount.service';
@@ -42,7 +42,8 @@ export class DiscountDetailsComponent implements OnInit {
     private fb: FormBuilder,
     private routes: ActivatedRoute,
     private productServ: ProductService,
-    private discountServ:DiscountService
+    private discountServ:DiscountService,
+    private router:Router
   ) {
     this.routes.paramMap.subscribe((value) => {
       this.DiscountId = Number(value.get('id'));
@@ -153,23 +154,51 @@ export class DiscountDetailsComponent implements OnInit {
         this.productServ.GetById(prdId).subscribe({
           next:(response)=>{
             this.ProductArr.push(response);
-            this.DiscountProducts.push(this.fb.group({
+            let discountGroup = this.fb.group({
               productId:[prdId,Validators.required],
               discountAmount:[amount,Validators.required]
-            }))
+            });
+            discountGroup.get('productId')?.valueChanges.subscribe((selectedProductId)=>{
+              let selectedProduct = this.ProductArr.find(p=>p.productId===selectedProductId);
+              if(selectedProduct){
+                const percentage = this.DiscountForm.get('DiscountPercentage')?.value || 0 ;
+                const calculatedDiscount = selectedProduct.productPrice * ( percentage / 100 );
+                discountGroup.get('discountAmount')?.setValue(calculatedDiscount,{ emitEvent: false })
+              }
+            })
+            this.DiscountProducts.push(discountGroup);
           }
         })
       }else{
-        this.DiscountProducts.push(this.fb.group({
+        let discountGroup = this.fb.group({
           productId:[prdId,Validators.required],
           discountAmount:[amount,Validators.required]
-        }))
+        });
+        discountGroup.get('productId')?.valueChanges.subscribe((selectedProductId)=>{
+          let selectedProduct = this.ProductArr.find(p=>p.productId===selectedProductId);
+          if(selectedProduct){
+            const percentage = this.DiscountForm.get('DiscountPercentage')?.value || 0 ;
+            const calculatedDiscount = selectedProduct.productPrice * ( percentage / 100 );
+            discountGroup.get('discountAmount')?.setValue(calculatedDiscount,{ emitEvent: false })
+          }
+        })
+        this.DiscountProducts.push(discountGroup);
       }
     }else{
-      this.DiscountProducts.push(this.fb.group({
+      let discountGroup = this.fb.group({
         productId:[prdId,Validators.required],
         discountAmount:[amount,Validators.required]
-      }))
+      });
+      discountGroup.get('productId')?.valueChanges.subscribe((selectedProductId)=>{
+        let selectedProduct = this.ProductArr.find(p=>p.productId===selectedProductId);
+        if(selectedProduct){
+          const percentage = this.DiscountForm.get('DiscountPercentage')?.value || 0 ;
+          const calculatedDiscount = selectedProduct.productPrice * ( percentage / 100 );
+          discountGroup.get('discountAmount')?.setValue(calculatedDiscount,{ emitEvent: false })
+        }
+      })
+      this.DiscountProducts.push(discountGroup);
+
     }
     this.isLoading=false;
   }
@@ -183,22 +212,23 @@ export class DiscountDetailsComponent implements OnInit {
     let discount:number = this.DiscountForm.get('DiscountPercentage')?.value;
     this.DiscountProducts.clear();
     if(select1Value > 0 && select2Value > 0 && discount > 0){
-      switch(select1Value){
+      switch(select1Value.toString()){
         case '1':
-          //ByBrand
+          //
+          console.log('start');
           this.productServ.FilterByBrand(select2Value).subscribe({
-            next:(res)=>{
-             if(res.length > 0 ){
-              res.forEach((product)=>{
-                let discountPrice = product.productPrice * (discount / 100);
-                this.CreateDiscountProduct(product.productId,discountPrice);
-              })
-              this.isLoading=false;
-             }else{
-              this.ShowErrorPanel("No Products For Selected Brand");
-             }
-            }
-          })
+              next:(res)=>{
+               if(res.length > 0 ){
+                res.forEach((product)=>{
+                  let discountPrice = product.productPrice * (discount / 100);
+                  this.CreateDiscountProduct(product.productId,discountPrice);
+                })
+                this.isLoading=false;
+               }else{
+                this.ShowErrorPanel("No Products For Selected Brand");
+               }
+              }
+            })
           return;
         case '2':
           //ByCategory
@@ -269,6 +299,7 @@ export class DiscountDetailsComponent implements OnInit {
     });
   }
   onSubmit(){
+    this.isLoading=true
     if(this.DiscountForm.valid){
       const formData=new FormData();
       formData.append('DiscountPercentage',this.DiscountForm.get('DiscountPercentage')?.value)
@@ -277,13 +308,16 @@ export class DiscountDetailsComponent implements OnInit {
       this.DiscountProducts.controls.forEach((product,index)=>{
         formData.append(`InsertProductDiscountDetails[${index}].ProductId`,product.get('productId')?.value)
         formData.append(`InsertProductDiscountDetails[${index}].DiscountAmount`,product.get('discountAmount')?.value)
+        formData.append(`UpdateProductDiscountDetails[${index}].ProductId`,product.get('productId')?.value)
+        formData.append(`UpdateProductDiscountDetails[${index}].DiscountAmount`,product.get('discountAmount')?.value)
       })
       if(this.DiscountEntity){
         //Update
-        formData.append('discountId',this.DiscountId.toString());
+        formData.append('DiscountId',this.DiscountId.toString());
         this.discountServ.UpdateDiscount(formData).subscribe({
           next:()=>{
             this.ShowSuccessPanel("Discount Updated Successfull");
+            this.router.navigate(['/product/manage-discounts']);
           },
           error:()=>{
             this.ShowErrorPanel("Discount Update Failed");
@@ -294,6 +328,7 @@ export class DiscountDetailsComponent implements OnInit {
         this.discountServ.CreateDiscount(formData).subscribe({
           next:()=>{
             this.ShowSuccessPanel("Discount Created Successfull");
+            this.router.navigate(['/product/manage-discounts']);
           },
           error:()=>{
             this.ShowErrorPanel("Discount Failed To Create");

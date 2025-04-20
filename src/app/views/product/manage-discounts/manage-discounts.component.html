@@ -26,32 +26,32 @@
     </button>
   </div>
 </div>
-<div class="row col-lg-12 col-md-12 col-sm-12 col-12 mt-2">
+<div class="row col-lg-12 col-md-12 col-sm-12 col-12 mt-2" style="height: 66vh; overflow: auto;">
   <table class="table table-hover table-rounded w-100">
     <thead>
       <tr>
         <td style="width: 10%;" class="text-center">Discount Id</td>
         <td style="width: 30%;" class="text-center">Start Date</td>
         <td style="width: 30%;" class="text-center">End Date</td>
-        <td style="width: 15%;" class="text-center">Discount Percentage</td>
-        <td style="width: 15%;" class="text-center">Actions</td>
+        <td style="width: 5%;" class="text-center">Discount Percentage</td>
+        <td style="width: 25%;" class="text-center">Actions</td>
       </tr>
     </thead>
     <tbody>
-      @for(discount of DiscountArr; track discount.discountId){
+      @for(discount of PaginatedData; track discount.discountId){
       <tr>
         <td class="align-middle text-center">{{discount.discountId}}</td>
         <td class="align-middle text-center">{{discount.discountFromDate | date:'dd-MM-yyyy' }}</td>
         <td class="align-middle text-center">{{discount.discountEndDate | date:'dd-MM-yyyy' }}</td>
         <td class="align-middle text-center">{{ discount.discountPercentage / 100 | percent }}</td>
         <td class="align-middle text-center">
-          <div class="row col-12 d-flex align-items-center justify-content-center">
-            <div class="col-3">
+          <div class="row col-lg-12 col-md-12 col-sm-12 col-12 gap-1 d-flex justify-content-center">
+            <div class="row col-lg-6 col-md-6 col-sm-12 col-12">
               <button class="btn btn-warning text-white" (click)="NavigateToDetails(discount.discountId)">
                 <i class="fa-solid fa-pen"></i>
               </button>
             </div>
-            <div class="col-3">
+            <div class="row col-lg-6 col-md-6 col-sm-12 col-12">
               <button class="btn btn-danger text-white" (click)="openDeleteModal(discount.discountId)">
                 <i class="fa-solid fa-trash"></i>
               </button>
@@ -62,6 +62,25 @@
       }
     </tbody>
   </table>
+</div>
+<div class="pg-footer mt-2 w-100 d-flex align-items-center justify-content-end">
+  <div class="tbl-nav d-flex align-items-center gap-3">
+    <button class="btn btn-outline-danger rounded-circle shadow-sm" title="Previous" (click)="prevPage()"
+      [disabled]="CurrentPage == 1">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+
+    <input type="text" class="form-control text-center border border-danger rounded-pill shadow-sm" style="width: 80px;"
+      placeholder="1" disabled [ngModel]="CurrentPage" />
+    Of
+    <input type="text" class="form-control text-center border border-danger rounded-pill shadow-sm" style="width: 80px;"
+      placeholder="1" disabled [ngModel]="TotalPages" />
+
+    <button class="btn btn-outline-danger rounded-circle shadow-sm" title="Next" (click)="nextPage()"
+      [disabled]="CurrentPage == TotalPages">
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </div>
 </div>
 }
 

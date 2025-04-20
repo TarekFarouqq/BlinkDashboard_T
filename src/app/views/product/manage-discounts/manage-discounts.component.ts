@@ -21,9 +21,15 @@ export class ManageDiscountsComponent implements OnInit {
   private endDateSubject = new BehaviorSubject<Date>(new Date());
   startDate$ = this.startDateSubject.asObservable();
   endDate$ = this.endDateSubject.asObservable();
+  CurrentPage:number=1;
+  TotalPages!:number;
   constructor(private discountServ: DiscountService, private router: Router) {
-    this.startDateSubject.next(new Date());
-    this.endDateSubject.next(new Date());
+    const today = new Date();
+    const startDate = today.toISOString().split('T')[0];
+    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    const endDate = endOfMonth.toLocaleDateString('en-CA');
+    this.startDateSubject.next(new Date(startDate));
+    this.endDateSubject.next(new Date(endDate));
   }
   updateStartDate(dateString: string) {
     const parsedDate = new Date(dateString);
@@ -39,6 +45,7 @@ export class ManageDiscountsComponent implements OnInit {
       this.discountServ.GetDiscountsBetweenDates(startDate,endDate).subscribe({
         next:(res)=>{
           this.DiscountArr=res;
+          this.TotalPages = Math.ceil(res.length / 10);
           this.isLoading=false;
         },
         error:()=>{
@@ -47,9 +54,6 @@ export class ManageDiscountsComponent implements OnInit {
         }
       })
     })
-    // this.discountServ.GetDiscountsBetweenDates(this.startDate$,this.endDate$).subscribe((res) => {
-    //   this.DiscountArr = res;
-    // });
   }
   NavigateToDetails(id: number) {
     this.router.navigate([`/product/discount-details/${id}`]);
@@ -72,5 +76,16 @@ export class ManageDiscountsComponent implements OnInit {
           this.isLoading = false;
         });
       });
+  }
+  get PaginatedData(){
+    const start = (this.CurrentPage - 1 ) * 10;
+    const end = this.CurrentPage * 10
+    return this.DiscountArr.slice(start,end);
+  }
+  prevPage(){
+    this.CurrentPage--;
+  }
+  nextPage(){
+    this.CurrentPage++;
   }
 }
