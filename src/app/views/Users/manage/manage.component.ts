@@ -35,11 +35,11 @@ export class ManageComponent implements OnInit{
       next: (res) => {
         this.users = res;
         this.isLoading = false;
-        console.log(this.users);
+       // console.log(this.users);
 
       },
       error: (err) => {
-        console.error('Error loading users:', err);
+       // console.error('Error loading users:', err);
         this.isLoading = false;
       },
     });
@@ -101,13 +101,13 @@ searchUser() {
   }
 
   goToUserDisplay(id: string): void {
-    console.log('Selected user id:', id);
+   // console.log('Selected user id:', id);
     this.router.navigate(['/Users/display', id]);
   }
 
   navigateToUpdate(userId: string) {
     this.router.navigate(['/Users/update', userId]);
-    console.log(userId);
+   // console.log(userId);
   }
 
   deleteUser(userId: string): void {
@@ -124,7 +124,7 @@ searchUser() {
         this.userService.deleteUser((userId)).subscribe({
           next: (res) => {
             this.loadUsers();
-            console.log('User deleted successfully!');
+           //console.log('User deleted successfully!');
           },
           error: (err) => {
             console.error('Error deleting user:', err);

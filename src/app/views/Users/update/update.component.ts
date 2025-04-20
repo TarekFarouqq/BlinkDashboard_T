@@ -62,7 +62,7 @@ export class UpdateComponent implements OnInit {
         });
       },
       error: (error) => {
-        console.error('Error updating user:', error);
+       // console.error('Error updating user:', error);
         Swal.fire({
           toast: true,
           position: 'top',
@@ -94,6 +94,8 @@ export class UpdateComponent implements OnInit {
             timer: 2500,
           });
           this.updateUserForm.reset();
+          // navigate to manage :
+          this.goToManage();
         },
         error: (error) => {
           console.error('Error updating user:', error);

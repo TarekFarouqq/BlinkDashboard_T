@@ -32,7 +32,7 @@ export class DisplayComponent  implements OnInit{
   loadUserDetails(): void {
     this.userService.getUserById((this.userId)).subscribe({
       next: (data) => {
-        console.log('Received user data:', data);
+      //  console.log('Received user data:', data);
         this.user = data;
       },
       error: (err) => {

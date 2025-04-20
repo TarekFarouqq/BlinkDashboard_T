@@ -37,7 +37,7 @@ export class AddUserComponent implements OnInit{
   ngOnInit(): void {}
 
   onSubmit(): void {
-    console.log(this.addUserForm.value);
+   // console.log(this.addUserForm.value);
     if (this.addUserForm.valid) {
       const userData: AddUser = this.addUserForm.value;
       const role = this.addUserForm.value.role;
@@ -75,29 +75,6 @@ export class AddUserComponent implements OnInit{
   }
 
 
-  // addUser(): void {
-  //   if (this.addUserForm.valid) {
-  //     const userData: AddUser = this.addUserForm.value;
-
-  //     this.userService.addUser(userData).subscribe({
-  //       next: (response) => {
-  //         Swal.fire({
-  //           toast: true,
-  //           position: 'top',
-  //           icon: 'success',
-  //           title: 'User added successfully',
-  //           showConfirmButton: false,
-  //           timer: 2500,
-  //         });
-  //         this.addUserForm.reset();
-  //       },
-  //       error: (error) => {
-  //         console.error('Error adding user:', error);
-  //       },
-  //     });
-  //   }
-  // }
-
   
   get userName() {
     return this.addUserForm.get('userName');
@@ -118,9 +95,6 @@ export class AddUserComponent implements OnInit{
   get userPassword() {
     return this.addUserForm.get('userPassword');
   }
-  // get rePassword() {
-  //   return this.addUserForm.get('rePassword');
-  // }
 
   get phoneNumber() {
     return this.addUserForm.get('phoneNumber');

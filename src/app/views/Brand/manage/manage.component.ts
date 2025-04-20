@@ -103,7 +103,7 @@ totalPages: number = 0;
   }
   navigateToUpdate(brandid: number) {
     this.router.navigate(['/Brand/update/', brandid]);
-    console.log(brandid);
+   // console.log(brandid);
   }
 
  
