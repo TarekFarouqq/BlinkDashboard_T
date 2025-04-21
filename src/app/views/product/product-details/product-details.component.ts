@@ -298,20 +298,8 @@ export class ProductDetailsComponent implements OnInit {
                 formData.append(`ProductStocks[${index}].ProductId`, rawValue.ProductId);
                 formData.append(`ProductStocks[${index}].StockUnitPrice`, rawValue.StockUnitPrice);
                 formData.append(`ProductStocks[${index}].StockQuantity`, rawValue.StockQuantity);
-
-
-
-
               });
               // End Of Creation of FormData
-
-              const entries = (formData as any).entries?.();
-              if (entries) {
-                for (const [key, value] of entries) {
-                  console.log(`${key}:`, value);
-                }
-              }
-
               if (this.ProductEntity) {
                 // Update
                 this.productServ.UpdateProduct(this.ProductId, formData).subscribe({
@@ -320,7 +308,7 @@ export class ProductDetailsComponent implements OnInit {
                     this.router.navigate(['/product']);
                   },
                   error: (err) => {
-                    this.ShowErrorMessage("Update failed: " + err.message);
+                    this.ShowErrorMessage("Update failed: " + err.error.message);
                   },
                   complete: () => this.isLoading = false
                 });
@@ -332,7 +320,7 @@ export class ProductDetailsComponent implements OnInit {
                       this.ShowSuccessMessage('Product Successfull Created');
                     },
                     error:(err) => {
-                      this.ShowErrorMessage('Product Failed To Create');
+                      this.ShowErrorMessage(err.error.message);
                     },
                     complete:()=> this.router.navigate(['/product'])
                   });
@@ -451,9 +439,3 @@ export class ProductDetailsComponent implements OnInit {
   // End Of Working On GIS
 }
 
-// const entries = (formData as any).entries?.();
-//               if (entries) {
-//                 for (const [key, value] of entries) {
-//                   console.log(`${key}:`, value);
-//                 }
-//               }

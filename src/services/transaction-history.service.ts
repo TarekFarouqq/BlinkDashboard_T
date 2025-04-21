@@ -21,4 +21,10 @@ export class TransactionHistoryService {
   UpdateTransaction(id:number,formGroup:any):Observable<any>{
     return this.httpClient.put(`${this.apiUrl}/ProductTransfer/UpdateTransaction/${id}`,formGroup); 
   }
+  GetTotalPages(pgSize:number):Observable<number>{
+    return this.httpClient.get<number>(`${this.apiUrl}/ProductTransfer/GetTotalPages/${pgSize}`); 
+  }
+  GetDataWithPagination(pgNumber:number,pgSize:number):Observable<any[]>{
+    return this.httpClient.get<any[]>(`${this.apiUrl}/ProductTransfer/GetDataWithPaginated/${pgNumber}/${pgSize}`); 
+  }
 }

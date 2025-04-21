@@ -82,10 +82,16 @@ export class ProductService {
   SearchProducts(searchText:string):Observable<any[]>{
     return this.httpClient.get<any[]>(`${this.apiUrl}/Product/SearchProducts/${searchText}`);
   }
+  SearchProductsByInventory(searchText:string,inventoryId:number):Observable<any[]>{
+    return this.httpClient.get<any[]>(`${this.apiUrl}/Product/SearchProductsById/${searchText}/${inventoryId}`);
+  }
   FilterByBrand(id:number):Observable<Product[]>{
     return this.httpClient.get<Product[]>(`${this.apiUrl}/Product/FilterByBrand/${id}`);
   }
   FilterByCategory(id:number):Observable<Product[]>{
     return this.httpClient.get<Product[]>(`${this.apiUrl}/Product/FilterByCategory/${id}`);
+  }
+  FilterByInventory(id:number):Observable<any[]>{
+    return this.httpClient.get<any[]>(`${this.apiUrl}/Product/FilterByInventoryId/${id}`);
   }
 }
