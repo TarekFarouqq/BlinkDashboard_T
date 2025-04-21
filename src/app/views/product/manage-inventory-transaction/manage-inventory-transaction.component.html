@@ -28,7 +28,7 @@
                     @for(transactionHistory of TransactionArr; track transactionHistory?.inventoryTransactionHeaderId){
                         <tr>
                             <td class="text-center align-middle">{{transactionHistory.inventoryTransactionHeaderId}}</td>
-                            <td class="text-center align-middle">{{transactionHistory.inventoryTransactionDate}}</td>
+                            <td class="text-center align-middle">{{transactionHistory.inventoryTransactionDate | date:'dd-MM-yyyy'}}</td>
                             <td class="text-center align-middle">{{transactionHistory.srcInventoryName}}</td>
                             <td class="text-center align-middle">{{transactionHistory.distInventoryName}}</td>
                             <td class="text-center align-middle">
@@ -50,15 +50,15 @@
     <div class="row col-lg-12 col-md-12 col-sm-12 col-12 d-flex align-items-center justify-content-end">
         <div class="row g-2 justify-content-end">
             <div class="col-3 col-sm-3 col-md-1 col-lg-1">
-                <button class="btn btn-primary w-100">
+                <button class="btn btn-primary w-100" [disabled]="currentPage == 1" (click)="prevPage()">
                     <i class="fa-solid fa-backward"></i>
                 </button>
             </div>
             <div class="col-6 col-sm-6 col-md-1 col-lg-1">
-                <input type="number" class="form-control text-center" (ngModel)="currentPage">
+                <input type="number" class="form-control text-center" [ngModel]="currentPage">
             </div>
             <div class="col-3 col-sm-3 col-md-1 col-lg-1">
-                <button class="btn btn-primary w-100">
+                <button class="btn btn-primary w-100" [disabled]="currentPage == TotalPages" (click)="nextPage()">
                     <i class="fa-solid fa-forward"></i>
                 </button>
             </div>
