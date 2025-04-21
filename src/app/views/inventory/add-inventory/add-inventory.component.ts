@@ -65,6 +65,20 @@ export class AddInventoryComponent implements OnInit {
     
     }
 
+     // Get Latitude And Longitude
+     getLatLongFromLink(givinLink:string){
+      const regex = /@?(-?\d+\.\d+),(-?\d+\.\d+)/;
+      
+      const match = givinLink.match(regex);
+      if(match){
+        this.addInventoryForm.patchValue({
+          lat:match[1],
+          long:match[2]
+        })
+      }
+    }
+
+
    // Getter methods
    get inventoryName() { return this.addInventoryForm.get('inventoryName'); }
    get inventoryAddress() { return this.addInventoryForm.get('inventoryAddress'); }
