@@ -216,8 +216,6 @@ export class CategoryDetailsComponent implements OnInit {
       }
     });
 
-    formUpdate.forEach((val, key) => console.log(`${key}:`, val));
-
     this.categoryServ.UpdateCategory(formUpdate).subscribe(
       (res) => {
         Swal.fire({
