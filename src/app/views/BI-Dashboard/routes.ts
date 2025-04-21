@@ -27,7 +27,30 @@ import { Routes } from '@angular/router';
                     data: {
                     title: 'Products',
                     }
+                },
+                
+                {
+                    path: 'branches-inventories',
+                    loadComponent: () => import('./branches-inventories/branches-inventories.component').then(m => m.BranchesInventoriesComponent),
+                    data: {
+                    title: 'Branches & Inventories',
+                    }
+                },
+                {
+                    path: 'sales-orders',
+                    loadComponent: () => import('./sales-orders/sales-orders.component').then(m => m.SalesOrdersComponent),
+                    data: {
+                    title: 'Sales & Orders',
+                    }
+                },
+                {
+                    path: 'supplier',
+                    loadComponent: () => import('./supplier/supplier.component').then(m => m.SupplierComponent),
+                    data: {
+                    title: 'Supplier',
+                    }
                 }
+
 
    
     ]

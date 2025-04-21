@@ -85,6 +85,21 @@ export class DefaultLayoutComponent implements OnInit {
         },
       ],
     },
+     //BI-Dashboard
+     {
+      name: 'BI-Dashboard',
+      url: '/bidashboard',
+      iconComponent: { name: 'cilChart' },
+      children: [
+
+        {
+          name: 'Supplier',
+          url: '/bidashboard/supplier',
+          icon: 'nav-icon-bullet',
+        },
+      ],
+    },
+    //End BI-Dashboard
     {
       title: true,
       name: 'Account',
@@ -138,6 +153,17 @@ export class DefaultLayoutComponent implements OnInit {
             url: '/bidashboard/products',
             icon: 'nav-icon-bullet',
           },
+          {
+            name: 'Branches & Inventories',
+
+            url: '/bidashboard/branches-inventories',
+            icon: 'nav-icon-bullet',
+          },
+          {
+            name: 'Sales & Orders',
+            url: '/bidashboard/sales-orders',
+            icon: 'nav-icon-bullet',
+          }
         ],
       },
       //End BI-Dashboard
