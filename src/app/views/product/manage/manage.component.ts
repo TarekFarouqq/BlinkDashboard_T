@@ -42,11 +42,13 @@ export class ManageComponent implements OnInit {
             },
             error:()=>{
               // this.ShowErrorPanel("Error while trying to get data from database");
+              this.isLoading=false
             }
           })
         },
         error:()=>{
           // this.ShowErrorPanel("Error while trying to get data from database");
+          this.isLoading=false
         }
       })
     }else{
