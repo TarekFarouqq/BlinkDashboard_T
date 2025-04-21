@@ -77,7 +77,7 @@
               </div>
   
               <!-- Latitude -->
-              <div class="form-group mb-3">
+              <!-- <div class="form-group mb-3">
                 <label class="form-label">Latitude</label>
                 <input type="number" class="form-control" formControlName="lat">
                 @if(lat?.invalid && (lat?.dirty || lat?.touched)) {
@@ -87,16 +87,16 @@
                     }
                   </div>
                 }
-              </div>
+              </div> -->
   
               <!-- Longitude -->
               <div class="form-group mb-3">
-                <label class="form-label">Longitude</label>
-                <input type="number" class="form-control" formControlName="long">
-                @if(long?.invalid && (long?.dirty || long?.touched)) {
+                <label class="form-label">Location Link</label>
+                <input type="text" class="form-control" #locationLink (change)="getLatLongFromLink(locationLink.value)">
+                @if(lat?.invalid && (lat?.dirty || lat?.touched) && long?.invalid && (long?.dirty || long?.touched)) {
                   <div class="invalid-feedback d-block">
-                    @if(long?.errors?.['required']) {
-                      <span>Longitude is required</span>
+                    @if(lat?.errors?.['required'] || long?.errors?.['required']) {
+                      <span>Location Link is required</span>
                     }
                   </div>
                 }
