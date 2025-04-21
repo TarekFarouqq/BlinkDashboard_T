@@ -29,4 +29,9 @@ export class InventoryService {
   delete(id: number):Observable<Inventory>{
     return this.httpClient.delete<Inventory>(this.apiUrl + '/Inventory/delete/' + id);
   }
+
+  isInventoryHasProducts(inventoryId: number): Observable<boolean> {
+    return this.httpClient.get<boolean>(`${this.apiUrl}/Inventory/IsInventoryHasProducts/${inventoryId}`);
+  }
+
 }

@@ -68,7 +68,6 @@ export class DefaultLayoutComponent implements OnInit {
       url: '/dashboard',
       iconComponent: { name: 'cil-speedometer' },
     },
-  
     {
       name: 'Product',
       url: '/product',
@@ -86,6 +85,21 @@ export class DefaultLayoutComponent implements OnInit {
         },
       ],
     },
+     //BI-Dashboard
+     {
+      name: 'BI-Dashboard',
+      url: '/bidashboard',
+      iconComponent: { name: 'cilChart' },
+      children: [
+
+        {
+          name: 'Supplier',
+          url: '/bidashboard/supplier',
+          icon: 'nav-icon-bullet',
+        },
+      ],
+    },
+    //End BI-Dashboard
     {
       title: true,
       name: 'Account',
@@ -139,10 +153,34 @@ export class DefaultLayoutComponent implements OnInit {
             url: '/bidashboard/products',
             icon: 'nav-icon-bullet',
           },
+          {
+            name: 'Branches & Inventories',
+
+            url: '/bidashboard/branches-inventories',
+            icon: 'nav-icon-bullet',
+          },
+          {
+            name: 'Sales & Orders',
+            url: '/bidashboard/sales-orders',
+            icon: 'nav-icon-bullet',
+          }
         ],
       },
       //End BI-Dashboard
- 
+      // Category
+      {
+        name:'Category',
+        url: '/category',
+        iconComponent: { name: 'cilBasket' },
+        children:[
+          {
+            name:'Manage Category',
+            url:'/category/manage',
+            icon:'nav-icon-bullet',
+          }
+        ]
+      },
+      //End Category
       //Products
       {
         name: 'Product',
@@ -162,6 +200,16 @@ export class DefaultLayoutComponent implements OnInit {
           {
             name: 'Review Products',
             url: '/product/review-products',
+            icon: 'nav-icon-bullet',
+          },
+          {
+            name: 'Manage Discounts',
+            url: '/product/manage-discounts',
+            icon: 'nav-icon-bullet',
+          },
+          {
+            name: 'Inventory Transaction',
+            url: '/product/manage-transaction',
             icon: 'nav-icon-bullet',
           },
         ],

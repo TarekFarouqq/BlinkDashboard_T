@@ -1,4 +1,6 @@
+
 export interface AddUser {
+
   userName: string;
   firstName: string;
   lastName: string;
@@ -8,4 +10,3 @@ export interface AddUser {
     address: string;
      role: string;
   }
-  

@@ -11,7 +11,7 @@ export class BranchService {
   constructor(private _HttpClient:HttpClient) { }
 
   getAllBranches():Observable<any> {
-    return this._HttpClient.get(`${environment.apiUrl}/Branch`);
+    return this._HttpClient.get(`${environment.apiUrl}/Branch/1/20`);
   }
 
   getBranchById(id:string):Observable<any> {

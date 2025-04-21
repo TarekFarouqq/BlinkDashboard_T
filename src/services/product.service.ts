@@ -21,8 +21,14 @@ export class ProductService {
   GetTotalPages(pgSize:number):Observable<number>{
     return this.httpClient.get<number>(`${this.apiUrl}/product/GetPagesCount/${pgSize}`);
   }
+  GetTotalPagesWithUser(pgSize:number,UserId:string):Observable<number>{
+    return this.httpClient.get<number>(`${this.apiUrl}/product/GetPagesCountWithUser/${pgSize}/${UserId}`);
+  }
   GetPagginatedProducts(pgNumber:number,pgSize:number):Observable<Product[]>{
     return this.httpClient.get<Product[]>(this.apiUrl + '/product/GetAllWithPaging/' + pgNumber + '/' + pgSize);
+  }
+  GetPagginatedProductsWithUser(pgNumber:number,pgSize:number,UserId:string):Observable<Product[]>{
+    return this.httpClient.get<Product[]>(`${this.apiUrl}/product/GetAllWithPagingWithUser/${pgNumber}/${pgSize}/${UserId}`);
   }
   GetFilteredProducts(filter:string,pgNumber:number,pgSize:number):Observable<Product[]>{
     return this.httpClient.get<Product[]>(this.apiUrl + '/product/GetFilteredProducts/' + filter + '/' + pgNumber + '/' + pgSize);
@@ -57,5 +63,35 @@ export class ProductService {
   GetReviewSuppliedProducts():Observable<ReviewSuppliedProducts[]>{
     return this.httpClient.get<ReviewSuppliedProducts[]>(`${this.apiUrl}/product/GetSuppliedProducts`);
   }
-
+  GetProductStockInInventory(srcId:number,prdId:number):Observable<number>{
+    return this.httpClient.get<number>(`${this.apiUrl}/Product/GetProductStockInInventory/${srcId}/${prdId}`);
+  }
+  GetBrandData():Observable<any[]>{
+    return this.httpClient.get<any[]>(`${this.apiUrl}/Product/GetListOfBrands`);
+  }
+  GetSubCategories():Observable<any[]>{
+    return this.httpClient.get<any[]>(`${this.apiUrl}/Product/GetSubCategories`);
+  }
+  GetListOfInventory():Observable<any[]>{
+    return this.httpClient.get<any[]>(`${this.apiUrl}/Product/GetListOfInventory`);
+  }
+  DeleteProductImage(id: number, path: string): Observable<any> {
+    const encodedPath = encodeURIComponent(path);
+    return this.httpClient.delete(`${this.apiUrl}/product/${id}/${encodedPath}`);
+  }
+  SearchProducts(searchText:string):Observable<any[]>{
+    return this.httpClient.get<any[]>(`${this.apiUrl}/Product/SearchProducts/${searchText}`);
+  }
+  SearchProductsByInventory(searchText:string,inventoryId:number):Observable<any[]>{
+    return this.httpClient.get<any[]>(`${this.apiUrl}/Product/SearchProductsById/${searchText}/${inventoryId}`);
+  }
+  FilterByBrand(id:number):Observable<Product[]>{
+    return this.httpClient.get<Product[]>(`${this.apiUrl}/Product/FilterByBrand/${id}`);
+  }
+  FilterByCategory(id:number):Observable<Product[]>{
+    return this.httpClient.get<Product[]>(`${this.apiUrl}/Product/FilterByCategory/${id}`);
+  }
+  FilterByInventory(id:number):Observable<any[]>{
+    return this.httpClient.get<any[]>(`${this.apiUrl}/Product/FilterByInventoryId/${id}`);
+  }
 }

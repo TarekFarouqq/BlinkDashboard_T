@@ -36,4 +36,14 @@ export class BrandService {
   deleteBrand(id: number): Observable<any> {
     return this.httpClient.delete<Brand>(`${this.apiUrl}/Brand/${id}`);
   }
+
+  // brand pagination : 
+  getPaginatedBrands(pageNumber: number, pageSize: number): Observable<Brand[]> {
+    return this.httpClient.get<Brand[]>(`${this.apiUrl}/Brand/paginated?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  }
+  
+  getBrandsPagesCount(pageSize: number): Observable<number> {
+    return this.httpClient.get<number>(`${this.apiUrl}/Brand/pages-count?pageSize=${pageSize}`);
+  }
+  
 }

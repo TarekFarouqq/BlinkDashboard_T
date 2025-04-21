@@ -1,0 +1,88 @@
+@if(isLoading){
+<div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="height: 79vh !important;">
+  <c-spinner variant="grow" color="danger" />
+  <p>Loading</p>
+</div>
+}@else{
+<form [formGroup]="DiscountForm" (submit)="onSubmit()">
+  <div class="row col-lg-12 col-md-12 col-sm-12 col-12 mb-2">
+    <div class="flex-column col-lg-4 col-md-4 col-sm-12 col-12">
+      Start Date
+      <input type="date" formControlName="DiscountFromDate" class="form-control">
+    </div>
+    <div class="flex-column col-lg-4 col-md-4 col-sm-12 col-12">
+      End Date
+      <input type="date" formControlName="DiscountEndDate" class="form-control">
+    </div>
+    <div class="flex-column col-lg-4 col-md-4 col-sm-12 col-12">
+      Discount Percetange
+      <input type="number" formControlName="DiscountPercentage" class="form-control">
+    </div>
+  </div>
+  <div
+    class="row col-lg-12 col-md-12 col-sm-12 col-12 mb-2 d-flex justify-content-end justify-content-lg-start justify-content-md-start">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+      <select formControlName="Select1" class="form-select mt-3">
+        <option [value]="1">By Brands</option>
+        <option [value]="2">By Category</option>
+      </select>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+      @if(DiscountForm.get('Select1')?.value == 1){
+      <ng-select [items]="BrandArr" formControlName="Select2" bindValue="brandId" bindLabel="brandName"
+        placeholder="Select Brand">
+      </ng-select>
+      }@else if(DiscountForm.get('Select1')?.value == 2){
+      <ng-select [items]="CategoryArr" formControlName="Select2" bindValue="categoryId" bindLabel="categoryName"
+        placeholder="Select Category">
+      </ng-select>
+      }
+    </div>
+    <div class="row col-lg-4 col-md-4 col-sm-12 col-12 gap-4" style="margin-top: 10px;">
+      <div class="row col-lg-2 col-md-4 col-sm-12 col-12" >
+        <button class="btn btn-dark text-white" type="button" (click)="AddAllProducts()">
+          <i class="fa-solid fa-check-double"></i>
+        </button>
+      </div>
+      <div class="row col-lg-2 col-md-4 col-sm-12 col-12">
+        <button class="btn btn-danger text-white" type="button" (click)="DeleteAllDiscountProducts()">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+      <div class="row col-lg-2 col-md-4 col-sm-12 col-12">
+        <button class="btn btn-primary text-white" type="button" (click)="AddDiscountProduct()">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12 col-md-12 col-sm-12 col-12 mb-2" style="height: 57vh; overflow-y: auto;" formArrayName="InsertProductDiscountDetails">
+    <div *ngFor="let product of DiscountProducts.controls;let i = index" [formGroupName]="i" class="row col-12 d-flex justify-content-center justify-content-lg-start justify-content-md-start">
+      <div class="row col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
+        <ng-select [items]="ProductArr" formControlName="productId" bindLabel="productName" bindValue="productId"
+          [typeahead]="productInput$" placeholder="Select Product">
+        </ng-select>
+      </div>
+      <div class="row col-lg-2 col-md-4 col-sm-9 col-9 mt-2">
+       <input type="number" formControlName="discountAmount" class="form-control" >
+      </div>
+      <div class="row col-lg-1 col-md-1 col-sm-3 col-3 mt-2 ms-1">
+        <button class="btn btn-danger text-white" type="button" (click)="DeleteDiscountProduct(i)">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Submit Form -->
+   <div class="row col-lg-12 col-md-12 col-sm-12 col-12">
+    <div class="d-flex align-items-center justify-content-center justify-content-lg-end justify-content-md-end">
+      <div class="row col-lg-2 col-md-3 col-sm-12 col-12">
+        <button type="submit" class="btn btn-success text-white">
+          <i class="fa-solid fa-floppy-disk fa-xl me-2"></i>
+          Save Changes
+        </button>
+      </div>
+    </div>
+   </div>
+</form>
+}

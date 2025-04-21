@@ -2,37 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
-  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  FormControlDirective,
-  FormDirective,
-  SpinnerComponent,
-} from '@coreui/angular';
 import { Brand } from '../../../../models/brand';
-import { BrandService } from '../../../../services/brand.service';
-import { ProductService } from '../../../../services/product.service';
-import { InventoryService } from '../../../../services/inventory.service';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Inventory } from '../../../../models/inventory';
 import { Product } from '../../../../models/product';
-import { forkJoin, of } from 'rxjs';
-import { AuthService } from '../../../../services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductService } from '../../../../services/product.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../../../services/auth.service';
+import { SpinnerComponent } from '@coreui/angular';
 @Component({
   selector: 'app-product-details',
   imports: [
     ReactiveFormsModule,
     FormsModule,
-    FormDirective,
-    FormControlDirective,
     CommonModule,
     FormsModule,
+    NgSelectModule,
     SpinnerComponent,
   ],
   templateUrl: './product-details.component.html',
@@ -52,340 +44,371 @@ export class ProductDetailsComponent implements OnInit {
   SupplierId!: string | '';
   UserRole!: string | '';
   constructor(
-    private brandServ: BrandService,
-    private inventoryServ: InventoryService,
-    private productServ: ProductService,
-    private fb: FormBuilder,
     private routes: ActivatedRoute,
+    private fb: FormBuilder,
+    private productServ: ProductService,
     private authServ: AuthService,
     private router: Router
   ) {
-    this.SupplierId = this.authServ?.getUserId() ?? '';
+    // Get Product Id
+    this.routes.paramMap.subscribe((id) => {
+      this.ProductId = Number(id.get('id'));
+    });
+    // Get User Id && Role
+    this.SupplierId = this.authServ.getUserId() ?? '';
     this.UserRole = this.authServ.getUserRoleFromToken() ?? '';
+    // Get BrandArr
+    this.productServ.GetBrandData().subscribe((res) => {
+      this.BrandArr = res;
+    });
+    // Get CategoryArr
+    this.productServ.GetSubCategories().subscribe((res) => {
+      this.CategoryArr = res;
+    });
+
+    // Create InsertProductDTO Form
     this.ProductForm = this.fb.group({
-      productName: ['', Validators.required],
-      productDescription: ['', Validators.required],
-      supplierId: [this.SupplierId, Validators.required],
-      brandId: [null, Validators.required],
-      categoryId: [null, Validators.required],
-      productImages: this.fb.array([]),
+      ProductName: ['', Validators.required],
+      ProductDescription: ['', Validators.required],
+      SupplierId: [this.SupplierId, Validators.required],
+      BrandId: [0, Validators.required],
+      CategoryId: [0, Validators.required],
+      ProductImages: this.fb.array([]),
       ProductStocks: this.fb.array([]),
     });
-    this.routes.paramMap.subscribe((params) => {
-      this.ProductId = Number(params.get('id'));
-      if (this.ProductId > 0) {
-        this.productServ.GetProductStock(this.ProductId).subscribe((res) => {
-          res.forEach((stock: any) => {
-            this.AddExistingProductStock(
-              stock.inventoryId,
-              stock.stockQuantity,
-              stock.stockUnitPrice
-            );
-          });
-        });
-      }
-    });
   }
+
   ngOnInit() {
-    this.isLoading = true;
-    this.getUserLocation();
-    const brandObs = this.brandServ.getAllBrands();
-    const categoryObs = this.productServ.GetChildCategory();
-    const inventoryObs = this.inventoryServ.getAll();
-    const productObs =
-      this.ProductId > 0 ? this.productServ.GetById(this.ProductId) : of(null);
-    forkJoin({
-      brands: brandObs,
-      categories: categoryObs,
-      inventory: inventoryObs,
-      product: productObs,
-    }).subscribe(({ brands, categories, inventory, product }) => {
-      this.BrandArr = brands;
-      this.CategoryArr = categories;
-      this.InventoryArr = inventory;
-      this.findClosestInventory();
-      if (product) {
-        this.ProductEntity = product;
-        this.ProductForm.patchValue({
-          productName: product.productName,
-          productDescription: product.productDescription,
-          brandId: product.brandId,
-          categoryId: product.categoryId,
-        });
-        this.ProductEntity.productImages.forEach((image) => {
-          this.AddExistingImage(image);
-        });
-      }
+    // Get InventoryArr
+    this.productServ.GetListOfInventory().subscribe((res) => {
+      this.InventoryArr = res;
+      // Get User Location
+      this.getUserLocation();
     });
-    this.isLoading = false;
+    this.isLoading = true;
+    if (this.ProductId > 0) {
+      this.productServ.GetById(this.ProductId).subscribe((res) => {
+        this.ProductEntity = res;
+        if (this.UserRole == 'Supplier') {
+          if (this.ProductEntity.supplierId !== this.SupplierId) {
+            this.ShowErrorMessage("You Can't Request This page");
+            this.router.navigate(['/product']);
+            this.isLoading = false;
+          }
+        }
+        this.isLoading = true;
+        this.ProductForm.patchValue({
+          ProductName: this.ProductEntity.productName,
+          ProductDescription: this.ProductEntity.productDescription,
+          BrandId: this.ProductEntity.brandId,
+          CategoryId: this.ProductEntity.categoryId,
+        });
+        this.isLoading = false;
+        this.isLoading = true;
+        this.ProductEntity.productImages.forEach((image: string) => {
+          this.AddExistingImage(image);
+          this.isLoading = false;
+        });
+      });
+      this.isLoading = true;
+      this.productServ.GetProductStock(this.ProductId).subscribe((res) => {
+        res.forEach((product: any) => {
+          this.AddExistingStock(
+            product.stockQuantity,
+            product.stockUnitPrice,
+            product.inventoryId
+          );
+          this.isLoading = false;
+        });
+      });
+    }
   }
+
   get ProductImages(): FormArray {
-    return this.ProductForm.get('productImages') as FormArray;
+    return this.ProductForm.get('ProductImages') as FormArray;
   }
   get ProductStocks(): FormArray {
     return this.ProductForm.get('ProductStocks') as FormArray;
   }
   AddProductImage() {
-    this.ProductImages.push(
-      this.fb.group({
-        productId: [this.ProductId],
-        productImage: [null, Validators.required],
-        previewUrl: [null],
-      })
-    );
+    this.ProductImages.push(this.createImageGroup());
   }
   AddExistingImage(imagePath: string) {
-    this.ProductImages.push(
-      this.fb.group({
-        productId: [this.ProductId],
-        productImage: [imagePath, Validators.required],
-        previewUrl: [imagePath],
-      })
-    );
+    this.ProductImages.push(this.createImageGroup(imagePath));
   }
-  OnImageSelected(event: any, index: number) {
-    const file = event.target.files[0];
-    if (file) {
+  createImageGroup(imagePath: string = '') {
+    return this.fb.group({
+      imageFile: [null],
+      imagePreview: [imagePath],
+    });
+  }
+  DeleteImage(index: number) {
+    const file = this.ProductImages.at(index).get('imageFile')?.value;
+    const preview = this.ProductImages.at(index).get('imagePreview')?.value;
+    if (file == null && preview == '') {
+      this.ProductImages.removeAt(index);
+    } else if (file !== null && preview !== '') {
+      this.ProductImages.removeAt(index);
+    } else if (file == null && preview != '') {
+      this.productServ.DeleteProductImage(this.ProductId, preview).subscribe(
+        (res) => {
+          this.ProductImages.removeAt(index);
+        },
+        (error) => {
+          this.ShowErrorMessage('Failed To Delete Image');
+        }
+      );
+    }
+  }
+  AddProductStock() {
+    this.ProductStocks.push(this.createStockGroup());
+  }
+  AddExistingStock(stock: number, price: number, invId: number) {
+    this.ProductStocks.push(this.createStockGroup(stock, price, invId));
+  }
+  createStockGroup(
+    stock: number = 0,
+    price: number = 0,
+    invId: number = this.closestInventoryId
+  ): FormGroup {
+    return this.fb.group({
+      InventoryId: [
+        { value: invId, disabled: this.UserRole != 'Admin' },
+        Validators.required,
+      ],
+      ProductId: [this.ProductId],
+      StockUnitPrice: [price, Validators.required],
+      StockQuantity: [stock, Validators.required],
+    });
+  }
+  DeleteStock(index: number) {
+    this.ProductStocks.removeAt(index);
+  }
+  onFileUpdate(event: Event, index: number) {
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files.length > 0) {
+      const file = fileInput.files[0];
       const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.ProductImages.at(index).patchValue({
-          productId: this.ProductId,
-          productImage: file,
-          previewUrl: e.target.result,
+      reader.onload = () => {
+        const imagePreview = reader.result as string;
+        const imagesFormArray = this.ProductForm.get(
+          'ProductImages'
+        ) as FormArray;
+        const imageGroup = imagesFormArray.at(index) as FormGroup;
+        imageGroup.patchValue({
+          imageFile: file,
+          imagePreview: imagePreview,
         });
       };
       reader.readAsDataURL(file);
     }
   }
-  AddProductStock() {
-    const stockGroup = this.fb.group({
-      inventoryId: [
-        {
-          value: this.closestInventoryId,
-          disabled: this.UserRole === 'Supplier',
-        },
-        Validators.required,
-      ],
-      productId: [this.ProductId, Validators.required],
-      stockUnitPrice: [null, Validators.required],
-      stockQuantity: [null, Validators.required],
+  ShowSuccessMessage(msg: string) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'success',
+      title: msg,
+      showConfirmButton: false,
+      timer: 2500,
     });
-    this.ProductStocks.push(stockGroup);
+    this.isLoading = false;
   }
-  AddExistingProductStock(invId: number, qnt: number, pri: number) {
-    this.ProductStocks.push(
-      this.fb.group({
-        inventoryId: [invId, Validators.required],
-        productId: [this.ProductId, Validators.required],
-        stockUnitPrice: [pri, Validators.required],
-        stockQuantity: [qnt, Validators.required],
-      })
-    );
+  ShowErrorMessage(msg: string) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'error',
+      title: msg,
+      showConfirmButton: false,
+      timer: 2500,
+    });
+    this.isLoading = false;
   }
-  DeleteProductStock(index: number) {
-    this.ProductStocks.removeAt(index);
-  }
-  DeleteProductImage(index: number) {
-    this.ProductImages.removeAt(index);
-  }
-  OnSubmit() {
-    if (this.ProductForm.invalid) {
-      this.ProductForm.markAllAsTouched();
-      return;
-    }
+
+  onSubmit() {
     this.isLoading = true;
-    const formData = new FormData();
-    formData.append('productName', this.ProductForm.value.productName);
-    formData.append(
-      'productDescription',
-      this.ProductForm.value.productDescription
-    );
-    formData.append('supplierId', this.ProductForm.value.supplierId);
-    formData.append('brandId', this.ProductForm.value.brandId);
-    formData.append('categoryId', this.ProductForm.value.categoryId);
-    let hasOldImages = false;
-    let hasNewImages = false;
-    this.ProductImages.controls.forEach((img: any) => {
-      const file = img.get('productImage').value;
-      if (this.ProductEntity) {
-        if (file instanceof File) {
-          formData.append('NewProductImages', file);
-          hasNewImages = true;
-        } else {
-          formData.append('OldProductImages', file);
-          hasOldImages = true;
-        }
-      } else {
-        if (file instanceof File) {
-          formData.append('productImages', file);
-        }
-      }
-    });
-    if (this.ProductEntity) {
-      if (!hasOldImages) {
-        formData.append('OldProductImages', '');
-      }
-      if (!hasNewImages) {
-        formData.append('NewProductImages', new Blob());
-      }
-    }
-    this.ProductStocks.controls.forEach((stock: any, index: number) => {
-      formData.append(
-        `productStocks[${index}].inventoryId`,
-        stock.value.inventoryId
-      );
-      formData.append(
-        `productStocks[${index}].productId`,
-        stock.value.productId
-      );
-      formData.append(
-        `productStocks[${index}].stockUnitPrice`,
-        stock.value.stockUnitPrice
-      );
-      formData.append(
-        `productStocks[${index}].stockQuantity`,
-        stock.value.stockQuantity
-      );
-    });
+    if (this.SupplierId) {
+      if (this.UserRole) {
+        if (this.ProductForm.valid) {
+          if (this.ProductImages.length > 0) {
+            if (this.ProductStocks.length > 0) {
+              // Check Product Quantity For Supplier
+              if (this.UserRole == 'Supplier') {
+                if (
+                  this.ProductStocks.at(0).get('StockUnitPrice')?.value == 0 ||
+                  this.ProductStocks.at(0).get('StockQuantity')?.value == 0
+                ) {
+                  this.ShowErrorMessage(
+                    'Please before continue you should enter the product quantity and price for selected inventory'
+                  );
+                }
+              }
+              // Create the FormData to Send to Backend
 
-    const formSupplierData = new FormData();
-    formSupplierData.append('productName', this.ProductForm.value.productName);
-    formSupplierData.append(
-      'productDescription',
-      this.ProductForm.value.productDescription
-    );
-    formSupplierData.append('brandId', this.ProductForm.value.brandId);
-    formSupplierData.append('categoryId', this.ProductForm.value.categoryId);
-    formSupplierData.append('supplierId', this.ProductForm.value.supplierId);
-    formSupplierData.append('inventoryId', this.closestInventoryId.toString());
-    formSupplierData.append(
-      'productPrice',
-      this.ProductStocks.at(0).get('stockUnitPrice')?.value
-    );
-    formSupplierData.append(
-      'productQuantity',
-      this.ProductStocks.at(0).get('stockQuantity')?.value
-    );
-    this.ProductImages.controls.forEach((img: any) => {
-      const file = img.get('productImage').value;
-      if (file instanceof File) {
-        formSupplierData.append('productImages', file);
-      }
-    });
+              const formData = new FormData();
+              formData.append(
+                'ProductName',
+                this.ProductForm.get('ProductName')?.value
+              );
+              formData.append(
+                'ProductDescription',
+                this.ProductForm.get('ProductDescription')?.value
+              );
+              formData.append(
+                'SupplierId',
+                this.ProductForm.get('SupplierId')?.value
+              );
+              formData.append(
+                'BrandId',
+                this.ProductForm.get('BrandId')?.value
+              );
+              formData.append(
+                'CategoryId',
+                this.ProductForm.get('CategoryId')?.value
+              );
+              let imageIndex = 0;
+              let oldImageIndex = 0;
+              let newImageIndex = 0;
 
-    if (this.ProductId <= 0) {
-      if (this.UserRole === 'Supplier') {
-        this.productServ.AddReviewSuppliedProduct(formSupplierData).subscribe((res)=>{
-          this.isLoading = false;
-          this.ProductForm.reset();
-          Swal.fire({
-            toast: true,
-            position: 'top',
-            icon: 'success',
-            title: 'Product added successfully',
-            showConfirmButton: false,
-            timer: 2500,
-          });
-          this.router.navigate(['/product/manage']);
-        },
-      (error)=>{
-          this.isLoading = false;
-          Swal.fire({
-            toast: true,
-            position: 'top',
-            icon: 'error',
-            title: 'Error while adding product',
-            showConfirmButton: false,
-            timer: 2500,
-          });
-      })
-      } else {
-        this.productServ.InsertProduct(formData).subscribe(
-          (res) => {
-            this.isLoading = false;
-            this.ProductForm.reset();
-            Swal.fire({
-              toast: true,
-              position: 'top',
-              icon: 'success',
-              title: 'Product added successfully',
-              showConfirmButton: false,
-              timer: 2500,
-            });
-            this.router.navigate(['/product/manage']);
-          },
-          (err) => {
-            this.isLoading = false;
-            Swal.fire({
-              toast: true,
-              position: 'top',
-              icon: 'error',
-              title: 'Error while adding product',
-              showConfirmButton: false,
-              timer: 2500,
-            });
+              this.ProductImages.controls.forEach((control) => {
+                const file = control.get('imageFile')?.value;
+                const preview = control.get('imagePreview')?.value;
+                if (file instanceof File) {
+                  if (this.ProductEntity) {
+                    formData.append(`NewProductImages`, file);
+                  } else {
+                    formData.append(`ProductImages`, file);
+                  }
+                } else if (
+                  typeof preview === 'string' &&
+                  preview.trim() !== ''
+                ) {
+                  if (this.ProductEntity) {
+                    formData.append(`OldProductImages`, preview);
+                  } else {
+                    formData.append(`OldImages`, preview);
+                  }
+                }
+              });
+              this.ProductStocks.controls.forEach((stock, index) => {
+                const stockGroup = stock as FormGroup;
+                const rawValue = stockGroup.getRawValue();
+                formData.append(`ProductStocks[${index}].InventoryId`, rawValue.InventoryId);
+                formData.append(`ProductStocks[${index}].ProductId`, rawValue.ProductId);
+                formData.append(`ProductStocks[${index}].StockUnitPrice`, rawValue.StockUnitPrice);
+                formData.append(`ProductStocks[${index}].StockQuantity`, rawValue.StockQuantity);
+              });
+              // End Of Creation of FormData
+              if (this.ProductEntity) {
+                // Update
+                this.productServ.UpdateProduct(this.ProductId, formData).subscribe({
+                  next: (res) => {
+                    this.ShowSuccessMessage("Product Updated Successfully");
+                    this.router.navigate(['/product']);
+                  },
+                  error: (err) => {
+                    this.ShowErrorMessage("Update failed: " + err.error.message);
+                  },
+                  complete: () => this.isLoading = false
+                });
+              } else {
+                // Insert
+                if(this.UserRole == "Admin"){
+                  this.productServ.InsertProduct(formData).subscribe({
+                    next:(res) => {
+                      this.ShowSuccessMessage('Product Successfull Created');
+                    },
+                    error:(err) => {
+                      this.ShowErrorMessage(err.error.message);
+                    },
+                    complete:()=> this.router.navigate(['/product'])
+                  });
+                }else if(this.UserRole == "Supplier"){
+                  let supplierInventoryId = this.ProductStocks.at(0).get('InventoryId')?.value
+                  let productStock = this.ProductStocks.at(0).get('StockQuantity')?.value
+                  let productPrice = this.ProductStocks.at(0).get('StockUnitPrice')?.value
+                  formData.append('InventoryId',supplierInventoryId.toString())
+                  formData.append('ProductQuantity',productStock.toString())
+                  formData.append('ProductPrice',productPrice.toString())
+                  this.productServ.AddReviewSuppliedProduct(formData).subscribe({
+                    next:(res)=>{
+                      this.ShowSuccessMessage("Product Successfull Created, and Waiting To Be Reviewed")
+                    },
+                    error:(err)=>{
+                      this.ShowErrorMessage("Product Failed To Create");
+                    },
+                    complete:()=>{
+                      this.router.navigate(['/product'])
+                    }
+                  })
+                }
+                
+              }
+            } else {
+              this.ShowErrorMessage(
+                'You should input at least 1 inventory stock for this product'
+              );
+              this.AddProductStock();
+            }
+          } else {
+            this.ShowErrorMessage(
+              'You should select at least 1 image for product'
+            );
+            this.AddProductImage();
           }
-        );
+        } else {
+          this.ShowErrorMessage(
+            'The Model is Invalid, Please Fill All Requirements'
+          );
+        }
+      } else {
+        this.ShowErrorMessage("Can't Get User Role From Token");
       }
     } else {
-      this.productServ.UpdateProduct(this.ProductId, formData).subscribe(
-        (res) => {
-          this.isLoading = false;
-          this.ProductForm.reset();
-          Swal.fire({
-            toast: true,
-            position: 'top',
-            icon: 'success',
-            title: 'Product updated successfully',
-            showConfirmButton: false,
-            timer: 2500,
-          });
-          this.router.navigate(['/product/manage']);
-        },
-        (err) => {
-          this.isLoading = false;
-          Swal.fire({
-            toast: true,
-            position: 'top',
-            icon: 'error',
-            title: 'Error while updating product',
-            showConfirmButton: false,
-            timer: 2500,
-          });
-        }
-      );
+      this.ShowErrorMessage("Can't Get User Id From Token");
     }
   }
 
   // Working on GIS Location
   getUserLocation() {
     if (navigator.geolocation) {
+      this.isLoading = true;
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this.CurrentUserLatitude = position.coords.latitude;
           this.CurrentUserLongitude = position.coords.longitude;
+          this.findClosestInventory();
+          this.isLoading = false;
         },
         (error) => {
-          console.log(error);
+          this.ShowErrorMessage('Error While trying to get you location');
         }
       );
     }
   }
   findClosestInventory() {
-    let closesetDistance = Infinity;
-    this.InventoryArr.forEach((inventory) => {
-      const distance = this.calculateDistance(
-        this.CurrentUserLatitude,
-        this.CurrentUserLongitude,
-        inventory.lat,
-        inventory.long
-      );
-      if (distance < closesetDistance) {
-        closesetDistance = distance;
-        this.closestInventoryId = inventory.inventoryId;
+    this.isLoading = true;
+    if (this.InventoryArr) {
+      let closesetDistance = Infinity;
+      this.InventoryArr.forEach((inventory) => {
+        const distance = this.calculateDistance(
+          this.CurrentUserLatitude,
+          this.CurrentUserLongitude,
+          inventory.lat,
+          inventory.long
+        );
+        this.isLoading = false;
+        if (distance < closesetDistance) {
+          closesetDistance = distance;
+          this.closestInventoryId = inventory.inventoryId;
+        }
+      });
+      this.setInventoryValue(this.closestInventoryId);
+      if (this.UserRole == 'Supplier') {
+        this.AddProductStock();
       }
-    });
-    this.setInventoryValue(this.closestInventoryId);
+    }
   }
   calculateDistance(
     lat1: number,
@@ -415,3 +438,4 @@ export class ProductDetailsComponent implements OnInit {
   }
   // End Of Working On GIS
 }
+

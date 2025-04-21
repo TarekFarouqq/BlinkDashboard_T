@@ -1,27 +1,60 @@
 .btn-primary {
-  background-color: #ff5242;  
-  border-color: #ff5242;      
+  background-color: #ff5242;
+  border-color: #ff5242;
 }
 
 .btn-primary:hover {
-  background-color: #f62d1e;   
+  background-color: #f62d1e;
   border-color: #f62d1e;
 }
+
 h2 {
-    font-size: 1.8rem;
-    color: #343a40;
-    font-weight: bold;
+  font-size: 1.8rem;
+  color: #343a40;
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+}
+
+button {
+  margin-right: 5px;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* update Responsive  */
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: auto;
   }
-  
-  table {
-    width: 100%;
+
+  .d-flex.flex-wrap .form-control {
+    width: 100% !important;
+    margin-bottom: 10px;
   }
-  
-  button {
-    margin-right: 5px;
+
+  .d-flex.flex-wrap .search-btn {
+    width: 100% !important;
   }
-  
-  button:hover {
-    opacity: 0.9;
+
+  .add-btn {
+    width: 100% !important;
   }
-  
+
+  .d-flex.justify-content-end {
+    justify-content: center !important;
+  }
+
+  .btn {
+    margin-right: 0 !important;
+    margin-bottom: 5px;
+  }
+
+  td {
+    word-break: break-word;
+  }
+}

@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../services/user.service';
 import Swal from 'sweetalert2';
 import { User } from '../../../../models/User';
+ 
+
 
 @Component({
   selector: 'app-update',
@@ -15,7 +17,7 @@ import { User } from '../../../../models/User';
 })
 export class UpdateComponent implements OnInit {
   updateUserForm!: FormGroup;
-  userId!: number;
+  userId!: string;
   user!: AddUser;
   
   constructor(
@@ -25,33 +27,50 @@ export class UpdateComponent implements OnInit {
   ) {
     this.updateUserForm = new FormGroup({
       userName: new FormControl('', [Validators.required]),
-      userFirstName: new FormControl('', [Validators.required]),
-      userLastName: new FormControl('', [Validators.required]),
-      userEmail: new FormControl('', [Validators.required, Validators.email]),
-      userPhone: new FormControl('', [Validators.required]),
-      userRole: new FormControl('', [Validators.required])
+      firstName: new FormControl('', [ Validators.required,Validators.minLength(3),Validators.maxLength(15) ]),
+      lastName: new FormControl('', [ Validators.required,Validators.minLength(3), Validators.maxLength(15)]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      userPassword: new FormControl('', [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.pattern(/^(?=.*[A-Z])(?=.*\d).+$/)
+      ]),
+      phoneNumber: new FormControl('', [Validators.required]),
+      address: new FormControl('', [ Validators.required,Validators.minLength(5),Validators.maxLength(200) ]),
+      role: new FormControl('', [Validators.required])
     });
+  
   }
 
 
   ngOnInit(): void {
-    this.userId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+    this.userId = this.activatedRoute.snapshot.paramMap.get('id')!;
+
+   // this.userId = this.activatedRoute.snapshot.paramMap.get('id');
     this.userService.getUserById(this.userId).subscribe({
       next: (response) => {
         this.user = response;
         this.updateUserForm.patchValue({
           userName: this.user.userName,
-          userFirstName: this.user.firstName,
-          userLastName: this.user.lastName,
-          userEmail: this.user.email,
-          userPhone: this.user.phoneNumber,
+          firstName: this.user.firstName,
+          lastName: this.user.lastName,
+          email: this.user.email,
+          phoneNumber: this.user.phoneNumber,
           userPassword: this.user.userPassword,
           address: this.user.address,
-          userRole: this.user.role
+          role: this.user.role
         });
       },
       error: (error) => {
-        console.error('Error fetching user:', error);
+       // console.error('Error updating user:', error);
+        Swal.fire({
+          toast: true,
+          position: 'top',
+          icon: 'error',
+          title: `Error: ${error.error?.message || 'An unknown error occurred'}`,
+          showConfirmButton: false,
+          timer: 2500,
+        });
       },
     });
   }
@@ -61,6 +80,7 @@ export class UpdateComponent implements OnInit {
   }
 
   updateUser(): void {
+    this.updateUserForm.markAllAsTouched();
     if (this.updateUserForm.valid) {
       const updatedUser: User = this.updateUserForm.value;
       this.userService.updateUser(this.userId, updatedUser).subscribe({
@@ -74,6 +94,8 @@ export class UpdateComponent implements OnInit {
             timer: 2500,
           });
           this.updateUserForm.reset();
+          // navigate to manage :
+          this.goToManage();
         },
         error: (error) => {
           console.error('Error updating user:', error);
@@ -88,9 +110,11 @@ export class UpdateComponent implements OnInit {
 
   // Getters
   get userName() { return this.updateUserForm.get('userName'); }
-  get userFirstName() { return this.updateUserForm.get('userFirstName'); }
-  get userLastName() { return this.updateUserForm.get('userLastName'); }
-  get userEmail() { return this.updateUserForm.get('userEmail'); }
-  get userPhone() { return this.updateUserForm.get('userPhone'); }
-  get userRole() { return this.updateUserForm.get('userRole'); }
+  get firstName() { return this.updateUserForm.get('firstName'); }
+  get lastName() { return this.updateUserForm.get('lastName'); }
+  get email() { return this.updateUserForm.get('email'); }
+  get userPassword(){return this.updateUserForm.get('userPassword')}
+  get phoneNumber() { return this.updateUserForm.get('phoneNumber'); }
+  get address(){return this.updateUserForm.get(('address'))}
+  get role() { return this.updateUserForm.get('role'); }
 }

@@ -18,24 +18,57 @@ export class ManageComponent implements OnInit{
   users: User[] = [];
   search: string = '';
   isLoading: boolean = true;
+  // for pagination :
+  currentPage: number = 1;
+  pageSize: number = 5;
+  totalPages: number = 0;
 
   constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
+    this.loadPagesCount();
     this.loadUsers();
   }
   loadUsers(): void {
-    this.userService.getAllUsers().subscribe({
+    this.isLoading = true;
+    this.userService.getPaginatedUsers(this.currentPage, this.pageSize).subscribe({
       next: (res) => {
         this.users = res;
         this.isLoading = false;
+       // console.log(this.users);
+
       },
       error: (err) => {
-        console.error('Error loading users:', err);
+       // console.error('Error loading users:', err);
+        this.isLoading = false;
       },
     });
   }
 
+  loadPagesCount(): void {
+    this.userService.getPagesCount(this.pageSize).subscribe({
+      next: (count) => {
+        this.totalPages = count;
+      },
+      error: (err) => {
+        console.error('Error getting pages count:', err);
+      },
+    });
+  }
+ 
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadUsers();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadUsers();
+    }
+  }
 
 searchUser() {
     if (this.search.trim()) {
@@ -68,13 +101,13 @@ searchUser() {
   }
 
   goToUserDisplay(id: string): void {
-    console.log('Selected user id:', id);
+   // console.log('Selected user id:', id);
     this.router.navigate(['/Users/display', id]);
   }
 
   navigateToUpdate(userId: string) {
     this.router.navigate(['/Users/update', userId]);
-    console.log(userId);
+   // console.log(userId);
   }
 
   deleteUser(userId: string): void {
@@ -88,10 +121,10 @@ searchUser() {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.userService.deleteUser(Number(userId)).subscribe({
+        this.userService.deleteUser((userId)).subscribe({
           next: (res) => {
             this.loadUsers();
-            console.log('User deleted successfully!');
+           //console.log('User deleted successfully!');
           },
           error: (err) => {
             console.error('Error deleting user:', err);
@@ -100,4 +133,6 @@ searchUser() {
       }
     });
   }
+
+  
 }

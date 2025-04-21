@@ -3,7 +3,9 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractContro
 import { InventoryService } from '../../../../services/inventory.service';  
 import Swal from 'sweetalert2';
 import { Inventory } from '../../../../models/inventory';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Ibranch } from '../../shared/Interfaces/ibranch';
+import { BranchService } from '../../../../services/BranchServices/branch.service';
 
 
 @Component({
@@ -17,10 +19,8 @@ export class UpdateInventoryComponent implements OnInit {
   inventory! : Inventory;
   inventoryId!: number ;
   //modify 
-  branches: { id: number, name: string }[] = []; 
-
-  constructor(private inventoryService: InventoryService,  private ActivatedRoute: ActivatedRoute) {
-
+  BranchArr!:Ibranch[];
+  constructor(private inventoryService: InventoryService,private branchServ:BranchService , private ActivatedRoute: ActivatedRoute,private router:Router) {
     this.updateInventoryForm = new FormGroup({
       inventoryName: new FormControl('', [Validators.required, Validators.minLength(3)]),
       inventoryAddress: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -32,6 +32,19 @@ export class UpdateInventoryComponent implements OnInit {
   }
   
   ngOnInit() {
+    this.branchServ.getAllBranches().subscribe({
+      next:(branches)=>{
+        this.BranchArr=branches;
+        //   next: (response) => {
+        //     this.inventory = response;
+        //     this.updateInventoryForm.patchValue(this.inventory);
+        //   },
+        //   error: (error) => {
+        //     console.error('Error fetching inventory:', error);
+        //   }
+        // });
+      }
+    })
      this.inventoryId = Number(this.ActivatedRoute.snapshot.paramMap.get('id'));
      this.inventoryService.getById(this.inventoryId).subscribe({
        next: (response) => {
@@ -42,19 +55,11 @@ export class UpdateInventoryComponent implements OnInit {
          console.error('Error fetching inventory:', error);
        }
      })
-
-    // modify
-    this.branches = [
-      { id: 1, name: 'Cairo' },
-      { id: 2, name: 'Mansoura' },
-    ];
   }
   
   onSubmit() {
     this.updateInventory();
   }
-
-
 
   updateInventory() {
     if (this.updateInventoryForm.valid) {
@@ -69,12 +74,25 @@ export class UpdateInventoryComponent implements OnInit {
             timer: 2500,
           });
           this.updateInventoryForm.reset(); 
+          this.router.navigate(['/inventory'])
         },
         error: (error) => {
           console.error('Error adding inventory:', error);
         }
       });}
-    
+    }
+
+    // Get Latitude And Longitude
+    getLatLongFromLink(givinLink:string){
+      const regex = /@?(-?\d+\.\d+),(-?\d+\.\d+)/;
+      
+      const match = givinLink.match(regex);
+      if(match){
+        this.updateInventoryForm.patchValue({
+          lat:match[1],
+          long:match[2]
+        })
+      }
     }
 
    // Getter methods

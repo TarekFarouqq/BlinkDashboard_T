@@ -1,0 +1,87 @@
+@if(isLoading){
+<div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="height: 79vh !important;">
+  <c-spinner variant="grow" color="danger" />
+  <p>Loading</p>
+</div>
+}@else{
+    <div class="row col-lg-12 col-md-12 col-sm-12 col-12 d-flex align-items-center justify-content-end mb-3">
+        <div class="row col-lg-2 col-md-2 col-sm-6 col-12">
+            <button class="btn btn-primary" (click)="NavigateToDetails(0)">
+                <i class="fa-solid fa-plus"></i>
+                New Transaction
+            </button>
+        </div>
+    </div>
+    <div class="row col-lg-12 col-md-12 col-sm-12 col-12 border rounded-2 w-100" style="height: 67vh; overflow-x: auto;">
+        <div class="table-responsive w-100">
+            <table class="table table-hover w-100">
+                <thead>
+                    <tr>
+                        <th class="text-center text-secondary" style="width: 10%;">Transaction Id</th>
+                        <th class="text-center text-secondary" style="width: 25%;">Transaction Date</th>
+                        <th class="text-center text-secondary" style="width: 25%;">Source Inventory</th>
+                        <th class="text-center text-secondary" style="width: 25%;">Destination Inventory</th>
+                        <th class="text-center text-secondary" style="width: 15%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(transactionHistory of TransactionArr; track transactionHistory?.inventoryTransactionHeaderId){
+                        <tr>
+                            <td class="text-center align-middle">{{transactionHistory.inventoryTransactionHeaderId}}</td>
+                            <td class="text-center align-middle">{{transactionHistory.inventoryTransactionDate | date:'dd-MM-yyyy'}}</td>
+                            <td class="text-center align-middle">{{transactionHistory.srcInventoryName}}</td>
+                            <td class="text-center align-middle">{{transactionHistory.distInventoryName}}</td>
+                            <td class="text-center align-middle">
+                                <div class="row gap-2 d-flex align-items-center justify-content-center">
+                                    <button type="button" class="col-md-3 btn btn-warning" (click)="NavigateToDetails(transactionHistory.inventoryTransactionHeaderId)">
+                                      <i class="fa-solid fa-pen-to-square text-white"></i>
+                                    </button>
+                                    <button type="button" class="col-md-3 btn btn-danger">
+                                      <i class="fa-solid fa-trash-can text-white"></i>
+                                    </button>
+                                  </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row col-lg-12 col-md-12 col-sm-12 col-12 d-flex align-items-center justify-content-end">
+        <div class="row g-2 justify-content-end">
+            <div class="col-3 col-sm-3 col-md-1 col-lg-1">
+                <button class="btn btn-primary w-100" [disabled]="currentPage == 1" (click)="prevPage()">
+                    <i class="fa-solid fa-backward"></i>
+                </button>
+            </div>
+            <div class="col-6 col-sm-6 col-md-1 col-lg-1">
+                <input type="number" class="form-control text-center" [ngModel]="currentPage">
+            </div>
+            <div class="col-3 col-sm-3 col-md-1 col-lg-1">
+                <button class="btn btn-primary w-100" [disabled]="currentPage == TotalPages" (click)="nextPage()">
+                    <i class="fa-solid fa-forward"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+
+<!-- Confirm Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-danger">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this product?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary border2r" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger border2r text-white">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

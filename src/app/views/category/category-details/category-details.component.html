@@ -1,0 +1,75 @@
+@if(isLoading){
+<div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="height: 79vh !important;">
+  <c-spinner variant="grow" color="danger" />
+  <p>Loading</p>
+</div>
+}@else{
+<form [formGroup]="CategoryForm" (submit)="onSubmit()">
+  <div class="row col-12 col-lg-12 col-md-12 col-sm-12">
+    <div class="row col-12 col-lg-12 col-md-12 col-sm-12 border-bottom">
+      <div class="flex-column col-12 col-lg-6 col-md-6 col-sm-12 mb-2">
+        <div class="row col-12">
+          <label for="inp-CategoryName" class="mb-2">Category Name</label>
+          <input type="text" id="inp-CategoryName" class="form-control" formControlName="categoryName">
+        </div>
+        <div class="row col-12 mt-3">
+          <label for="inp-CategoryDescription" class="mb-2">Category Description</label>
+          <textarea type="text" id="inp-CategoryDescription" class="form-control" formControlName="categoryDescription"
+            rows="3" style="resize: none; overflow: auto;"></textarea>
+        </div>
+      </div>
+      <div class="flex-column col-12 col-lg-6 col-md-6 col-sm-12 mb-2">
+        <div class="row col-12">
+          <label for="inp-Image" class="mb-2">Category Image</label>
+          <input type="file" id="inp-Image" class="form-control" (change)="onFileChanged($event)">
+        </div>
+        @if(CategoryForm.get('previewUrl')?.value){
+        <div
+          class="row d-none d-lg-flex d-md-flex d-sm-flex col-md-6 col-lg-3 col-sm-6 border bg-white rounded-3 p-1 mt-3 d-flex align-items-center justify-content-center">
+          <img [src]="CategoryForm.get('previewUrl')?.value" style="width: 175px; height: 140px;">
+        </div>
+        }
+      </div>
+    </div>
+    <div class="row col-12 col-lg-12 col-md-12 col-sm-12 d-flex">
+      <div class="row col-12 mt-2">
+        <button type="button" class="btn btn-primary col-lg-2 col-md-3 col-sm-4 col-6 text-white" (click)="AddSubCategory()">
+          <i class="fa-solid fa-plus"></i>
+          Add Category
+        </button>
+      </div>
+      <div class="flex-column col-12 col-lg-12 col-md-12 col-sm-12 mt-3" style="height: 36vh;overflow-y: auto;"
+        formArrayName="subCategories">
+        <div class="row col-12 col-lg-12 col-md-12 col-sm-12 border-bottom mb-2"
+          *ngFor="let subCategory of subCategories.controls; let i = index" [formGroupName]="i">
+          <div class="col-lg-3 col-md-3 col-sm-12 mb-2 mt-2">
+            <input type="text" class="form-control" formControlName="categoryName" placeholder="Sub Category Name">
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12 mb-2 mt-2">
+            <input type="text" class="form-control" formControlName="categoryDescription"
+              placeholder="Sub Description Name">
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-6 col-8 mb-2 mt-2">
+            <input type="file" class="form-control" (change)="onFileChangedSubCategory($event,i)">
+          </div>
+          <div class="col-lg-1 col-md-3 col-sm-3 col-2 mb-2">
+            @if(subCategories.at(i).get('previewUrl')?.value){
+            <img [src]="subCategories.at(i).get('previewUrl')?.value" class="bg-white"
+              style="width: 50px;height: 50px;">
+            }
+          </div>
+          <div class="col-lg-1 col-md-1 col-sm-3 col-2 mt-2">
+            <button type="button" class="btn btn-danger text-white" (click)="DeleteSubCategory(i)">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row col-12 col-lg-12 col-md-12 col-sm-12 d-flex align-items-center justify-content-end mt-2">
+      <button type="submit" class="btn btn-success col-lg-2 col-md-3 col-sm-6 col-6 text-white">Save Changes</button>
+    </div>
+  </div>
+  <div class="row"></div>
+</form>
+}

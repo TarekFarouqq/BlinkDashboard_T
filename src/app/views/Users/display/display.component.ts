@@ -30,9 +30,9 @@ export class DisplayComponent  implements OnInit{
 
 
   loadUserDetails(): void {
-    this.userService.getUserById(Number(this.userId)).subscribe({
+    this.userService.getUserById((this.userId)).subscribe({
       next: (data) => {
-        console.log('Received user data:', data);
+      //  console.log('Received user data:', data);
         this.user = data;
       },
       error: (err) => {
@@ -40,24 +40,9 @@ export class DisplayComponent  implements OnInit{
       }
     });
   }
-  navigateToUpdate(id: number): void {
-    this.router.navigate(['/Users/update', id]);
-  }
+   
   goBackToList(): void {
     this.router.navigate(['/Users/manage']);
   }
-  deleteUser(id: number): void {
-    if (confirm('Are you sure you want to delete this user?')) {
-      this.userService.deleteUser(id).subscribe({
-        next: () => {
-          alert('User deleted successfully!');
-          this.goBackToList();
-        },
-        error: (err) => {
-          console.error('Error deleting user:', err);
-        }
-      });
-    }
-  
-}
+ 
 }

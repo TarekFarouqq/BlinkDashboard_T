@@ -4,6 +4,7 @@ import { InventoryService } from '../../../../services/inventory.service';
 import Swal from 'sweetalert2';
 import { BranchService } from '../../../../services/BranchServices/branch.service';
 import { Ibranch } from '../../shared/Interfaces/ibranch';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-add-inventory',
   imports: [ReactiveFormsModule],
@@ -16,7 +17,7 @@ export class AddInventoryComponent implements OnInit {
   branches: { id: number, name: string }[] = []; 
   BranchArr!:Ibranch[];
 
-  constructor(private inventoryService: InventoryService,private branchServ:BranchService) {
+  constructor(private inventoryService: InventoryService,private branchServ:BranchService,private router:Router) {
 
     this.addInventoryForm = new FormGroup({
       inventoryName: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -55,6 +56,7 @@ export class AddInventoryComponent implements OnInit {
             timer: 2500,
           });
           this.addInventoryForm.reset(); 
+          this.router.navigate(['/inventory'])
         },
         error: (error) => {
           console.error('Error adding inventory:', error);
@@ -62,6 +64,20 @@ export class AddInventoryComponent implements OnInit {
       });}
     
     }
+
+     // Get Latitude And Longitude
+     getLatLongFromLink(givinLink:string){
+      const regex = /@?(-?\d+\.\d+),(-?\d+\.\d+)/;
+      
+      const match = givinLink.match(regex);
+      if(match){
+        this.addInventoryForm.patchValue({
+          lat:match[1],
+          long:match[2]
+        })
+      }
+    }
+
 
    // Getter methods
    get inventoryName() { return this.addInventoryForm.get('inventoryName'); }

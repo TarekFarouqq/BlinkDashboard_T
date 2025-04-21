@@ -58,6 +58,38 @@ export const routes: Routes = [
           title: 'review-products-details'
         }
       },
+      {
+        path: 'manage-discounts',
+         canActivate: [adminGuard],
+        loadComponent: () => import('./manage-discounts/manage-discounts.component').then(m => m.ManageDiscountsComponent),
+        data: {
+          title: 'Manage-Discounts'
+        }
+      },
+      {
+        path: 'discount-details/:id',
+         canActivate: [adminGuard],
+        loadComponent: () => import('./discount-details/discount-details.component').then(m => m.DiscountDetailsComponent),
+        data: {
+          title: 'Discount-Details'
+        }
+      },
+      {
+        path: 'manage-transaction',
+         canActivate: [adminGuard],
+        loadComponent: () => import('./manage-inventory-transaction/manage-inventory-transaction.component').then(m => m.ManageInventoryTransactionComponent),
+        data: {
+          title: 'Manage-Transactions'
+        }
+      },
+      {
+        path: 'transaction-details/:id',
+         canActivate: [adminGuard],
+        loadComponent: () => import('./transaction-details/transaction-details.component').then(m => m.TransactionDetailsComponent),
+        data: {
+          title: 'Transaction-Details'
+        }
+      },
     ]
   }
 ];

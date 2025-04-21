@@ -36,6 +36,12 @@ import { Routes } from '@angular/router';
 {
     path: 'update/:id',
     loadComponent: () => import('./update/update.component').then(m => m.UpdateComponent),
+},
+
+// add path for add admin :
+{
+    path:'add-admin',
+    loadComponent:()=> import('./add-admin/add-admin.component').then(m => m.AddAdminComponent),
 }
     ]
 }
