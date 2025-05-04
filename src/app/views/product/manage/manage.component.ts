@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
 import Swal from 'sweetalert2';
+import { NotifcationService } from '../../../../services/notifcation.service';
 declare var bootstrap: any;
 @Component({
   selector: 'app-manage',
@@ -23,11 +24,14 @@ export class ManageComponent implements OnInit {
   FilterProduct: string = '';
   UserRole!: string | '';
   CurrentUserId!: string | '';
+
   constructor(
     private productServ: ProductService,
     private router: Router,
-    private authServ: AuthService
+    private authServ: AuthService,
+    private notificationService: NotifcationService
   ) {
+    
     this.UserRole = this.authServ.getUserRoleFromToken() ?? '';
     this.CurrentUserId = this.authServ.getUserId() ?? '';
     if(this.UserRole=="Supplier"){
