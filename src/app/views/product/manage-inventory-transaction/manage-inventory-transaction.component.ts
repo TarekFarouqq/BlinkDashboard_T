@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 })
 export class ManageInventoryTransactionComponent implements OnInit {
   isLoading: boolean = false;
-  currentPage!:number;
+  currentPage:number =1;
   TransactionArr!: any[];
   TotalPages!: number;
   constructor(
@@ -24,7 +24,7 @@ export class ManageInventoryTransactionComponent implements OnInit {
    this.transactionServ.GetTotalPages(10).subscribe({
     next:(res)=>{
       this.TotalPages=res;
-      this.currentPage=this.TotalPages;
+      // this.currentPage=this.TotalPages;
       this.transactionServ.GetDataWithPagination(this.currentPage,10).subscribe({
         next:(response)=>{
           this.TransactionArr=response;
